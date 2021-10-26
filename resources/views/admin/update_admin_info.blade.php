@@ -6,7 +6,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0"><i class="fas fa-cog"></i>Settings</h1>
+            <h1 class="m-0">Settings</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -23,7 +23,7 @@
                 <div class="col-md-8">
                     <div class="card">
                         <div class="card-header bg-primary">
-                            <div class="card-title"><i class="fas fa-user"></i> <span> Admin Change Password</span></div>
+                            <div class="card-title text-center"><i class="fas fa-exclamation-circle"></i><span>  Update Admin Details</span></div>
                         </div>
                         <div class="card-body">
                             <div class="col-md-12">
@@ -43,43 +43,54 @@
                                         </button>
                                     </div>
                                 @endif
-                                <form action="{{ url('/admin/update-password') }}" method="POST" role="form" name="updatePasswordForm" id="updatePasswordForm">@csrf
+                                <form action="{{ url('/admin/update-admin-info') }}" method="post" enctype="multipart/form-data" role="form">@csrf
+                                    <div class="form-group row">
+                                        <label for="admin_name" class="col-md-4 col-form-label">Name</label>
+                                        <div class="col-md-8">
+                                            <input type="text"  name="admin_name" id="admin_name" class="form-control @error('admin_name') is-invalid @enderror" value="{{ $adminCurrentInfo['name'] }}" placeholder="Enter your name">
+                                            @error('admin_name')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
+                                    </div>
                                     <div class="form-group row">
                                         <label for="admin_type" class="col-md-4 col-form-label">Admin Type</label>
                                         <div class="col-md-8">
-                                            <input type="text" name="admin_type" id="admin_type" value="{{ $currentAdmin->type }}" class="form-control" readonly="">
+                                            <input type="text" name="admin_type" id="admin_type" value="{{ $adminCurrentInfo['type'] }}" class="form-control" readonly>
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="email" class="col-md-4 col-form-label">Email Address</label>
                                         <div class="col-md-8">
-                                            <input type="email" name="email" id="email" value="{{ $currentAdmin->email }}" class="form-control" readonly="">
+                                            <input type="email" name="email" id="email" value="{{ $adminCurrentInfo['email'] }}" class="form-control" readonly>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="current_password" class="col-md-4 col-form-label">Current Password</label>
+                                        <label for="current_password" class="col-md-4 col-form-label">Mobile</label>
                                         <div class="col-md-8">
-                                            <input type="password" name="current_password" id="current_password" class="form-control" placeholder="Enter current password" required>
-                                            <span id="checkPwd"></span>
+                                            <input type="text" name="mobile" id="mobile" class="form-control @error('mobile') is-invalid @enderror" placeholder="Enter phone number" value="{{ $adminCurrentInfo['mobile'] }}">
+                                            @error('mobile')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                             @enderror
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="new_password" class="col-md-4 col-form-label">New Password</label>
+                                        <label for="new_password" class="col-md-4 col-form-label">Image</label>
                                         <div class="col-md-8">
-                                            <input type="password" name="new_password" id="new_password" class="form-control" placeholder="Enter new password" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="confirm_password" class="col-md-4 col-form-label">Confirm Password</label>
-                                        <div class="col-md-8">
-                                            <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="Enter confirm password" required>
+                                            <input type="file" name="admin_image" id="admin_image" class="form-control">
+                                            @if(!empty($adminCurrentInfo->image))
+                                            <a target="_blank" href="{{ url('/images/admin_images/admin_photos').'/'.$adminCurrentInfo->image }}">View Image</a>
+                                            <input type="hidden" name="current_admin_image" value="{{ $adminCurrentInfo->image }}">
+                                             @endif
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-md-8 offset-md-4">
-                                            <button type="submit" id="submit" class="submit btn btn-primary">
-                                                Change Password
-                                            </button>
+                                            <input type="submit" id="submit" class="submit btn btn-primary" value="Update" class="btn btn-primary">
                                         </div>
                                     </div>
                                 </form>

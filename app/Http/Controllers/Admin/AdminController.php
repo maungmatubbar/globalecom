@@ -10,28 +10,15 @@ use Illuminate\Support\Facades\Auth;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Hash;
+use Image;
 
 class AdminController extends Controller
 {
 
-    // use AuthenticatesUsers;
-
-    // /**
-    //  * Where to redirect users after login.
-    //  *
-    //  * @var string
-    //  */
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
-    // protected $redirectTo = RouteServiceProvider::HOME;
-
-
     public function dashboard()
     {
         //dd(auth('admin')->user());
-        //return redirect()->intended(RouteServiceProvider::HOME);
+        Session::put('page', 'dashboard');
         return view('admin.admin_dashboard');
     }
     public function login(Request $request)
@@ -64,6 +51,7 @@ class AdminController extends Controller
     }
     public function settings()
     {
+        Session::put('page', 'settings');
         $currentAdmin = Admin::where('email', Auth::guard('admin')->user()->email)->first();
         return view('admin.admin_settings', ['currentAdmin' => $currentAdmin]);
     }
@@ -81,5 +69,76 @@ class AdminController extends Controller
         } else {
             return false;
         }
+    }
+    public function updatePassword(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $data = $request->all();
+            if (Hash::check($data['current_password'], Auth::guard('admin')->user()->password)) {
+                if ($data['new_password'] == $data['confirm_password']) {
+                    Admin::where('id', Auth::guard('admin')->user()->id)->update([
+                        'password' => bcrypt($data['new_password'])
+                    ]);
+                    Session::flash('success_msg', 'Update password successfully');
+                } else {
+                    Session::flash('error_msg', 'New password and Confirm password does not match');
+                }
+            } else {
+                Session::flash('error_msg', 'Your password is incorrect');
+            }
+        }
+        return redirect()->back();
+    }
+    public function updateAdminInfo(Request $request)
+    {
+        Session::put('page', 'update-admin-info');
+
+        //validation 
+        if ($request->isMethod('post')) {
+            $data = $request->all();
+            $rules = [
+                'admin_name' => 'required',
+                'mobile' => 'required|numeric',
+                'admin_image' => 'image'
+            ];
+            $customMessages = [
+                'admin_name.required' => 'Name is reuired',
+                'admin_name.alpha' => 'Valid Name is reuired',
+                'mobile.required' => 'Mobile number is reuired',
+                'mobile.numeric' => 'Valid Mobile number is reuired',
+                'admin_image.image' => 'Valid image is required'
+            ];
+            $this->validate($request, $rules, $customMessages);
+
+            //Upload image
+            if ($request->hasFile('admin_image')) {
+                $image_temp = $request->file('admin_image');
+                if ($image_temp->isValid()) {
+                    if (Auth::guard('admin')->user()->image) {
+                        unlink('images/admin_images/admin_photos/' . Auth::guard('admin')->user()->image);
+                    }
+                    $extension = $image_temp->getClientOriginalExtension();
+                    $imageName = rand(111, 9999) . '.' . $extension;
+                    $imagePath = 'images/admin_images/admin_photos/' . $imageName;
+                    Image::make($image_temp)->resize(300, 300)->save($imagePath);
+                } else if (!empty($data['current_admin_image'])) {
+                    $imageName = $data['current_admin_image'];
+                } else {
+                    $imageName = "";
+                }
+            }
+            //Update admin details
+            Admin::where('email', Auth::guard('admin')->user()->email)->update([
+                'name' => $data['admin_name'],
+                'mobile' => $data['mobile'],
+                'image' => $imageName
+            ]);
+            Session::flash('success_msg', 'Admin info update successfully.');
+            return redirect()->back();
+        }
+
+
+        $adminCurrentInfo = Auth::guard('admin')->user();
+        return view('admin.update_admin_info', ['adminCurrentInfo' => $adminCurrentInfo]);
     }
 }
