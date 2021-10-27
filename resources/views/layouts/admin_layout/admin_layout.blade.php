@@ -17,6 +17,10 @@
   <link rel="stylesheet" href="{{asset('/')}}plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- JQVMap -->
   <link rel="stylesheet" href="{{asset('/')}}plugins/jqvmap/jqvmap.min.css">
+  <!--Data Table-->
+  <link rel="stylesheet" href="{{asset('/')}}plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="{{asset('/')}}plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <link rel="stylesheet" href="{{asset('/')}}plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{asset('/')}}css/admin_css/adminlte.min.css">
   <!-- overlayScrollbars -->
@@ -76,6 +80,18 @@
 <!-- daterangepicker -->
 <script src="{{asset('/')}}plugins/moment/moment.min.js"></script>
 <script src="{{asset('/')}}plugins/daterangepicker/daterangepicker.js"></script>
+<!--Data Tables-->
+<script src="{{asset('/')}}plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="{{asset('/')}}plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="{{asset('/')}}plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="{{asset('/')}}plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="{{asset('/')}}plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="{{asset('/')}}plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="{{asset('/')}}plugins/pdfmake/pdfmake.min.js"></script>
+<script src="{{asset('/')}}plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="{{asset('/')}}plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="{{asset('/')}}plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="{{asset('/')}}plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 <!-- Summernote -->
@@ -90,5 +106,10 @@
 <script src="{{asset('/')}}js/admin_js/pages/dashboard.js"></script>
 <!--custom js script-->
 <script src="{{ asset('/') }}js/admin_js/admin_script.js"></script>
+<script>
+  $(function () {
+    $("#section").DataTable();
+  });
+</script>
 </body>
 </html>

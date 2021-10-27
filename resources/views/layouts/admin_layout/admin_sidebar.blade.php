@@ -33,7 +33,7 @@
               <p>Dashboard</p>
             </a>
           </li>
-
+          <!--Settings-->
           @if(Session::get('page')=="settings" || Session::get('page')=="update-admin-info")
           <?php $active = 'active'; $menuopen = 'menu-open'; ?>
           @else 
@@ -41,7 +41,7 @@
           @endif
           <li class="nav-item has-treeview {{ $menuopen }}">
             <a href="#" class="nav-link {{ $active }}">
-              <i class="fas fa-th"></i>
+              <i class="fas fa-cogs"></i>
               <p>
                 Settings
                 <i class="right fas fa-angle-left"></i>
@@ -70,6 +70,45 @@
                   <p>Admin password update</p>
                 </a>
               </li>
+            </ul>
+          </li>
+              <!--Catelog-->
+              @if(Session::get('page')=="sections" || Session::get('page')=="categories")
+              <?php $active = 'active'; $menuopen = 'menu-open'; ?>
+              @else 
+              <?php $active=""; $menuopen=''; ?>
+              @endif
+              <li class="nav-item has-treeview {{ $menuopen }}">
+                <a href="#" class="nav-link {{ $active }}">
+                  <i class="fas fa-th"></i>
+                  <p>
+                    Catelogues
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+            <ul class="nav nav-treeview">
+              @if(Session::get('page')=="sections")
+                <?php $active = 'active'; ?>
+                @else 
+                <?php $active="";?>
+                @endif
+              <li class="nav-item">
+                <a href="{{ url('/admin/sections') }}" class="nav-link {{ $active }}">
+                  <i class="fas fa-archive nav-icon"></i>
+                  <p>Sections</p>
+                </a>
+              </li>
+            <li class="nav-item">
+              @if(Session::get('page')=="categories")
+              <?php $active = 'active'; ?>
+              @else 
+              <?php $active="";?>
+              @endif
+              <a href="{{ url('/admin/categories') }}" class="nav-link {{ $active }}">
+                <i class="fas fa-cannabis nav-icon"></i>
+                <p>Categories</p>
+              </a>
+            </li>
             </ul>
           </li>
         </ul>
