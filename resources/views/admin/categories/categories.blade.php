@@ -11,7 +11,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ url('/admin/dashboard') }}">Home</a></li>
-              <li class="breadcrumb-item active">Section</li>
+              <li class="breadcrumb-item active">Categories</li>
             </ol>
           </div>
         </div>
@@ -25,30 +25,33 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Section</h3>
+                <h3 class="card-title">Categories</h3>
+                <a href="" class="btn btn-success float-right">Add Category</a>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="section" class="table table-bordered table-hover">
+                <table id="categories" class="table table-bordered table-hover">
                   <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Section Name</th>
+                    <th>Category Name</th>
+                    <th>URL</th>
                     <th>Publication Status</th>
                   </tr>
                   </thead>
                   <tbody>
                     <?php $i=1; ?>
-                    @foreach ($sections as $section)
+                    @foreach ($categories as $category)
                     
                     <tr>
                         <td>{{ $i++ }}</td>
-                        <td>{{ $section->name }}</td>
+                        <td>{{ $category->category_name }}</td>
+                        <td>{{ $category->url }}</td>
                         <td>
-                          @if($section->status == 1)
-                              <a class="SectionStatus" id="section-{{ $section->id }}" section_id="{{ $section->id }}"  href="javascript:void(0)">Active</a>
+                          @if($category->status == 1)
+                              <a class="CategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}"  href="javascript:void(0)">Active</a>
                           @else()
-                          <a class="SectionStatus" id="section-{{ $section->id }}" section_id="{{ $section->id }}"  href="javascript:void(0)">Inactive</a>
+                          <a class="CategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}"  href="javascript:void(0)">Inactive</a>
                           @endif
                       </td>
                     </tr>

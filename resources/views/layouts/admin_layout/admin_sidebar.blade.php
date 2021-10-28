@@ -41,7 +41,7 @@
           @endif
           <li class="nav-item has-treeview {{ $menuopen }}">
             <a href="#" class="nav-link {{ $active }}">
-              <i class="fas fa-cogs"></i>
+              <i class="fas fa-th"></i>
               <p>
                 Settings
                 <i class="right fas fa-angle-left"></i>
@@ -72,7 +72,7 @@
               </li>
             </ul>
           </li>
-              <!--Catelog-->
+              <!-- Catelogues-->
               @if(Session::get('page')=="sections" || Session::get('page')=="categories")
               <?php $active = 'active'; $menuopen = 'menu-open'; ?>
               @else 

@@ -108,7 +108,8 @@
 <script src="{{ asset('/') }}js/admin_js/admin_script.js"></script>
 <script>
   $(function () {
-    $("#section").DataTable();
+    $("#section").DataTable();                
+    $("#categories").DataTable();                
   });
 </script>
 </body>

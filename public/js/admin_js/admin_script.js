@@ -19,7 +19,7 @@ $(document).ready(function() {
             }
         });
     });
-
+    //section
     $('.SectionStatus').click(function() {
         var status = $(this).text();
         var section_id = $(this).attr('section_id');
@@ -32,6 +32,27 @@ $(document).ready(function() {
                     $('#section-' + section_id).html("<a class='SectionStatus' href='javascript:void(0)'>Inactive</a>");
                 } else if (res['status'] == 1) {
                     $('#section-' + section_id).html("<a class='SectionStatus' href='javascript:void(0)'>Active</a>");
+                }
+            },
+            error: function() {
+                alert('Problem');
+            }
+        });
+    });
+
+    //Categoris
+    $('.CategoryStatus').click(function() {
+        var status = $(this).text();
+        var category_id = $(this).attr('category_id');
+        $.ajax({
+            type: 'post',
+            url: '/admin/update-category-status',
+            data: { status: status, category_id: category_id },
+            success: function(res) {
+                if (res['status'] == 0) {
+                    $('#category-' + category_id).html("<a class='CategoryStatus' href='javascript:void(0)'>Inactive</a>");
+                } else if (res['status'] == 1) {
+                    $('#category-' + category_id).html("<a class='CategoryStatus' href='javascript:void(0)'>Active</a>");
                 }
             },
             error: function() {

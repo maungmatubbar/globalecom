@@ -14,5 +14,6 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         '/admin/check-current-pass',
         '/admin/update-section-status',
+        '/admin/update-category-status',
     ];
 }
