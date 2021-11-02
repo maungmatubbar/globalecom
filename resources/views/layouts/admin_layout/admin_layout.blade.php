@@ -15,6 +15,9 @@
   <link rel="stylesheet" href="{{asset('/')}}plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
   <!-- iCheck -->
   <link rel="stylesheet" href="{{asset('/')}}plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Select2 -->
+  <link rel="stylesheet" href="{{asset('/')}}plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="{{asset('/')}}plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
   <!-- JQVMap -->
   <link rel="stylesheet" href="{{asset('/')}}plugins/jqvmap/jqvmap.min.css">
   <!--Data Table-->
@@ -92,6 +95,7 @@
 <script src="{{asset('/')}}plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="{{asset('/')}}plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
+<script src="{{asset('/')}}plugins/select2/js/select2.full.min.js"></script>
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="{{asset('/')}}plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 <!-- Summernote -->
@@ -109,8 +113,14 @@
 <script>
   $(function () {
     $("#section").DataTable();                
-    $("#categories").DataTable();                
-  });
+    $("#categories").DataTable();  
+
+    $('.select2').select2()
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })              
+      });
 </script>
 </body>
 </html>

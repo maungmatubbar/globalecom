@@ -79,9 +79,13 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="new_password" class="col-md-4 col-form-label">Image</label>
+                                        <label for="admin_image" class="col-md-4 col-form-label">Image</label>
                                         <div class="col-md-8">
-                                            <input type="file" name="admin_image" id="admin_image" class="form-control">
+                                            <div class="custom-file">
+                                                <input type="file" name="admin_image" id="admin_image" class="custom-file-input">
+                                                <label class="custom-file-label" for="category_image">Choose photo</label>
+                                            </div>
+                                          
                                             @if(!empty($adminCurrentInfo->image))
                                             <a target="_blank" href="{{ url('/images/admin_images/admin_photos').'/'.$adminCurrentInfo->image }}">View Image</a>
                                             <input type="hidden" name="current_admin_image" value="{{ $adminCurrentInfo->image }}">

@@ -25,8 +25,16 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
+                @if(Session::has('success_msg'))
+                  <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ Session::get('success_msg') }}
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                @endif  
                 <h3 class="card-title">Categories</h3>
-                <a href="" class="btn btn-success float-right">Add Category</a>
+                <a href="{{ url('/admin/add-edit-category') }}" class="btn btn-success float-right"><i class="fas fa-plus"></i> Add Category</a>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -34,7 +42,9 @@
                   <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Category Name</th>
+                    <th>Category</th>
+                    <th>Parent Category</th>
+                    <th>Section</th>
                     <th>URL</th>
                     <th>Publication Status</th>
                   </tr>
@@ -42,10 +52,20 @@
                   <tbody>
                     <?php $i=1; ?>
                     @foreach ($categories as $category)
-                    
+                    @if(!isset($category->parentcategory->category_name))
+                    @php
+                        $parent_category = 'Root'
+                    @endphp
+                     @else
+                      @php
+                        $parent_category = $category->parentcategory->category_name;
+                      @endphp
+                    @endif
                     <tr>
                         <td>{{ $i++ }}</td>
                         <td>{{ $category->category_name }}</td>
+                        <td>{{ $parent_category  }}</td>
+                        <td>{{  $category->section->name }}</td>
                         <td>{{ $category->url }}</td>
                         <td>
                           @if($category->status == 1)

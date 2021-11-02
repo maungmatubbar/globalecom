@@ -1,6 +1,8 @@
 // const { ajax } = require("jquery");
 
 $(document).ready(function() {
+
+    //current password check
     $('#current_password').keyup(function() {
         var checkPass = $('#current_password').val();
         $.ajax({
@@ -19,7 +21,7 @@ $(document).ready(function() {
             }
         });
     });
-    //section
+    //update section status
     $('.SectionStatus').click(function() {
         var status = $(this).text();
         var section_id = $(this).attr('section_id');
@@ -40,7 +42,7 @@ $(document).ready(function() {
         });
     });
 
-    //Categoris
+    //Update Categories Status
     $('.CategoryStatus').click(function() {
         var status = $(this).text();
         var category_id = $(this).attr('category_id');
@@ -60,4 +62,23 @@ $(document).ready(function() {
             }
         });
     });
+
+    //Appand Categories Level
+
+    $('#section_id').change(function() {
+        var section_id = $(this).val();
+        $.ajax({
+            method: 'POST',
+            url: '/admin/appand-categories-level',
+            data: { section_id: section_id },
+            success: function(resp) {
+                $('#appandCategoriesLevel').html(resp);
+            },
+            error: function() {
+                alert('problem');
+            }
+        });
+    });
+
+
 });
