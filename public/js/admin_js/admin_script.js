@@ -79,6 +79,21 @@ $(document).ready(function() {
             }
         });
     });
-
+    $('.category_image_delete').click(function() {
+        var category_id = $(this).attr('category_id');
+        //$('#image_section').hide();
+        $.ajax({
+            method: 'POST',
+            url: '/admin/delete-category-image',
+            data: { category_id: category_id },
+            success: function() {
+                $('#image_section').hide();
+                alert("Category Image Successfully!");
+            },
+            error: function() {
+                alert('problem');
+            }
+        })
+    });
 
 });

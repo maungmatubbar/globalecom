@@ -36,7 +36,7 @@ class CategoryController extends Controller
             return response()->json(['status' => $status, 'category_id' => $data['category_id']]);
         }
     }
-
+    //Add edit Categories functionality
     //validation
     public function validation($request){
         $rules = [
@@ -84,7 +84,9 @@ class CategoryController extends Controller
         if(empty($data['meta_keywords'])){
             $data['meta_keywords']="";
         }
-        
+        // echo "<pre>";
+        // print_r($data['category_name']);
+        // exit;
         $category->parent_id = $data['parent_id'];
         $category->category_name = $data['category_name'];
         $category->category_image = $imageName;
@@ -99,37 +101,65 @@ class CategoryController extends Controller
         $category->save();
     }
     //Category save all 
-    public function addEditCategory(Request $request, $id = null)
+    public function addEditCategory(Request $request, $url = null)
     {
-        if ($id == '') {
+        if ($url == "") {
+            //For add Category
             $title = "Add Category";
             $category = new Category();
+            $categorydata = array();
+            $getCategories = array();
+            $message = 'Save category successfully!';
         } else {
-
+            //For Edit Category
             $title = "Edit Category";
-        }
+            $categorydata = Category::where('url',$url)->first();
+            $categorydata = json_decode(json_encode($categorydata));
+            $getCategories = Category::with('subcategories')->where(['parent_id'=>0,'section_id'=>$categorydata->section_id])->get();
+            $getCategories = json_decode(json_encode($getCategories));
+            $category = Category::find($categorydata->id);
+            $message = 'Update category successfully!';
+        }//video using url replace id
       
         if ($request->isMethod('post')) {
-            
             $data = $request->all();
             $this->validation($request);
             $imageName=$this->categoryImageSave($request);
             $this->categoryInfoSave($category,$data,$imageName);
-            Session::flash('success_msg', 'Save category successfully');
+            Session::flash('success_msg',$message);
             return redirect('admin/categories');
         }
         $sections = Section::get();
-        return view('admin.categories.add_edit_category')->with(compact('title', 'sections'));
+        return view('admin.categories.add_edit_category')->with(compact('title', 'sections','categorydata','getCategories'));
     }
 
     //Appand Categories Level
     public function appandCategoriesLevel(Request $request){
         if($request->ajax()){
             $data=$request->all();
-            $categories = Category::with('subcategories')->where(['section_id'=>$data['section_id'],'parent_id'=>0,'status'=>1])->get();
-            $categories = json_decode(json_encode($categories,true));
-           return view('admin.categories.appand_categories_level',)->with(compact('categories'));
+            $getCategories = Category::with('subcategories')->where(['section_id'=>$data['section_id'],'parent_id'=>0,'status'=>1])->get();
+            $getCategories = json_decode(json_encode($getCategories));
+           return view('admin.categories.appand_categories_level',)->with(compact('getCategories'));
 
         }
+    }
+    public function deleteCategoryImage(Request $request){
+        if ($request->ajax()) {
+            $data = $request->all();
+            $categoryImage = Category::select('category_image')->where('id', $data['category_id'])->first();
+            $category_image_path = 'images/category_images/';
+            if(file_exists($category_image_path.$categoryImage->category_image)){
+                unlink($category_image_path.$categoryImage->category_image);
+                Category::where('id',$data['category_id'])->update(['category_image'=>'']);
+            }
+            return response()->json(['category_id' => $data['category_id']]);
+        } 
+    }
+    public function deleteCategory($url){
+        Category::where('url',$url)->delete();
+        Session::flash('success_msg','Category Delete Successfully!');
+        return redirect()->back();
+
+
     }
 }

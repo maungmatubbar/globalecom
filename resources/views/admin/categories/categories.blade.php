@@ -46,7 +46,8 @@
                     <th>Parent Category</th>
                     <th>Section</th>
                     <th>URL</th>
-                    <th>Publication Status</th>
+                    <th>Status</th>
+                    <th>Actions</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -71,8 +72,12 @@
                           @if($category->status == 1)
                               <a class="CategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}"  href="javascript:void(0)">Active</a>
                           @else()
-                          <a class="CategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}"  href="javascript:void(0)">Inactive</a>
+                          <a class="CategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}"  href="javascript:void(0)" onclick='return confirm("Are you sure delete this!")'>Inactive</a>
                           @endif
+                      </td>
+                      <td>
+                        <a href="{{ url('admin/add-edit-category/'.$category->url) }}" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
+                        <a href="{{ url('admin/delete-category/'.$category->url) }}" onclick="return confirm('Are you sure you want to delete this category?')" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
                       </td>
                     </tr>
                     @endforeach
