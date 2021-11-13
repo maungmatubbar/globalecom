@@ -160,6 +160,5 @@ class CategoryController extends Controller
         Session::flash('success_msg','Category Delete Successfully!');
         return redirect()->back();
 
-
     }
 }

@@ -17,5 +17,6 @@ class VerifyCsrfToken extends Middleware
         '/admin/update-category-status',
         '/admin/appand-categories-level',
         '/admin/delete-category-image',
+        '/admin/update-product-status',
     ];
 }

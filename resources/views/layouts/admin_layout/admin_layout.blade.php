@@ -94,6 +94,8 @@
 <script src="{{asset('/')}}plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="{{asset('/')}}plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="{{asset('/')}}plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<!-- bs-custom-file-input -->
+<script src="{{asset('/')}}plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
 
 <script src="{{asset('/')}}plugins/select2/js/select2.full.min.js"></script>
 <!-- Tempusdominus Bootstrap 4 -->
@@ -110,16 +112,22 @@
 <script src="{{asset('/')}}js/admin_js/pages/dashboard.js"></script>
 <!--custom js script-->
 <script src="{{ asset('/') }}js/admin_js/admin_script.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   $(function () {
+   // Summernote
+   $('#summernote').summernote()
     $("#section").DataTable();                
     $("#categories").DataTable();  
+    $("#products").DataTable();  
 
-    $('.select2').select2()
+    $('.select2').select2();
     //Initialize Select2 Elements
     $('.select2bs4').select2({
       theme: 'bootstrap4'
-    })              
+    })   ;
+    bsCustomFileInput.init();
+    
       });
 </script>
 </body>

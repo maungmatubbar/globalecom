@@ -79,21 +79,134 @@ $(document).ready(function() {
             }
         });
     });
+    //Delete Category Image
     $('.category_image_delete').click(function() {
         var category_id = $(this).attr('category_id');
         //$('#image_section').hide();
-        $.ajax({
-            method: 'POST',
-            url: '/admin/delete-category-image',
-            data: { category_id: category_id },
-            success: function() {
-                $('#image_section').hide();
-                alert("Category Image Successfully!");
-            },
-            error: function() {
-                alert('problem');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#44bd32',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    method: 'POST',
+                    url: '/admin/delete-category-image',
+                    data: { category_id: category_id },
+                    success: function() {
+                        $('#image_section').hide();
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Category image has been deleted successfully!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    },
+                    error: function() {
+                        alert('problem');
+                    }
+                });
+            }
+        });
+
+    });
+    //Delete Sweet Alert
+    $('.confirmDelete').click(function() {
+        var record = $(this).attr('record');
+        var recordurl = $(this).attr('recordurl');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#44bd32',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Swal.fire(
+                //     'Deleted!',
+                //     'Category has been deleted.',
+                //     'success'
+                // )
+                window.location.href = '/admin/delete-' + record + '/' + recordurl;
             }
         })
+    });
+    $('.ConfirmDelete').click(function() {
+        var record = $(this).attr('record');
+        var recordurl = $(this).attr('recordurl');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#44bd32',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    method: 'GET',
+                    url: '/admin/delete-' + record + '/' + recordurl,
+                    data: { recordurl: recordurl },
+                    success: function(res) {
+                        $('#' + recordurl).fadeOut(1000, function() {
+                            $(this).hide();
+                            $('.msg').append("<div class='alert alert-success alert-dismissible fade show' role='alert'>" + res['success_msg'] +
+                                "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>" +
+                                "<span aria-hidden='true'>&times;</span>" +
+                                "</button>" +
+                                +"</div>");
+                        });
+                    },
+                    error: function() {
+                        alert('problem');
+                    }
+                });
+            }
+        });
+
+    });
+
+    //Update Product Status 
+    $('.ProductStatus').click(function() {
+        var status = $(this).text();
+        var product_id = $(this).attr('product_id');
+        $.ajax({
+            type: 'post',
+            url: '/admin/update-product-status',
+            data: { status: status, product_id: product_id },
+            success: function(res) {
+                if (res['status'] == 0) {
+                    $('#product-' + product_id).html("<a class='ProductStatus' href='javascript:void(0)'>Inactive</a>");
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Product status Inactive successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } else if (res['status'] == 1) {
+                    $('#product-' + product_id).html("<a class='ProductStatus' href='javascript:void(0)'>Active</a>");
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Product status Active successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            },
+            error: function() {
+                alert('Problem');
+            }
+        });
     });
 
 });

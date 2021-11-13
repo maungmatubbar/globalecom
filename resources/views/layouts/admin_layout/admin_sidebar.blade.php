@@ -73,14 +73,14 @@
             </ul>
           </li>
               <!-- Catelogues-->
-              @if(Session::get('page')=="sections" || Session::get('page')=="categories")
+              @if(Session::get('page')=="sections" || Session::get('page')=="categories" || Session::get('page')=="products")
               <?php $active = 'active'; $menuopen = 'menu-open'; ?>
               @else 
               <?php $active=""; $menuopen=''; ?>
               @endif
               <li class="nav-item has-treeview {{ $menuopen }}">
                 <a href="#" class="nav-link {{ $active }}">
-                  <i class="fas fa-th"></i>
+                  <i class="fas fa-store"></i>
                   <p>
                     Catelogues
                     <i class="right fas fa-angle-left"></i>
@@ -98,17 +98,28 @@
                   <p>Sections</p>
                 </a>
               </li>
-            <li class="nav-item">
-              @if(Session::get('page')=="categories")
-              <?php $active = 'active'; ?>
-              @else 
-              <?php $active="";?>
-              @endif
-              <a href="{{ url('/admin/categories') }}" class="nav-link {{ $active }}">
-                <i class="fas fa-cannabis nav-icon"></i>
-                <p>Categories</p>
-              </a>
-            </li>
+              <li class="nav-item">
+                @if(Session::get('page')=="categories")
+                <?php $active = 'active'; ?>
+                @else 
+                <?php $active="";?>
+                @endif
+                <a href="{{ url('/admin/categories') }}" class="nav-link {{ $active }}">
+                  <i class="fas fa-cannabis nav-icon"></i>
+                  <p>Categories</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                @if(Session::get('page')=="products")
+                <?php $active = 'active'; ?>
+                @else 
+                <?php $active="";?>
+                @endif
+                <a href="{{ url('/admin/products') }}" class="nav-link {{ $active }}">
+                  <i class="fas fa-cannabis nav-icon"></i>
+                  <p>Products</p>
+                </a>
+              </li>
             </ul>
           </li>
         </ul>

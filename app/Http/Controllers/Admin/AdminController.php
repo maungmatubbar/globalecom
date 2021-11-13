@@ -44,7 +44,8 @@ class AdminController extends Controller
             }
         }
         if (auth('admin')->user()) {
-            return redirect('/admin/dashboard');
+            //return redirect('/admin/dashboard');
+            return redirect()->back();
         } else {
             return view('admin.admin_login');
         }

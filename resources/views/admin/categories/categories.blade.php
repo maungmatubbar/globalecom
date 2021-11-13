@@ -54,9 +54,9 @@
                     <?php $i=1; ?>
                     @foreach ($categories as $category)
                     @if(!isset($category->parentcategory->category_name))
-                    @php
-                        $parent_category = 'Root'
-                    @endphp
+                      @php
+                          $parent_category = 'Root'
+                      @endphp
                      @else
                       @php
                         $parent_category = $category->parentcategory->category_name;
@@ -77,7 +77,7 @@
                       </td>
                       <td>
                         <a href="{{ url('admin/add-edit-category/'.$category->url) }}" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
-                        <a href="{{ url('admin/delete-category/'.$category->url) }}" onclick="return confirm('Are you sure you want to delete this category?')" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
+                        <a class="confirmDelete btn btn-sm btn-danger" record="category" recordurl="{{ $category->url }}" href="javascript:void(0)"><i class="fas fa-trash-alt"></i></a>
                       </td>
                     </tr>
                     @endforeach

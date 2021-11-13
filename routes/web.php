@@ -42,5 +42,10 @@ Route::prefix('/admin')->namespace('Admin')->group(function () {
         Route::post('/appand-categories-level','CategoryController@appandCategoriesLevel');
         Route::post('/delete-category-image','CategoryController@deleteCategoryImage');
         Route::get('/delete-category/{url}','CategoryController@deleteCategory');
+        //Products
+        Route::get('/products','ProductsController@products');
+        Route::post('/update-product-status', 'ProductsController@updateProductStatus');
+        Route::get('/delete-product/{url}', 'ProductsController@deleteProduct');
+        Route::match(['get', 'post'], '/add-edit-product/{url?}','ProductsController@addEditProduct');
     });
 });
