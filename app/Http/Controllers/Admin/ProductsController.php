@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Product;
 use App\Section;
 use App\Category;
+use App\ProductsAttribute;
+use App\ProductsImage;
+use App\Brand;
 use Session;
 use Image;
 class ProductsController extends Controller
@@ -73,6 +76,7 @@ class ProductsController extends Controller
     public function validation($request){
         $rules = [
             'category_id' => 'required',
+            'brand_id' => 'required',
             'product_name' => 'required|regex:/^[\pL\s\-]+$/u',
             'product_code' => 'required|regex:/^[\w-]*$/',
             'product_price' => 'required|numeric',
@@ -82,6 +86,7 @@ class ProductsController extends Controller
         ];
         $customMessages = [
             'category_id.required'=>"Category field is required",
+            'brand_id.required'=>"Brand field is required",
             'product_name.required' => 'Product name is reuired',
             'product_name.regex' => 'Valid Product name is reuired',
             'product_code.require' => 'Product code is reuired',
@@ -131,11 +136,6 @@ class ProductsController extends Controller
         return $video_name;
     }
     public function saveProductInfo($request,$product,$image_name,$video_name){
-        if($request->is_featured){
-            $is_featured = "Yes";
-        }else{
-            $is_featured = "No";
-        }
        
         if(empty($request->product_discount)){
             $request->product_discount=0;
@@ -176,6 +176,7 @@ class ProductsController extends Controller
         $categoryInfo = Category::find($request->category_id);
         $product->section_id = $categoryInfo->section_id;
         $product->category_id = $request->category_id;
+        $product->brand_id = $request->brand_id;
         $product->product_name = $request->product_name;
         $product->product_url = str_slug($request->product_name."-".rand(11,999));
         $product->product_code = $request->product_code;
@@ -183,8 +184,12 @@ class ProductsController extends Controller
         $product->product_price = $request->product_price;
         $product->product_discount = $request->product_discount;
         $product->product_weight = $request->product_weight;
-        $product->product_video = $video_name;
-        $product->main_image = $image_name;
+        if(!empty($video_name)){
+            $product->product_video = $video_name;
+        }
+        if(!empty($image_name)){
+            $product->main_image = $image_name;
+        }
         $product->description = $request->description;
         $product->wash_care = $request->wash_care;
         $product->fabric = $request->fabric;
@@ -195,7 +200,11 @@ class ProductsController extends Controller
         $product->meta_title = $request->meta_title;
         $product->meta_description = $request->meta_description;
         $product->meta_keywords = $request->meta_keywords;
-        $product->is_featured = $is_featured;
+        if(!empty($request->is_featured)){
+            $product->is_featured = $request->is_featured;
+        }else{
+            $product->is_featured = "No";
+        }
         $product->status = $request->status;
         $product->save();
     }
@@ -203,28 +212,29 @@ class ProductsController extends Controller
         if($url==""){
             $title="Add Product";
             $product = new Product;
-
+            $productdata = array();
+            $message = "Product added successfully!";
         }else{
             $title="Edit Product";
             $product_data = Product::where('product_url',$url)->first();
-            $product_data = json_decode(json_encode($product_data));
-            echo "<pre>";
-            print_r($product_data);exit;
+            $productdata = json_decode(json_encode($product_data));
+            $product = Product::find($productdata->id);
+            $message = "Product updated successfully!";
         }
         
         
         if($request->isMethod('post')){
-          
+           //validation
             $this->validation($request);
-           // echo"<pre>"; print_r($request->all());exit;
              //Product Image Upload
            $image_name = $this->imageUpload($request);
             //Upload Product video
           
             $video_name = $this->videoUpload($request);
             //Save product details in tables
+           // echo "<pre>";print_r($request->is_featured);exit;
             $this->saveProductInfo($request,$product,$image_name,$video_name);
-            Session::flash('success_msg','Product info added successfully!');
+            Session::flash('success_msg',$message);
             return redirect('/admin/products');
         }
         $fabricArray= array('Cotton','Polyester','Wool');
@@ -234,6 +244,191 @@ class ProductsController extends Controller
         $patternArray = array('Checked','Plain','Printed','Self','Solid');
         $categories = Section::with('categories')->get();
         $categories = json_decode(json_encode($categories));
-        return view('admin.products.add_edit_product')->with(compact('title','fabricArray','sleeveArray','fitArray','occasionArray','patternArray','categories'));
+        $brands = Brand::where('status',1)->get();
+        $brands = json_decode(json_encode($brands));
+        return view('admin.products.add_edit_product')->with(compact('title','fabricArray','sleeveArray','fitArray','occasionArray','patternArray','categories','productdata','brands'));
+    }
+    public function deleteProductImage(Request $request){
+        if ($request->ajax()) {
+            $product_image = Product::select('main_image')->where('id',$request->product_id)->first();
+            $product_image_path = 'images/product_images/large/';
+            if(file_exists($product_image_path.$product_image->main_image)){
+                unlink($product_image_path.$product_image->main_image);
+            }
+            $product_image_path = 'images/product_images/medium/';
+            if(file_exists($product_image_path.$product_image->main_image)){
+                unlink($product_image_path.$product_image->main_image);
+            }
+            $product_image_path = 'images/product_images/small/';
+            if(file_exists($product_image_path.$product_image->main_image)){
+                unlink($product_image_path.$product_image->main_image);
+            }
+            return response()->json(['porduct_id'=>$request->porduct_id]);
+        }
+    }
+    public function deleteProductVideo(Request $request,$product_id){
+        if ($request->ajax()) {
+            $product_video = Product::select('product_video')->where('id',$product_id)->first();
+            $product_video_path = 'videos/product_videos/';
+            if(file_exists($product_video_path.$product_video->product_video)){
+                unlink($product_video_path.$product_video->product_video);
+                Product::where('id',$product_id)->update(array("product_video"=>""));
+            }
+           
+            return response()->json(['message'=>'Video has been delete Successfully!']);
+        }
+    }
+
+    //Add Attributes Functions
+
+    public function addAttributes(Request $request,$id){
+        
+      
+        if($request->isMethod('post')){
+            $data = $request->all();
+            foreach($data['sku'] as $key => $value ){
+                //SKU already exists check
+                $attrCountSKU = ProductsAttribute::where(['sku'=>$value])->count(); 
+                if($attrCountSKU){
+                   $message = 'SKU already exists, Please add another SKU!';
+                   session::flash('error_message',$message);
+                    return redirect()->back();
+                }
+                $attrCountSize = ProductsAttribute::where(['product_id'=>$id,'size'=>$data['size'][$key]])->count(); 
+                if($attrCountSize){
+                   $message = 'Size already exists, Please add another size!';
+                   session::flash('error_message',$message);
+                    return redirect()->back();
+                }
+                if(!empty($value)){
+                    $attribute = new ProductsAttribute();
+                    $attribute->product_id = $id;
+                    $attribute->sku = $value;
+                    $attribute->size = $data['size'][$key];
+                    $attribute->price = $data['price'][$key];
+                    $attribute->stock = $data['stock'][$key];
+                    $attribute->status = 1;
+                    $attribute->save();
+                }
+            }
+            $message = 'Product Attributes has been added successfully!';
+            session::flash('success_message',$message);
+             return redirect()->back();
+        }
+        $productdata = Product::select('id','product_name','product_code','product_color','main_image')->with('attributes')->find($id);
+        $productdata=json_decode(json_encode($productdata));
+        //echo "<pre>";print_r($productdata);die;
+        $title = "Product Attributes";
+        return view('admin.products.add_attributes')->with(compact('productdata','title'));
+    }
+    public function editAttributes(Request $request,$id){
+        $data = $request->all();
+        //echo "<pre>";print_r($data['attrId']);die;
+        if($request->isMethod('post')){
+            foreach( $data['attrId'] as $key => $attr ){
+                if(!empty($attr)){
+                    ProductsAttribute::where('id',$data['attrId'][$key])->update([
+                        'price'=>$data['price'][$key],
+                        'stock'=>$data['stock'][$key]
+                    ]);
+                }
+            }
+           
+        }
+        $message = 'Product Attributes has been updated successfully!';
+        session::flash('success_message',$message);
+        return redirect()->back();
+    }
+    public function updateProductAttributeStatus(Request $request){
+        if($request->ajax()){
+            $data = $request->all();
+            if ($data['status'] == 'Active') {
+                $status = 0;
+            } else {
+                $status = 1;
+            }
+            ProductsAttribute::where('id', $data['record_id'])->update([
+                'status' => $status,
+            ]);
+            return response()->json(['status' => $status, 'record_id' => $data['record_id']]);
+        }
+    }
+    public function deleteProductAttribute(Request $request,$id){
+        if($request->ajax()){
+            ProductsAttribute::where('id',$id)->delete();
+            return response()->json(['success_msg'=>'Product Attribute Delete Successfully!']);
+        }
+    }
+
+    //Product Images
+    public function addImages(Request $request,$id){
+        if($request->isMethod('post')){
+            $request->validate([
+                'images' => 'required',
+                'images.*'=>'image|mimes:png,jpg,jpeg,gif'
+            ]);
+           if($request->hasFile('images')){
+                $images = $request->file('images');
+                foreach($images as $key => $image){
+                    $productImage = new ProductsImage();
+                    $image_tmp = Image::make($image);
+                    $extension = $image->getClientOriginalExtension();
+                    $imageName = "productImage".rand(111,9999).time().".".$extension;
+                    //Using path
+                    $large_image_path = "images/product_images/large/".$imageName;
+                    $medium_image_path = "images/product_images/medium/".$imageName;
+                    $small_image_path = "images/product_images/small/".$imageName;
+                    Image::make($image_tmp)->resize(1040,1200)->save($large_image_path);
+                    Image::make($image_tmp)->resize(520,600)->save($medium_image_path);
+                    Image::make($image_tmp)->resize(260,300)->save($small_image_path);
+                    $productImage->image = $imageName;
+                    $productImage->product_id = $id;
+                    $productImage->status = 1;
+                    $productImage->save();
+                }
+               
+           }
+           $message = 'Product images has been added successfully!';
+           session::flash('success_message',$message);
+           return redirect()->back();
+            
+        }
+        $title = "Product Images";
+        $productdata = Product::select('id','product_name','product_code','product_color','main_image')->with('images')->find($id);
+        $productdata = json_decode(json_encode($productdata));
+        return view('admin.products.add_images')->with(compact('title','productdata'));
+    }
+    public function updateProductImageStatus(Request $request){
+        if($request->ajax()){
+            $data = $request->all();
+            if ($data['status'] == 'Active') {
+                $status = 0;
+            } else {
+                $status = 1;
+            }
+            ProductsImage::where('id', $data['record_id'])->update([
+                'status' => $status,
+            ]);
+            return response()->json(['status' => $status, 'record_id' => $data['record_id']]);
+        }
+    }
+    public function deleteImage(Request $request,$id){
+        if($request->ajax()){
+            $product_image = ProductsImage::select('image')->where('id',$id)->first();
+            $product_image_path = 'images/product_images/large/';
+            if(file_exists($product_image_path.$product_image->image)){
+                unlink($product_image_path.$product_image->image);
+            }
+            $product_image_path = 'images/product_images/medium/';
+            if(file_exists($product_image_path.$product_image->main_image)){
+                unlink($product_image_path.$product_image->image);
+            }
+            $product_image_path = 'images/product_images/small/';
+            if(file_exists($product_image_path.$product_image->image)){
+                unlink($product_image_path.$product_image->image);
+            }
+            ProductsImage::where('id',$id)->delete();
+            return response()->json(['success_msg'=>'Product Image Delete Successfully!']);
+        }
     }
 }

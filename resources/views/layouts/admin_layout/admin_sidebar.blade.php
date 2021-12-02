@@ -1,8 +1,8 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
-      <img src="{{asset('/')}}images/admin_images/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">Admin Panel</span>
+      <!--<img src="{{asset('/')}}images/admin_images/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">-->
+      <span class="brand-text font-weight-light"> <strong>E-commerce Admin</strong></span>
     </a>
 
     <!-- Sidebar -->
@@ -66,21 +66,21 @@
                 <?php $active="";?>
                 @endif
                 <a href="{{ url('/admin/settings') }}" class="nav-link {{ $active }}">
-                  <i class="fas fa-lock nav-icon"></i>
+                  <i class="fas fa-user-shield nav-icon"></i>
                   <p>Admin password update</p>
                 </a>
               </li>
             </ul>
           </li>
               <!-- Catelogues-->
-              @if(Session::get('page')=="sections" || Session::get('page')=="categories" || Session::get('page')=="products")
+              @if(Session::get('page')=="sections" ||  Session::get('page')=="brands"|| Session::get('page')=="categories" || Session::get('page')=="products")
               <?php $active = 'active'; $menuopen = 'menu-open'; ?>
               @else 
               <?php $active=""; $menuopen=''; ?>
               @endif
               <li class="nav-item has-treeview {{ $menuopen }}">
                 <a href="#" class="nav-link {{ $active }}">
-                  <i class="fas fa-store"></i>
+                  <i class="fas fa-th"></i>
                   <p>
                     Catelogues
                     <i class="right fas fa-angle-left"></i>
@@ -94,8 +94,19 @@
                 @endif
               <li class="nav-item">
                 <a href="{{ url('/admin/sections') }}" class="nav-link {{ $active }}">
-                  <i class="fas fa-archive nav-icon"></i>
+                  <i class="fas fa-dot-circle nav-icon"></i>
                   <p>Sections</p>
+                </a>
+              </li>
+              @if(Session::get('page')=="brands")
+              <?php $active = 'active'; ?>
+              @else 
+              <?php $active="";?>
+              @endif
+              <li class="nav-item">
+                <a href="{{ url('/admin/brands') }}" class="nav-link {{ $active }}">
+                  <i class="fas fa-dot-circle nav-icon"></i>
+                  <p>Brands</p>
                 </a>
               </li>
               <li class="nav-item">
@@ -105,7 +116,7 @@
                 <?php $active="";?>
                 @endif
                 <a href="{{ url('/admin/categories') }}" class="nav-link {{ $active }}">
-                  <i class="fas fa-cannabis nav-icon"></i>
+                  <i class="fas fa-dot-circle nav-icon"></i>
                   <p>Categories</p>
                 </a>
               </li>
@@ -116,7 +127,7 @@
                 <?php $active="";?>
                 @endif
                 <a href="{{ url('/admin/products') }}" class="nav-link {{ $active }}">
-                  <i class="fas fa-cannabis nav-icon"></i>
+                  <i class="fas fa-dot-circle nav-icon"></i>
                   <p>Products</p>
                 </a>
               </li>

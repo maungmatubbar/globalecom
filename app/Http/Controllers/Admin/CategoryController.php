@@ -33,6 +33,7 @@ class CategoryController extends Controller
             Category::where('id', $data['category_id'])->update([
                 'status' => $status,
             ]);
+            
             return response()->json(['status' => $status, 'category_id' => $data['category_id']]);
         }
     }
@@ -89,7 +90,9 @@ class CategoryController extends Controller
         // exit;
         $category->parent_id = $data['parent_id'];
         $category->category_name = $data['category_name'];
-        $category->category_image = $imageName;
+        if(!empty($imageName)){
+            $category->category_image = $imageName;
+        }
         $category->category_discount = $data['category_discount'];
         $category->section_id = $data['section_id'];
         $category->description = $data['description'];

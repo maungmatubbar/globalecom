@@ -10,7 +10,7 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="{{ url('/admin/dashboard') }}">Home</a></li>
               <li class="breadcrumb-item active">{{ $title }}</li>
             </ol>
           </div>
@@ -45,10 +45,11 @@
                               @foreach ($categories as $section)
                                 <optgroup label="{{ $section->name }}"></optgroup>
                                   @foreach ($section->categories as $category)
-                                    <option value="{{ $category->id }}" @if(!empty(@old('category_id')) && $category->id == @old('category_id'))  selected @endif>&nbsp;&nbsp;&nbsp;&raquo;&nbsp;{{ $category->category_name }}</option>
+                                    <option value="{{ $category->id }}" @if(!empty(@old('category_id')) && $category->id == @old('category_id'))  selected 
+                                      @elseif (!empty($productdata->category_id) && $productdata->category_id == $category->id) selected @endif>&nbsp;&nbsp;&nbsp;&raquo;&nbsp;{{ $category->category_name }}</option>
 
                                     @foreach ($category->subcategories as $subcategory)
-                                    <option value="{{  $subcategory->id  }}" @if(!empty(@old('category_id')) && $subcategory->id == @old('category_id'))  selected @endif>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&Rarr;&nbsp;{{  $subcategory->category_name  }}</option>
+                                      <option value="{{  $subcategory->id  }}" @if(!empty(@old('category_id')) && $subcategory->id == @old('category_id'))  selected @elseif (!empty($productdata->category_id) && $productdata->category_id == $subcategory->id) selected @endif>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&Rarr;&nbsp;{{  $subcategory->category_name  }}</option>
                                     @endforeach
 
                                   @endforeach
@@ -62,17 +63,31 @@
                             @enderror
                         </div>
                         <div class="form-group">
+                          <label>Select Brand*</label>
+                          <select name="brand_id" id="brand_id" class="form-control select2  @error('brand_id') is-invalid @enderror" style="width: 100%;">
+                            <option value="">Select</option>   
+                            @foreach ($brands as $brand )
+                              <option value="{{ $brand->id }}" @if (!empty($productdata->brand_id)&& $productdata->brand_id==$brand->id) selected @endif>{{ $brand->name }}</option>
+                            @endforeach  
+                          </select>
+                          @error('brand_id')
+                          <span class="invalid-feedback" role="alert">
+                              <strong>{{ $message }}</strong>
+                          </span>
+                          @enderror
+                        </div>
+                        <div class="form-group">
                             <label for="product_name">Product Name*</label>
-                            <input type="text" name="product_name" class="form-control @error('product_name') is-invalid @enderror"  id="product_name" @if(!empty($productdata)) value="{{ $productdata->product_name}}" @else  value="{{ old('product_name') }}" @endif placeholder="Enter product name">
+                            <input type="text" name="product_name" class="form-control @error('product_name') is-invalid @enderror"  id="product_name" @if(!empty($productdata->product_name)) value="{{ $productdata->product_name}}" @else  value="{{ old('product_name') }}" @endif placeholder="Enter product name">
                             @error('product_name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                              <span class="invalid-feedback" role="alert">
+                                  <strong>{{ $message }}</strong>
+                              </span>
                             @enderror
                         </div>     
                         <div class="form-group">
                             <label for="product_price">Product Price*</label>
-                            <input type="text" name="product_price" class="form-control @error('product_price') is-invalid @enderror"  @if(!empty($productdata)) value="{{ $productdata->product_price}}" @else  value="{{ old('product_price') }}" @endif id="product_price" placeholder="Enter product price">
+                            <input type="text" name="product_price" class="form-control @error('product_price') is-invalid @enderror"  @if(!empty($productdata->product_price)) value="{{ $productdata->product_price}}" @else  value="{{ old('product_price') }}" @endif id="product_price" placeholder="Enter product price">
                             @error('product_price')
                               <span class="invalid-feedback" role="alert">
                                   <strong>{{ $message }}</strong>
@@ -81,7 +96,7 @@
                         </div>              
                         <div class="form-group">
                             <label for="product_discount">Product Discount(%)</label>
-                            <input type="text" name="product_discount" class="form-control"  @if(!empty($productdata)) value="{{ $productdata->product_discount}}" @else  value="{{ old('product_discount') }}" @endif id="product_discount" placeholder="Enter product Discount">
+                            <input type="text" name="product_discount" class="form-control"  @if(!empty($productdata->product_discount)) value="{{ $productdata->product_discount}}" @else  value="{{ old('product_discount') }}" @endif id="product_discount" placeholder="Enter product Discount">
                         </div>
                         <div class="form-group">
                             <label for="video">Product Video</label>
@@ -89,51 +104,55 @@
                                 <input type="file" name="product_video" class="custom-file-input @error('product_video') is-invalid @enderror" id="product_video">
                                 <label class="custom-file-label" for="product_video">Choose Video</label>
                               </div>
+                              @if(!empty($productdata->product_video))
+                                <div class="mt-1 video_sction">
+                                    <video controls>
+                                      <source src="{{ asset('videos/product_videos/'.$productdata->product_video) }}" type="video/mp4">
+                                      <source src="{{ asset('videos/product_videos/'.$productdata->product_video) }}" type="video/ogg">
+                                    </video>
+                                    <div class="">
+                                      <a href="{{ asset('videos/product_videos/'.$productdata->product_video) }}" class="btn btn-sm btn-success" download>Download</a>
+                                      <a href="javascript:void(0)" record="video" record_id="{{ $productdata->id }}"  class="deleteItem btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
+                                    </div>
+                                </div>
+                              @endif
                               @error('product_video')
-                              <span class="invalid-feedback" role="alert">
-                                  <strong>{{ $message }}</strong>
-                              </span>
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
                               @enderror
                         </div>
                         <div class="form-group">
                             <label for="product_description">Product Description</label>
-                            <textarea class="form-control" name="description"  id="summernote" rows="3" placeholder="Enter ...">@if(!empty($productdata)) {{ $productdata->description}} @else {{ old('description') }} @endif</textarea>
+                            <textarea class="form-control" name="description"  id="summernote" rows="3" placeholder="Enter ...">@if(!empty($productdata->description)) {{ $productdata->description}} @else {{ old('description') }} @endif</textarea>
                         </div>
                         <div class="form-group">
                           <label>Select Sleeve</label>
-                          <select name="sleeve" id="sleeve" class="form-control select2 @error('sleeve') is-invalid @enderror" style="width: 100%;">
+                          <select name="sleeve" id="sleeve" class="form-control select2" style="width: 100%;">
                             <option value="">Select</option>   
                             @foreach ($sleeveArray as $sleeve )
-                              <option value="{{ $sleeve }}">{{ $sleeve }}</option>
+                              <option value="{{ $sleeve }}" @if (!empty($productdata->sleeve)&& $productdata->sleeve==$sleeve) selected @endif>{{ $sleeve }}</option>
                             @endforeach  
                           </select>
-                          @error('sleeve')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                          @enderror
                         </div>
                         <div class="form-group">
                           <label>Select Pattern</label>
-                          <select name="pattern" id="pattern" class="form-control select2 @error('pattern') is-invalid @enderror" style="width: 100%;">
+                          <select name="pattern" id="pattern" class="form-control select2 " style="width: 100%;">
                             <option value="">Select</option>   
                             @foreach ($patternArray as $pattern )
-                              <option value="{{ $pattern }}">{{ $pattern }}</option>
+                              <option value="{{ $pattern }}" @if (!empty($productdata->pattern)&& $productdata->pattern==$pattern) selected @endif>{{ $pattern }}</option>
                             @endforeach  
                           </select>
-                          @error('pattern')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                          @enderror
                         </div>
                         <div class="form-group">
                           <label for="meta_title">Meta title</label>
                           <textarea class="form-control" name="meta_title" id="meta_title" rows="3" placeholder="Enter ...">@if(!empty($productdata)) {{ $productdata->meta_title}} @else {{ old('meta_title') }} @endif</textarea>
                         </div>
                         <div class="form-group">
-                          <label for="meta_keywords">Meta Keywords</label>
-                          <textarea class="form-control" name="meta_keywords" id="meta_keywords" rows="3" placeholder="Enter ...">@if(!empty($productdata)) {{ $productdata->meta_keywords}} @else {{ old('meta_keywords') }} @endif</textarea>
+                          <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="is_featured" id="is_featured" value="Yes" @if(!empty($productdata) && $productdata->is_featured=="Yes") checked @endif >
+                            <label  for="is_featured">Featured Item </label>
+                          </div>
                         </div>
                         <!-- /.form-group -->
                     </div>
@@ -162,7 +181,7 @@
                           <input type="text" name="product_weight" class="form-control"  @if(!empty($productdata)) value="{{ $productdata->product_weight}}" @else  value="{{ old('product_weight') }}" @endif id="product_weight" placeholder="Enter product weight">
                       </div> 
                       <div class="form-group">
-                        <label for="main_image">Product Main Image*</label>
+                        <label for="main_image">Product Main Image</label>
                         <div class="custom-file">
                           <input type="file" name="main_image" class="custom-file-input @error('main_image') is-invalid @enderror" id="main_image">
                           <label class="custom-file-label" for="main_image">Choose Image</label>
@@ -173,10 +192,15 @@
                           @enderror
                         </div>
                         <div>Recommended Image Size:(Width:1040px,Height:1200px)</div>
-                        @if(!empty($productdata->main_image))
+                        <?php
+                          if(!empty($productdata->main_image)){
+                            $image_path = 'images/product_images/small/'. $productdata->main_image;
+                          }
+                        ?>
+                        @if(!empty($productdata->main_image) && file_exists($image_path))
                           <div id="image_section">
-                            <img style="width: 65px;height:75px;margin-top:10px" src="{{ asset('images/product_images/'.$productdata ->main_image)}}" alt="product image">
-                            <a id="product-{{ $productdata ->id }}" product_id="{{ $productdata->id }}" href="javascript:void(0)" class="product_image_delete mt-5 btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
+                            <img style="width: 65px;height:75px;margin-top:10px" src="{{ asset('images/product_images/small/'.$productdata ->main_image)}}" alt="product image">
+                            <a href="javascript:void(0)" product_id="{{ $productdata->id }}" class="product_image_delete mt-5 btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></a>
                           </div>
                         @endif
                           
@@ -187,56 +211,39 @@
                       </div>
                       <div class="form-group">
                         <label>Select Fabric</label>
-                        <select name="fabric" id="fabric" class="form-control select2 @error('fabric') is-invalid @enderror" style="width: 100%;">
+                        <select name="fabric" id="fabric" class="form-control select2 " style="width: 100%;">
                           <option value="">Select</option>   
                           @foreach ($fabricArray as $fabric )
-                            <option value="{{ $fabric }}">{{ $fabric }}</option>
+                            <option value="{{ $fabric }}" @if (!empty($productdata->fabric) && $productdata->fabric==$fabric) selected @endif>{{ $fabric }}</option>
                           @endforeach  
                         </select>
-                        @error('fabric')
-                          <span class="invalid-feedback" role="alert">
-                              <strong>{{ $message }}</strong>
-                          </span>
-                        @enderror
                       </div>
                       <div class="form-group">
                         <label>Select Fit</label>
-                        <select name="fit" id="fit" class="form-control select2 @error('fit') is-invalid @enderror" style="width: 100%;">
+                        <select name="fit" id="fit" class="form-control select2" style="width: 100%;">
                           <option value="">Select</option>   
                           @foreach ($fitArray as $fit )
-                            <option value="{{ $fit }}">{{ $fit }}</option>
+                            <option value="{{ $fit }}" @if (!empty($productdata->fit) && $productdata->fit==$fit) selected @endif>{{ $fit }}</option>
                           @endforeach  
                         </select>
-                        @error('fit')
-                          <span class="invalid-feedback" role="alert">
-                              <strong>{{ $message }}</strong>
-                          </span>
-                        @enderror
                       </div>
                       <div class="form-group">
                         <label>Select Occasion</label>
-                        <select name="occasion" id="occasion" class="form-control select2 @error('occasion') is-invalid @enderror" style="width: 100%;">
+                        <select name="occasion" id="occasion" class="form-control select2" style="width: 100%;">
                           <option value="">Select</option>   
                           @foreach ($occasionArray as $occasion )
-                            <option value="{{ $occasion }}">{{ $occasion }}</option>
+                            <option value="{{ $occasion }}" @if (!empty($productdata->occasion) && $productdata->occasion==$occasion) selected @endif>{{ $occasion }}</option>
                           @endforeach  
                         </select>
-                        @error('occasion')
-                          <span class="invalid-feedback" role="alert">
-                              <strong>{{ $message }}</strong>
-                          </span>
-                        @enderror
                       </div>
                       <div class="form-group">
                         <label for="meta_description">Meta Description</label>
                         <textarea class="form-control" name="meta_description" id="meta_description" rows="3" placeholder="Enter ...">@if(!empty($productdata)) {{ $productdata->meta_description}} @else {{ old('meta_description') }} @endif</textarea>
                       </div>
                       <div class="form-group">
-                        <div class="form-check">
-                          <input type="checkbox" class="form-check-input" name="is_featured" id="is_featured" value="1">
-                          <label  for="is_featured">Featured Item </label>
-                        </div>
-                    </div>
+                        <label for="meta_keywords">Meta Keywords</label>
+                        <textarea class="form-control" name="meta_keywords" id="meta_keywords" rows="3" placeholder="Enter ...">@if(!empty($productdata)) {{ $productdata->meta_keywords}} @else {{ old('meta_keywords') }} @endif</textarea>
+                      </div>
                       <div class="form-group">
                           <label for="">Status: </label>
                           <span>
@@ -254,7 +261,7 @@
               </div>
               <!-- /.card-body -->
               <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">@if(empty($productdata))Save product Info @else Update product @endif</button>
+                  <button type="submit" class="btn btn-primary">@if(empty($productdata))Save product info @else Update product info @endif</button>
               </div>
             </form>
         </div>

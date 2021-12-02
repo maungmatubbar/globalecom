@@ -23,7 +23,7 @@ $(document).ready(function() {
     });
     //update section status
     $('.SectionStatus').click(function() {
-        var status = $(this).text();
+        var status = $(this).children("i").attr("status");
         var section_id = $(this).attr('section_id');
         $.ajax({
             type: 'post',
@@ -31,9 +31,9 @@ $(document).ready(function() {
             data: { status: status, section_id: section_id },
             success: function(res) {
                 if (res['status'] == 0) {
-                    $('#section-' + section_id).html("<a class='SectionStatus' href='javascript:void(0)'>Inactive</a>");
+                    $('#section-' + section_id).html("<i class='fas fa-toggle-off' status='Inactive'></i>");
                 } else if (res['status'] == 1) {
-                    $('#section-' + section_id).html("<a class='SectionStatus' href='javascript:void(0)'>Active</a>");
+                    $('#section-' + section_id).html("<i class='fas fa-toggle-on' status='Active'></i>");
                 }
             },
             error: function() {
@@ -44,7 +44,7 @@ $(document).ready(function() {
 
     //Update Categories Status
     $('.CategoryStatus').click(function() {
-        var status = $(this).text();
+        var status = $(this).children("i").attr("status");
         var category_id = $(this).attr('category_id');
         $.ajax({
             type: 'post',
@@ -52,9 +52,9 @@ $(document).ready(function() {
             data: { status: status, category_id: category_id },
             success: function(res) {
                 if (res['status'] == 0) {
-                    $('#category-' + category_id).html("<a class='CategoryStatus' href='javascript:void(0)'>Inactive</a>");
+                    $('#category-' + category_id).html("<i class='fas fa-toggle-off' status='Inactive'></i>");
                 } else if (res['status'] == 1) {
-                    $('#category-' + category_id).html("<a class='CategoryStatus' href='javascript:void(0)'>Active</a>");
+                    $('#category-' + category_id).html("<i class='fas fa-toggle-on' status='Active'></i>");
                 }
             },
             error: function() {
@@ -153,7 +153,7 @@ $(document).ready(function() {
             if (result.isConfirmed) {
                 $.ajax({
                     method: 'GET',
-                    url: '/admin/delete-' + record + '/' + recordurl,
+                    url: '/admin/delete-product-' + record + '/' + recordurl,
                     data: { recordurl: recordurl },
                     success: function(res) {
                         $('#' + recordurl).fadeOut(1000, function() {
@@ -176,7 +176,7 @@ $(document).ready(function() {
 
     //Update Product Status 
     $('.ProductStatus').click(function() {
-        var status = $(this).text();
+        var status = $(this).children("i").attr("status");
         var product_id = $(this).attr('product_id');
         $.ajax({
             type: 'post',
@@ -184,7 +184,7 @@ $(document).ready(function() {
             data: { status: status, product_id: product_id },
             success: function(res) {
                 if (res['status'] == 0) {
-                    $('#product-' + product_id).html("<a class='ProductStatus' href='javascript:void(0)'>Inactive</a>");
+                    $('#product-' + product_id).html("<i class='fas fa-toggle-off' status='Inactive'></i>");
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
@@ -193,11 +193,237 @@ $(document).ready(function() {
                         timer: 1500
                     });
                 } else if (res['status'] == 1) {
-                    $('#product-' + product_id).html("<a class='ProductStatus' href='javascript:void(0)'>Active</a>");
+                    $('#product-' + product_id).html("<i class='fas fa-toggle-on' status='Active'></i>");
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
                         title: 'Product status Active successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            },
+            error: function() {
+                alert('Problem');
+            }
+        });
+    });
+    //Delete Product Image
+    $('.product_image_delete').click(function() {
+        var product_id = $(this).attr('product_id');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#44bd32',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    method: 'POST',
+                    url: '/admin/delete-product-image',
+                    data: { product_id: product_id },
+                    success: function() {
+                        $('#image_section').hide();
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Product image has been deleted successfully!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    },
+                    error: function() {
+                        alert('problem');
+                    }
+                });
+            }
+        });
+
+    });
+    $('.deleteItem').click(function() {
+        var record = $(this).attr('record');
+        var record_id = $(this).attr('record_id');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#44bd32',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                $.ajax({
+                    method: "get",
+                    url: '/admin/delete-product-' + record + '/' + record_id,
+                    data: { product_id: record_id },
+                    success: function(res) {
+                        $('.video_sction').hide();
+                        Swal.fire(
+                            'Deleted!',
+                            res,
+                            'success'
+                        );
+                    },
+                    error: function() {
+                        alert("Problem");
+                    }
+                });
+                //window.location.href = '/admin/delete-' + record + '/' + recordurl;
+            }
+        })
+    });
+
+
+    //add attributes
+    var maxField = 10; //Input fields increment limitation
+    var addButton = $('.add_button'); //Add button selector
+    var wrapper = $('.field_wrapper'); //Input field wrapper
+    var fieldHTML = '<div class="mt-2"><input type="text" id="size" name="size[]" value="" placeholder="Size" required/>&nbsp;<input type="text" id="sku" name="sku[]" value="" placeholder="SKU" required/>&nbsp;<input type="text" id="price" name="price[]" value="" placeholder="Price" required/>&nbsp;<input type="text" id="stock" name="stock[]" value="" placeholder="Stock" required/> <a href="javascript:void(0);" class="remove_button"> <i class="fas fa-minus"></div>'; //New input field html 
+    var x = 1; //Initial field counter is 1
+
+    //Once add button is clicked
+    $(addButton).click(function() {
+        //Check maximum number of input fields
+        if (x < maxField) {
+            x++; //Increment field counter
+            $(wrapper).append(fieldHTML); //Add field html
+        }
+    });
+
+    //Once remove button is clicked
+    $(wrapper).on('click', '.remove_button', function(e) {
+        e.preventDefault();
+        $(this).parent('div').remove(); //Remove field html
+        x--; //Decrement field counter
+    });
+
+    //Delete Table Row
+    $('.deleteTableRow').click(function() {
+            var record = $(this).attr('record');
+            var record_id = $(this).attr('record_id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#44bd32',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    $.ajax({
+                        method: "get",
+                        url: '/admin/delete-product-' + record + '/' + record_id,
+                        data: { attribute_id: record_id },
+                        success: function(res) {
+                            $('#tableRow-' + record_id).fadeOut(1000, function() {
+                                $(this).hide();
+                                $('.msg').append("<div class='alert alert-success alert-dismissible fade show' role='alert'>" + res['success_msg'] +
+                                    "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>" +
+                                    "<span aria-hidden='true'>&times;</span>" +
+                                    "</button>" +
+                                    +"</div>");
+                            });
+                        },
+                        error: function() {
+                            alert("Problem");
+                        }
+                    });
+                    //window.location.href = '/admin/delete-' + record + '/' + recordurl;
+                }
+            })
+        })
+        //Update Status
+    $('.status').click(function() {
+        var status = $(this).children("i").attr("status");
+        var record = $(this).attr('record');
+        var record_id = $(this).attr('record_id');
+        $.ajax({
+            type: 'post',
+            url: '/admin/update-' + record + '-status',
+            data: { status: status, record_id: record_id },
+            success: function(res) {
+                if (res['status'] == 0) {
+                    $('#status-' + record_id).html("<i class='fas fa-toggle-off' status='Inactive'></i>");
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Product ' + record + ' status inactive successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } else if (res['status'] == 1) {
+                    $('#status-' + record_id).html("<i class='fas fa-toggle-on' status='Active'></i>");
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Product ' + record + ' status active successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            },
+            error: function() {
+                alert('Problem');
+            }
+        });
+    });
+
+    // Multiple images preview in browser
+    function previewImages() {
+
+        var $preview = $('#preview').empty();
+        if (this.files) $.each(this.files, readAndPreview);
+
+        function readAndPreview(i, file) {
+
+            if (!/\.(jpe?g|png|gif)$/i.test(file.name)) {
+                return alert(file.name + " is not an image,Please select another one .jpeg,.jpg or .png");
+            } // else...
+
+            var reader = new FileReader();
+
+            $(reader).on("load", function() {
+                $preview.append($("<img/>", { src: this.result, height: 100, width: 70 }));
+            });
+
+            reader.readAsDataURL(file);
+
+        }
+
+    }
+    $('#file-input').on("change", previewImages);
+
+    $('.brandstatus').click(function() {
+        var status = $(this).children("i").attr("status");
+        var record = $(this).attr('record');
+        var record_id = $(this).attr('record_id');
+        $.ajax({
+            type: 'post',
+            url: '/admin/update-' + record + '-status',
+            data: { status: status, record_id: record_id },
+            success: function(res) {
+                if (res['status'] == 0) {
+                    $('#status-' + record_id).html("<i class='fas fa-toggle-off' status='Inactive'></i>");
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Product ' + record + ' status inactive successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } else if (res['status'] == 1) {
+                    $('#status-' + record_id).html("<i class='fas fa-toggle-on' status='Active'></i>");
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Product ' + record + ' status active successfully!',
                         showConfirmButton: false,
                         timer: 1500
                     });

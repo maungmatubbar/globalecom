@@ -25,7 +25,17 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Section</h3>
+                <span class="msg"></span>
+                @if(Session::has('success_msg'))
+                  <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ Session::get('success_msg') }}
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                @endif 
+                <h3 class="card-title">Brands</h3>
+                <a href="{{ url('/admin/add-edit-brand') }}" class="btn btn-success float-right"><i class="fas fa-plus"></i> Add Brand</a>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -33,23 +43,28 @@
                   <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Section Name</th>
-                    <th>Publication Status</th>
+                    <th>Brand Name</th>
+                    <th>Status</th>
+                    <th>Action</th>
                   </tr>
                   </thead>
                   <tbody>
                     <?php $i=1; ?>
-                    @foreach ($sections as $section)
+                    @foreach ($brands as $brand)
                     
-                    <tr>
+                    <tr id="tableRow-{{ $brand->id }}">
                         <td>{{ $i++ }}</td>
-                        <td>{{ $section->name }}</td>
+                        <td>{{ $brand->name }}</td>
                         <td>
-                          @if($section->status == 1)
-                              <h4><a class="SectionStatus" id="section-{{ $section->id }}" section_id="{{ $section->id }}"  href="javascript:void(0)"><i class='fas fa-toggle-on' status='Active'></i></a></h4>
+                          @if($brand->status == 1)
+                              <h4 ><a class="brandstatus" id="status-{{ $brand->id }}" record="brand" record_id="{{ $brand->id }}"  href="javascript:void(0)"><i class="fas fa-toggle-on" status="Active"></i></a></h4>
                           @else()
-                            <h4><a class="SectionStatus" id="section-{{ $section->id }}" section_id="{{ $section->id }}"  href="javascript:void(0)"><i class='fas fa-toggle-off' status='Inactive'></i></a></h4>
+                         <h4><a class="brandstatus" id="status-{{ $brand->id }}" record="brand" record_id="{{ $brand->id }}"  href="javascript:void(0)" ><i class="fas fa-toggle-off" status="Inactive"></i></a></h4>
                           @endif
+                      </td>
+                      <td>
+                        <a title="Edit" class="btn btn-primary" href="{{ url('/admin/add-edit-brand/'.$brand->id) }}"><i class="fas fa-edit"></i></a>
+                        <a title="Delete" class="deleteTableRow btn btn-danger" record="brand" record_id="{{ $brand->id }}"  href="javascript:void(0)"><i class="fas fa-trash-alt"></i></a>
                       </td>
                     </tr>
                     @endforeach

@@ -70,9 +70,9 @@
                         <td>{{ $category->url }}</td>
                         <td>
                           @if($category->status == 1)
-                              <a class="CategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}"  href="javascript:void(0)">Active</a>
+                              <h4><a class="CategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}"  href="javascript:void(0)"><i class='fas fa-toggle-on' status="Active"></i></a></h4>
                           @else()
-                          <a class="CategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}"  href="javascript:void(0)" onclick='return confirm("Are you sure delete this!")'>Inactive</a>
+                            <h4><a class="CategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}"  href="javascript:void(0)"><i class='fas fa-toggle-off' status="Inactive"></i></a></h4>
                           @endif
                       </td>
                       <td>

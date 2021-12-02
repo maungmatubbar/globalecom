@@ -74,15 +74,17 @@
                         <td>{{  $product->section->name }}</td>
                         <td>
                           @if($product->status == 1)
-                              <a class="ProductStatus" id="product-{{ $product->id }}" product_id="{{ $product->id }}"  href="javascript:void(0)">Active</a>
+                              <h4><a class="ProductStatus" id="product-{{ $product->id }}" product_id="{{ $product->id }}"  href="javascript:void(0)"><i class='fas fa-toggle-on' status="Active"></i></a></h4>
                           @else()
-                          <a class="ProductStatus" id="product-{{ $product->id }}" product_id="{{ $product->id }}"  href="javascript:void(0)">Inactive</a>
+                          <h4><a class="ProductStatus" id="product-{{ $product->id }}" product_id="{{ $product->id }}"  href="javascript:void(0)"><i class='fas fa-toggle-off' status="Inactive"></i></a></h4>
                           @endif
                       </td>
-                      <td>
-                        <a href="{{ url('admin/add-edit-product/'.$product->product_url) }}" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
+                      <td class="btn-group">
+                        <a href="{{ url('admin/add-attributes/'.$product->id) }}" title="Add Attributes" class="btn btn-info"><i class="fas fa-plus"></i></a>
+                        <a href="{{ url('admin/add-images/'.$product->id) }}" title="Add Images" class="btn btn-secondary"><i class="fas fa-cloud-upload-alt"></i></a>
+                        <a title="Edit Product" href="{{ url('admin/add-edit-product/'.$product->product_url) }}" class="btn b btn-primary"><i class="fas fa-pencil-alt"></i></a>
 
-                        <a class="ConfirmDelete btn btn-sm btn-danger" record="product" recordurl="{{ $product->product_url }}" href="javascript:void(0)"><i class="fas fa-trash-alt"></i></a>
+                        <a title="Delete" class="ConfirmDelete btn btn-danger" record="product" recordurl="{{ $product->product_url }}" href="javascript:void(0)"><i class="fas fa-trash-alt"></i></a>
                       </td>
                     </tr>
                     @endforeach
