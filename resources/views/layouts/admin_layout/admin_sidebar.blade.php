@@ -73,7 +73,7 @@
             </ul>
           </li>
               <!-- Catelogues-->
-              @if(Session::get('page')=="sections" ||  Session::get('page')=="brands"|| Session::get('page')=="categories" || Session::get('page')=="products")
+              @if(Session::get('page')=="sections" ||  Session::get('page')=="brands"|| Session::get('page')=="categories" || Session::get('page')=="products"|| Session::get('page')=="banners")
               <?php $active = 'active'; $menuopen = 'menu-open'; ?>
               @else 
               <?php $active=""; $menuopen=''; ?>
@@ -129,6 +129,17 @@
                 <a href="{{ url('/admin/products') }}" class="nav-link {{ $active }}">
                   <i class="fas fa-dot-circle nav-icon"></i>
                   <p>Products</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                @if(Session::get('page')=="banners")
+                <?php $active = 'active'; ?>
+                @else 
+                <?php $active="";?>
+                @endif
+                <a href="{{ url('/admin/banners') }}" class="nav-link {{ $active }}">
+                  <i class="fas fa-dot-circle nav-icon"></i>
+                  <p>Banners</p>
                 </a>
               </li>
             </ul>

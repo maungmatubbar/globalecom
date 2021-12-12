@@ -85,9 +85,7 @@ class CategoryController extends Controller
         if(empty($data['meta_keywords'])){
             $data['meta_keywords']="";
         }
-        // echo "<pre>";
-        // print_r($data['category_name']);
-        // exit;
+        
         $category->parent_id = $data['parent_id'];
         $category->category_name = $data['category_name'];
         if(!empty($imageName)){
@@ -96,7 +94,11 @@ class CategoryController extends Controller
         $category->category_discount = $data['category_discount'];
         $category->section_id = $data['section_id'];
         $category->description = $data['description'];
-        $category->url = str_slug($data['category_name']);
+        if(!empty($data['section_id'])){
+            $section = Section::find($data['section_id']);
+            $category->url = str_slug($data['category_name'].'-'.$section->name);
+        }
+        
         $category->meta_title = $data['meta_title'];
         $category->meta_description = $data['meta_description'];
         $category->meta_keywords = $data['meta_keywords'];

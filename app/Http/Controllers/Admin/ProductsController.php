@@ -109,8 +109,8 @@ class ProductsController extends Controller
                $medium_image_path = "images/product_images/medium/".$image_name;
                $small_image_path = "images/product_images/small/".$image_name;
                Image::make($image_tmp)->save($large_image_path);
-               Image::make($image_tmp)->resize(520,600)->save($medium_image_path);
-               Image::make($image_tmp)->resize(260,300)->save($small_image_path);
+               Image::make($image_tmp)->resize(320,320)->save($medium_image_path);
+               Image::make($image_tmp)->resize(160,160)->save($small_image_path);
            }
         }else
         {
@@ -237,11 +237,19 @@ class ProductsController extends Controller
             Session::flash('success_msg',$message);
             return redirect('/admin/products');
         }
-        $fabricArray= array('Cotton','Polyester','Wool');
+        /*$fabricArray= array('Cotton','Polyester','Wool');
         $sleeveArray = array('Full Sleeve','Half Sleeve','Short Sleeve');
         $fitArray = array('Regular','Slim');
         $occasionArray=array('Casual','Formal');
-        $patternArray = array('Checked','Plain','Printed','Self','Solid');
+        $patternArray = array('Checked','Plain','Printed','Self','Solid');*/
+        //product filters
+        $productFilters = Product::productFilters();
+        $fabricArray = $productFilters['fabricArray'];
+        $sleeveArray = $productFilters['sleeveArray'];
+        $fitArray = $productFilters['fitArray'];
+        $occasionArray = $productFilters['occasionArray'];
+        $patternArray = $productFilters['patternArray'];
+
         $categories = Section::with('categories')->get();
         $categories = json_decode(json_encode($categories));
         $brands = Brand::where('status',1)->get();

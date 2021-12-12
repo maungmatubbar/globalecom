@@ -138,7 +138,8 @@ $(document).ready(function() {
             }
         })
     });
-    $('.ConfirmDelete').click(function() {
+    $(document).on("click", ".ConfirmDelete", function() { //for delete table second and other pages
+        //$('.ConfirmDelete').click(function() {
         var record = $(this).attr('record');
         var recordurl = $(this).attr('recordurl');
         Swal.fire({
@@ -304,42 +305,42 @@ $(document).ready(function() {
 
     //Delete Table Row
     $('.deleteTableRow').click(function() {
-            var record = $(this).attr('record');
-            var record_id = $(this).attr('record_id');
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#44bd32',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
+        var record = $(this).attr('record');
+        var record_id = $(this).attr('record_id');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#44bd32',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
 
-                    $.ajax({
-                        method: "get",
-                        url: '/admin/delete-product-' + record + '/' + record_id,
-                        data: { attribute_id: record_id },
-                        success: function(res) {
-                            $('#tableRow-' + record_id).fadeOut(1000, function() {
-                                $(this).hide();
-                                $('.msg').append("<div class='alert alert-success alert-dismissible fade show' role='alert'>" + res['success_msg'] +
-                                    "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>" +
-                                    "<span aria-hidden='true'>&times;</span>" +
-                                    "</button>" +
-                                    +"</div>");
-                            });
-                        },
-                        error: function() {
-                            alert("Problem");
-                        }
-                    });
-                    //window.location.href = '/admin/delete-' + record + '/' + recordurl;
-                }
-            })
+                $.ajax({
+                    method: "get",
+                    url: '/admin/delete-product-' + record + '/' + record_id,
+                    data: { attribute_id: record_id },
+                    success: function(res) {
+                        $('#tableRow-' + record_id).fadeOut(1000, function() {
+                            $(this).hide();
+                            $('.msg').append("<div class='alert alert-success alert-dismissible fade show' role='alert'>" + res['success_msg'] +
+                                "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>" +
+                                "<span aria-hidden='true'>&times;</span>" +
+                                "</button>" +
+                                +"</div>");
+                        });
+                    },
+                    error: function() {
+                        alert("Problem");
+                    }
+                });
+                //window.location.href = '/admin/delete-' + record + '/' + recordurl;
+            }
         })
-        //Update Status
+    });
+    //Update Status
     $('.status').click(function() {
         var status = $(this).children("i").attr("status");
         var record = $(this).attr('record');
@@ -433,6 +434,42 @@ $(document).ready(function() {
                 alert('Problem');
             }
         });
+    });
+    $('.DeleteTableRow1').click(function() {
+        var record = $(this).attr('record');
+        var record_id = $(this).attr('record_id');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#44bd32',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                $.ajax({
+                    method: "get",
+                    url: '/admin/delete-' + record + '/' + record_id,
+                    data: { attribute_id: record_id },
+                    success: function(res) {
+                        $('#tableRow-' + record_id).fadeOut(1000, function() {
+                            $(this).hide();
+                            $('.msg').append("<div class='alert alert-success alert-dismissible fade show' role='alert'>" + res['success_msg'] +
+                                "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>" +
+                                "<span aria-hidden='true'>&times;</span>" +
+                                "</button>" +
+                                +"</div>");
+                        });
+                    },
+                    error: function() {
+                        alert("Problem");
+                    }
+                });
+                //window.location.href = '/admin/delete-' + record + '/' + recordurl;
+            }
+        })
     });
 
 });

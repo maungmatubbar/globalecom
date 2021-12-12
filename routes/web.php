@@ -13,14 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 // Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+//Route::get('/home', 'HomeController@index')->name('home');
 
+use App\Category;
 Route::prefix('/admin')->namespace('Admin')->group(function () {
     //All the admin routes will be defined here:-
     Route::match(['get', 'post'], '/', 'AdminController@login');
@@ -63,5 +64,28 @@ Route::prefix('/admin')->namespace('Admin')->group(function () {
         Route::match(['get', 'post'], 'add-images/{id}', 'ProductsController@addImages');
         Route::post('update-image-status','ProductsController@updateProductImageStatus');
         Route::get('delete-product-image/{id}','ProductsController@deleteImage');
+        //Banners
+        Route::get('/banners','BannersController@banners');
+        Route::post('/update-banner-status', 'BannersController@updateBannerStatus');
+        Route::get('/delete-banner/{id}','BannersController@deleteBanner');
+        Route::match(['get', 'post'], 'add-edit-banner/{id?}', 'BannersController@addEditBanner');
     });
+});
+
+Route::namespace('Front')->group(function(){
+    //Home Page Route
+    Route::get('/','IndexController@index');
+    //Listing Categories Route
+    //Route::get('/{url}','ProductsController@listing');
+    //$catUrls = Category::select('url')->where('status',1)->get()->pluck('url')->toArray(); not working 
+    $catUrls = Category::select('url')->where('status',1)->get();
+    foreach( $catUrls  as $catUrl){
+      // echo "<pre>";print($catUrl['url']);
+      $url = $catUrl['url'];
+      Route::get('/'.$url,'ProductsController@listing');
+    }
+    Route::get('/contact-us',function(){
+        echo "test"; die;
+    });
+    
 });
