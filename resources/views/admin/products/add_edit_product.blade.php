@@ -42,19 +42,19 @@
                             <label>Select Category*</label>
                             <select name="category_id" id="category_id" class="form-control select2 @error('category_id') is-invalid @enderror" style="width: 100%;">
                               <option value="">Select</option> 
-                              @foreach ($categories as $section)
-                                <optgroup label="{{ $section->name }}"></optgroup>
-                                  @foreach ($section->categories as $category)
-                                    <option value="{{ $category->id }}" @if(!empty(@old('category_id')) && $category->id == @old('category_id'))  selected 
-                                      @elseif (!empty($productdata->category_id) && $productdata->category_id == $category->id) selected @endif>&nbsp;&nbsp;&nbsp;&raquo;&nbsp;{{ $category->category_name }}</option>
+                                @foreach ($categories as $section)
+                                  <optgroup label="{{ $section->name }}"></optgroup>
+                                    @foreach ($section->categories as $category)
+                                      <option value="{{ $category->id }}" @if(!empty(@old('category_id')) && $category->id == @old('category_id'))  selected 
+                                        @elseif (!empty($productdata->category_id) && $productdata->category_id == $category->id) selected @endif>&nbsp;&nbsp;&nbsp;&raquo;&nbsp;{{ $category->category_name }}</option>
 
-                                    @foreach ($category->subcategories as $subcategory)
-                                      <option value="{{  $subcategory->id  }}" @if(!empty(@old('category_id')) && $subcategory->id == @old('category_id'))  selected @elseif (!empty($productdata->category_id) && $productdata->category_id == $subcategory->id) selected @endif>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&Rarr;&nbsp;{{  $subcategory->category_name  }}</option>
+                                      @foreach ($category->subcategories as $subcategory)
+                                        <option value="{{  $subcategory->id  }}" @if(!empty(@old('category_id')) && $subcategory->id == @old('category_id'))  selected @elseif (!empty($productdata->category_id) && $productdata->category_id == $subcategory->id) selected @endif>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&Rarr;&nbsp;{{  $subcategory->category_name  }}</option>
+                                      @endforeach
+
                                     @endforeach
-
-                                  @endforeach
-                               
-                              @endforeach    
+                                
+                                @endforeach    
                             </select>
                             @error('category_id')
                               <span class="invalid-feedback" role="alert">
@@ -207,7 +207,7 @@
                       </div>
                       <div class="form-group">
                           <label for="wash_care">Wash Care</label>
-                          <textarea class="form-control" name="wash_care"  id="wash_care" rows="3" placeholder="Enter ...">@if(!empty($productdata)) {{ $productdata->meta_title}} @else {{ old('wash_care') }} @endif</textarea>
+                          <textarea class="form-control" name="wash_care"  id="wash_care" rows="3" placeholder="Enter ...">@if(!empty($productdata)) {{ $productdata->wash_care}} @else {{ old('wash_care') }} @endif</textarea>
                       </div>
                       <div class="form-group">
                         <label>Select Fabric</label>

@@ -63,7 +63,10 @@
                         </div> 
                         <div class="form-group"> 
                             <label for="product_color">Product Color:</label> {{ $productdata->product_color}}
-                        </div>    
+                        </div>   
+                        <div class="form-group"> 
+                          <label for="product_color">Product Price:</label> {{ $productdata->product_price}}.00 Tk
+                      </div> 
                         <!-- /.form-group -->
                     </div>
                      <!-- /.col -->

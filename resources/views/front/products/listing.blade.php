@@ -74,11 +74,12 @@
             @endforeach
         </div>-->
         @include('front.products.ajax_products_list')
+       
     </div>
     <a href="compair.html" class="btn btn-large pull-right">Compair Product</a>
-    <div class="pagination" id="pagination">
-        {!! $categoryProducts->appends(['sort'=>'lowest_price_first'])->links() !!}
-    </div>
+        <div class="pagination">
+            {{  $categoryProducts->appends(['sort'=>'lowest_price_first'])->links()  }}
+        </div>
     <br class="clr"/>
 </div>
 @endsection

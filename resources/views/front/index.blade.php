@@ -1,3 +1,4 @@
+<?php use App\Product; ?>
 @extends('layouts.front_layout.front_layout')
 @section('content')
 <div class="span9">
@@ -16,15 +17,25 @@
                                     <?php
                                         $product_image_path = 'images/product_images/small/'.$item['main_image'];
                                     ?>
-                                    <a href="product_details.html">
+                                    <a href="{{ url('product/'.$item['id']) }}">
                                         @if(!empty($item['main_image']) && file_exists($product_image_path))
                                         <img src="{{ asset('images/product_images/small/'.$item['main_image']) }}" alt=""></a>
                                         @else
                                         <img src="{{ asset('images/product_images/small/no_image.jpg') }}" alt=""></a>
                                         @endif
                                     <div class="caption">
+                                        <?php $discounted_price = Product::getDiscountedPrice($item['id']); ?>
                                         <h5>{{ $item['product_name'] }}</h5>
-                                        <h4><a class="btn" href="product_details.html">VIEW</a> <span class="pull-right">Tk.{{ $item['product_price'] }}</span></h4>
+                                        <h5><a class="btn" href="{{ url('product/'.$item['id']) }}" >VIEW</a>
+                                                <span class="pull-right">
+                                                @if($discounted_price>0)
+                                                <del>Tk.{{ $item['product_price'] }}</del>
+                                                <span class="text-warning">Tk.{{ $discounted_price }}</span> 
+                                                @else
+                                                Tk.{{ $item['product_price'] }}
+                                                @endif
+                                            </span>
+                                        </h5>
                                     </div>
                                 </div>
                             </li>
@@ -46,7 +57,7 @@
         <li class="span3">
             <div class="thumbnail">
                 @php( $product_image_path = 'images/product_images/small/'.$product['main_image'])
-                <a  href="product_details.html">
+                <a  href="{{ url('product/'.$product['id']) }}">
                     @if(!empty($product['main_image']) && file_exists($product_image_path ))
                         <img src="{{ asset('/') }}images/product_images/small/{{ $product['main_image'] }}" alt=""/>
                     @else
@@ -58,8 +69,16 @@
                     <p>
                        {{ $product['product_code'] }}({{ $product['product_color'] }})
                     </p>
-                    
-                    <h4 style="text-align:center"><a class="btn" href="product_details.html"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Add to <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" href="#">Tk.{{ $product['product_price'] }}</a></h4>
+                    <?php $discounted_price = Product::getDiscountedPrice($product['id']); ?>
+                    <h4 style="text-align:center"><a class="btn" href="{{ url('product/'.$product['id']) }}">Add to <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" href="{{ url('product/'.$product['id']) }}">
+                        @if($discounted_price>0)
+                          <del>Tk.{{ $product['product_price'] }}</del>
+                          <span style="color: yellow">Tk.{{ $discounted_price }}</span>
+                         @else
+                         Tk.{{ $product['product_price'] }}
+                         @endif
+                    </a>
+                </h4>
                 </div>
             </div>
         </li>

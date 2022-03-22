@@ -6,7 +6,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="">
-        
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- Front style -->
         <link id="callCss" rel="stylesheet" href="{{ url('css/front_css/front.min.css') }}" media="screen"/>
         <link href="{{ url('css/front_css/base.css') }}" rel="stylesheet" media="screen"/>
@@ -24,7 +25,7 @@
         <style type="text/css" id="enject"></style>
     </head>
     <body>
-        @include('layouts.front_layout.front_header');
+        @include('layouts.front_layout.front_header')
     <!-- Header End====================================================================== -->
         @include('front.banners.home_page_banner')
     <div id="mainBody">
@@ -41,13 +42,15 @@
     @include('layouts.front_layout.front_footer')
     <!-- Placed at the end of the document so the pages load faster ============================================= -->
     <script src="{{ url('js/front_js/jquery.js') }}" type="text/javascript"></script>
+    <script src="{{ url('js/front_js/jquery.validate.js') }}" type="text/javascript"></script>
     <script src="{{ url('js/front_js/front.min.js') }}" type="text/javascript"></script>
     <script src="{{ url('js/front_js/google-code-prettify/prettify.js') }}"></script>
 
     <script src="{{ url('js/front_js/front.js') }}"></script>
     <script src="{{ url('js/front_js/front_script.js') }}"></script>
     <script src="{{ url('js/front_js/jquery.lightbox-0.5.js') }}"></script>
-     {{-- <script type="text/javascript">
+    
+  <!--<script type="text/javascript">
         $(window).on('hashchange', function() {
             if (window.location.hash) {
                 var page = window.location.hash.replace('#', '');
@@ -64,34 +67,31 @@
             $(document).on('click', '.pagination a',function(event)
             {
                 event.preventDefault();
-      
                 $('li').removeClass('active');
                 $(this).parent('li').addClass('active');
-      
                 var myurl = $(this).attr('href');
                 var page=$(this).attr('href').split('page=')[1];
-                var url = $('#url').val();
-                
-                getData(page,url);
+                getData(page);
             });
       
         });
       
-        function getData(page,url){
+        function getData(page){
+            var url = $('#url').val();
             console.log(url);
             $.ajax(
             {
-                url: '?sort=lowest_price_first&page=' + page,
-                type: "get",
-                datatype: "html",
+                url: '?page=' + page,
+                method: "get",
+                datatype:'html',
                 data:{url:url},
-            }).done(function(data){
-                $("#filter_products").empty().html(data);
-                location.hash = page;
-            }).fail(function(jqXHR, ajaxOptions, thrownError){
-                  alert('No response from server');
+                success:function(data){
+                    $("#filter_products").html(data);
+                    location.hash = page;
+                }
             });
         }
-    </script>  --}}
+        getData(1);
+    </script>  -->
     </body>
 </html>

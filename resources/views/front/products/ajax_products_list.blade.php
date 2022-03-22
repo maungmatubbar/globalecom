@@ -1,9 +1,10 @@
+<?php use App\Product; ?>
 <div class="tab-pane  active" id="blockView">
     <ul class="thumbnails">
         @foreach ($categoryProducts as $product)
         <li class="span3">
             <div class="thumbnail">
-                <a href="product_details.html">
+                <a href="{{ url('product/'.$product['id']) }}">
                     @if(isset($product['main_image']))
                     <?php  $product_image_path = 'images/product_images/small/'.$product['main_image']; ?>
                     @else
@@ -20,7 +21,17 @@
                     <p>
                         {{ $product['brand']['name'] }}
                     </p>
-                    <h4 style="text-align:center"><a class="btn" href="product_details.html"> <i class="icon-zoom-in"></i></a> <a class="btn" href="#">Add to <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" href="#">Tk.{{ $product['product_price'] }}</a></h4>
+                    <?php $discounted_price = Product::getDiscountedPrice($product['id']); ?>
+                    <h5 style="text-align:center"><!--<a class="btn" href="{{ url('product/'.$product['id']) }}"> <i class="icon-zoom-in"></i></a> --><a class="btn" href="#">Add to <i class="icon-shopping-cart"></i></a> <a class="btn btn-primary" href="#">
+                        @if($discounted_price>0)
+                                <del>Tk.{{ $product['product_price'] }}</del>
+                                <span style="color: yellow">Tk.{{ $discounted_price }}</span>
+                            @else
+                                Tk.{{ $product['product_price'] }}
+                            @endif
+                        </a>
+                    </h5>
+                   
                 </div>
             </div>
         </li>

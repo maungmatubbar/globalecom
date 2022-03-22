@@ -77,15 +77,43 @@ Route::namespace('Front')->group(function(){
     Route::get('/','IndexController@index');
     //Listing Categories Route
     //Route::get('/{url}','ProductsController@listing');
-    //$catUrls = Category::select('url')->where('status',1)->get()->pluck('url')->toArray(); not working 
-    $catUrls = Category::select('url')->where('status',1)->get();
+    $catUrls = Category::select('url')->where('status',1)->get()->pluck('url')->toArray();// not working 
+    //$catUrls = Category::select('url')->where('status',1)->get();
     foreach( $catUrls  as $catUrl){
       // echo "<pre>";print($catUrl['url']);
-      $url = $catUrl['url'];
-      Route::get('/'.$url,'ProductsController@listing');
+      //$url = $catUrl['url'];
+     // Route::get('/'.$url,'ProductsController@listing');
+      Route::get('/'.$catUrl,'ProductsController@listing');
     }
+    Route::get('/ajax-pagination','ProductsController@ajaxPagination');
+    //Product Detail Route
+    //Route::get('/product/{id}','ProductsController@detail');
+    Route::get('/product/{id}','ProductsController@detail');
     Route::get('/contact-us',function(){
         echo "test"; die;
     });
-    
+    //Get Product price details product
+    Route::post('/get-product-price','ProductsController@getPrice');
+    //Add to cart
+    Route::post('/add-to-cart','ProductsController@addtocart');
+    //Cart Route
+    Route::get('/cart','ProductsController@cart');
+    //Update Cart Item Quantity
+    Route::post('/update-cart-item-qty','ProductsController@updateCartItemQty');
+    //Delete Cart Item 
+    Route::post('/delete-cart-item','ProductsController@deleteCartItem');
+     //User Login and Register
+    Route::get('/login-register','UsersController@loginRegister');
+    //Login user
+    Route::post('/login','UsersController@loginUser');
+    //Register user
+    Route::post('/register','UsersController@registerUser');
+    //Check Email
+    Route::match(['get', 'post'], '/check-email','UsersController@checkEmail');
+    //Logout user
+    Route::get('/logout','UsersController@logout');
+    //User Login
+    Route::post('/login','UsersController@login');
+    //Confirm account
+    Route::match(['GET','POST'],'/confirm/{code}','UsersController@confirmAccount');
 });

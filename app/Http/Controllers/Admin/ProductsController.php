@@ -153,7 +153,7 @@ class ProductsController extends Controller
             $request->fabric="";
         }
         if(empty($request->pattern)){
-            $request->pattern=" ";
+            $request->pattern="";
         }
         if(empty($request->sleeve)){
             $request->sleeve="";
@@ -234,7 +234,7 @@ class ProductsController extends Controller
             //Save product details in tables
            // echo "<pre>";print_r($request->is_featured);exit;
             $this->saveProductInfo($request,$product,$image_name,$video_name);
-            Session::flash('success_msg',$message);
+            Session::flash('success_message',$message);
             return redirect('/admin/products');
         }
         /*$fabricArray= array('Cotton','Polyester','Wool');
@@ -254,6 +254,7 @@ class ProductsController extends Controller
         $categories = json_decode(json_encode($categories));
         $brands = Brand::where('status',1)->get();
         $brands = json_decode(json_encode($brands));
+        
         return view('admin.products.add_edit_product')->with(compact('title','fabricArray','sleeveArray','fitArray','occasionArray','patternArray','categories','productdata','brands'));
     }
     public function deleteProductImage(Request $request){
@@ -323,7 +324,7 @@ class ProductsController extends Controller
             session::flash('success_message',$message);
              return redirect()->back();
         }
-        $productdata = Product::select('id','product_name','product_code','product_color','main_image')->with('attributes')->find($id);
+        $productdata = Product::select('id','product_name','product_code','product_color','product_price','main_image')->with('attributes')->find($id);
         $productdata=json_decode(json_encode($productdata));
         //echo "<pre>";print_r($productdata);die;
         $title = "Product Attributes";
