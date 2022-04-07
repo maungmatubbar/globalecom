@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
-use Session;
+use App\Country;
 use App\User;
-use Auth;
 use App\Cart;
 use App\Sms;
-use Illuminate\Support\Facades\Mail;
+use Session;
+use Auth;
 class UsersController extends Controller
 {
     public function loginRegister(){
@@ -104,7 +106,6 @@ class UsersController extends Controller
             abort(404);
         }
     }
-   
     //check email
     public function checkEmail(Request $request){
         $data = $request->all();
@@ -149,6 +150,122 @@ class UsersController extends Controller
             }
             else{
                 $message = "Email and Password does not match,Please try again!";
+                Session::flash('error_message',$message);
+                return redirect()->back();
+            }
+        }
+    }
+    public function forgotPassword(Request $request){
+        if($request->isMethod('post')){
+            $data = $request->all();
+            $emailCount = User::where('email',$data['email'])->count();
+            if($emailCount==0){
+                $message = 'Email does not exists.';
+                Session::put('error_message',$message);
+                Session::forget('success_message');
+                return redirect()->back();
+            }
+            //Generate Random Password
+            $rendom_password = str_random(8);
+            //Encode / Secure password
+            $new_password = bcrypt($rendom_password);
+            //Update Password
+            User::where('email',$data['email'])->update(['password'=>$new_password]);
+            //Get user name 
+            $userName = User::select('name')->where('email',$data['email'])->first();
+            //Send  forgot password email
+            $email = $data['email'];
+            $name = $userName->name;
+            $messageData = [
+                'email' => $email,
+                'name' => $name,
+                'password' => $rendom_password
+
+            ];
+            Mail::send('emails.forgot_password',$messageData,function($message)use($email){
+                $message->to($email)->subject('New Password Generate E-Commarce website');
+            });
+            //Redirect to login register page
+            $message = 'Please check your email for new password';
+            Session::put('success_message',$message);
+            Session::forget('error_message');
+            return redirect('login-register');
+
+        }
+        return view('front.users.forgot_password');
+    }
+    //user account validation
+    public function validation($request){
+        $rules = [
+            'name' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
+            'mobile' => 'required|numeric'
+        ];
+        $customMessage = [
+            'name.required' => 'Name is required',
+            'name.regex' => 'Valid name is required',
+            'mobile.required' => 'Mobile number is required',
+            'mobile.numeric' => 'Valid mobile number is required'
+        ];
+        $this->validate($request,$rules,$customMessage);
+
+    }
+    //User account update
+    public function account(Request $request){
+        $user_id = Auth::user()->id;
+        $userDetails = User::find($user_id)->toArray();
+        $countries = Country::where('status',1)->get()->toArray();
+        if($request->isMethod('post')){
+            $this->validation($request);
+            $user = User::find($user_id);
+            $user->name = $request->name;
+            $user->address = $request->address;
+            $user->city = $request->city;
+            $user->state = $request->state;
+            $user->country = $request->country ;
+            $user->pincode = $request->pincode;
+            $user->mobile = $request->mobile;
+           $user->save();
+
+           
+           $message = "Your account details have been upadate successfully.";
+           Session::flash('success_message',$message);
+           Session::forget('error_message');
+           return redirect()->back();
+        }
+        return view('front.users.account')->with(compact('userDetails','countries'));
+    }
+    //Check user current password 
+    public function chkUserPassword(Request $request){
+        if($request->isMethod('post')){
+            $data = $request->all();
+            $user_id = Auth::user()->id;
+            $chkPassword = User::select('password')->where('id',$user_id)->first();
+            if(Hash::check($data['current_password'], $chkPassword->password)){
+                return 'true';
+            }
+            else
+            {
+                return 'false';
+            }
+        }
+    }
+    //Update user password
+    public function updateUserPassword(Request $request){
+        if($request->isMethod('post')){
+            $data = $request->all();
+            $user_id = Auth::user()->id;
+            $chkPassword = User::select('password')->where('id',$user_id)->first();
+            if(Hash::check($data['currentPassword'], $chkPassword->password)){
+                //Update current password
+                $new_password = bcrypt($data['newPassword']);
+                User::where('id',$user_id)->update(['password'=>$new_password]);
+                $message = "Password update successfully.";
+                Session::flash('success_message',$message);
+                return redirect()->back();
+            }
+            else
+            {
+                $message = "Your current password is incorrect";
                 Session::flash('error_message',$message);
                 return redirect()->back();
             }

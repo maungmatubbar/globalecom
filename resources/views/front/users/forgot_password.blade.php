@@ -5,7 +5,7 @@
 		<li><a href="index.html">Home</a> <span class="divider">/</span></li>
 		<li class="active">Login</li>
     </ul>
-	<h3> Login/Register</h3>	
+	<h3>Forgot Password</h3>	
 	<hr class="soft"/>
     @if(Session::has('error_message'))
         <div class="alert alert-danger">
@@ -26,36 +26,18 @@
 	<div class="row">
 		<div class="span4">
 			<div class="well">
-			<h5>CREATE YOUR ACCOUNT</h5><br/>
-			<p>Enter your information to create an account.</p><br/><br/><br/>
-			<form id="registerForm" action="{{ url('/register') }}" method="post">
+			<h5>Forgot Password?</h5>
+			<p class="text-success">Enter email to get new password.</p><br/>
+			<form id="forgotPasswordForm" action="{{ url('/forgot-password') }}" method="post">
                 @csrf
-                <div class="control-group">
-                    <label class="control-label" for="name">Name</label>
-                    <div class="controls">
-                        <input class="span3"  type="text" id="name" name="name" placeholder="Enter Name">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="mobile">Mobile Number</label>
-                    <div class="controls">
-                      <input class="span3"  type="text" id="mobile" name="mobile" placeholder="Enter mobile number">
-                    </div>
-                  </div>
                 <div class="control-group">
                     <label class="control-label" for="email">Email</label>
                     <div class="controls">
-                    <input class="span3"  type="email" id="email" name="email" placeholder="Enter email">
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label class="control-label" for="password">Password</label>
-                    <div class="controls">
-                    <input class="span3"  type="password" id="password" name="password" placeholder="Enter password">
+                    <input class="span3"  type="email" id="email" name="email" placeholder="Enter email" required>
                     </div>
                 </div>
 			  <div class="controls">
-			  <button type="submit" class="btn block btn-success">Create Your Account</button>
+			  <button type="submit" class="btn block btn-warning">Submit</button>
 			  </div>
 			</form>
 		</div>
@@ -80,7 +62,7 @@
                         </div>
                     <div class="control-group">
                         <div class="controls">
-                        <button type="submit" class="btn btn-primary">Sign in</button> <a href="{{ url('/forgot-password') }}">Forget password?</a>
+                        <button type="submit" class="btn btn-primary">Sign in</button> <a href="forgetpass.html">Forget password?</a>
                         </div>
                     </div>
                 </form>

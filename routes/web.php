@@ -116,4 +116,16 @@ Route::namespace('Front')->group(function(){
     Route::post('/login','UsersController@login');
     //Confirm account
     Route::match(['GET','POST'],'/confirm/{code}','UsersController@confirmAccount');
+    //Forget Password
+    Route::match(['get', 'post'], '/forgot-password','UsersController@forgotPassword');
+    Route::group(['middleware'=>['checkUser']],function(){
+        //My Account
+         Route::match(['get', 'post'], '/account','UsersController@account');
+        //check current current password
+        Route::post('/check-user-pwd','UsersController@chkUserPassword');
+        //update user password
+        Route::post('/update-user-pwd','UsersController@updateUserPassword');
+    });
+   
+
 });

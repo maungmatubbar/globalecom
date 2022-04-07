@@ -249,6 +249,7 @@ $(document).ready(function() {
 
         }
     });
+    //User Login Validation
     $("#loginForm").validate({
         rules: {
             email: {
@@ -273,5 +274,80 @@ $(document).ready(function() {
 
 
         }
+    });
+    //Account Validation
+    $("#accountForm").validate({
+        rules: {
+            name: "required",
+            address: "required",
+            mobile: {
+                required: true,
+                digits: true,
+                minlength: 11,
+            },
+            email: {
+                required: true,
+                email: true,
+                remote: 'check-email'
+            },
+
+        },
+        messages: {
+            name: "Please enter your name",
+            address: "Please enter your address",
+            mobile: {
+                required: "Please enter your mobile number",
+                digits: "Please enter digits",
+                minlength: "Please enter 11 digits of mobile number",
+
+            },
+            email: {
+                required: "Please enter your email address",
+                email: "Please enter valid email address",
+                remote: "Email already exists!"
+            },
+        }
+    });
+    //Check User Current Password
+    $('#currentPassword').keyup(function() {
+        var currentPwd = $(this).val();
+        $.ajax({
+            type: 'post',
+            url: '/check-user-pwd',
+            data: { current_password: currentPwd },
+            success: function(resp) {
+                if (resp == "false") {
+                    $('#chkPwd').html("<font color='red'>Your password is incorrect <font>");
+                } else {
+                    $('#chkPwd').html("<font color='green'>Your password is correct <font>");
+                }
+
+            },
+            error: function(resp) {
+                alert('error');
+            }
+
+        });
+    });
+    $("#passwordForm").validate({
+        rules: {
+            currentPassword: {
+                required: true,
+                minlength: 6,
+                maxlength: 12
+            },
+            newPassword: {
+                required: true,
+                minlength: 6,
+                maxlength: 12
+            },
+            confirmPassword: {
+                required: true,
+                minlength: 6,
+                maxlength: 12,
+                equalTo: "#newPassword"
+            }
+
+        },
     });
 });
