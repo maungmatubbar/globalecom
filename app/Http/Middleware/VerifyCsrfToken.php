@@ -13,6 +13,7 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         '/admin/check-current-pass',
+        '/admin/logout',
         '/admin/update-section-status',
         '/admin/update-category-status',
         '/admin/appand-categories-level',
@@ -23,6 +24,7 @@ class VerifyCsrfToken extends Middleware
         '/admin/update-image-status',
         '/admin/update-brand-status',
         '/admin/update-banner-status',
-        '/get-product-price'
+        '/get-product-price',
+        '/admin/update-coupon-status'
     ];
 }

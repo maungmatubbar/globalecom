@@ -6,18 +6,23 @@
             <th colspan="2">Description</th>
             <th>Quantity/Update</th>
             <th>Unit Price</th>
-            <th>Product/Category</br>Discount</th>
+            <th>Product/Category<br/>Discount</th>
             <th>Sub Total</th>
         </tr>
     </thead>
     <tbody>
         <?php $total_price=0; $totalDiscount=0; ?>
         @foreach ($userCartItems as $item)
+        <!--Get Attribute Price-->
         <?php $attrPrice = Product::getAttrDiscountedPrice($item->product_id,$item->size);;
         ?>
         <tr>
-        <td> <img width="60" src="{{ asset('/images/product_images/small/'.$item->product->main_image) }}" alt=""/></td>
-        <td colspan="2">{{ $item->product->product_name }}({{ $item->product->product_code }})<br/>Color : {{ $item->product->product_color }}
+        <td> 
+            <img width="60" src="{{ asset('/images/product_images/small/'.$item->product->main_image) }}" alt=""/>
+        </td>
+        <td colspan="2">
+            {{ $item->product->product_name }}({{ $item->product->product_code }})
+            <br/>Color : {{ $item->product->product_color }}
             <br/>Size : {{ $item->size }}
         </td>
         <td>
@@ -29,7 +34,7 @@
         </td>
         <td>Tk.{{ $attrPrice['price'] }}.00</td>
         <td>Tk.{{ $attrPrice['discount'] }}.00</td>
-        <?php $totalDiscount=$attrPrice['discount']*$item->quantity+$totalDiscount ?>
+        <?php $totalDiscount = $attrPrice['discount']*$item->quantity + $totalDiscount; ?>
         <td>Tk.{{ $attrPrice['final_price']*$item->quantity }}.00</td>
         </tr>
         <?php $total_price = $total_price+( $attrPrice['final_price']*$item->quantity); ?>
@@ -37,18 +42,23 @@
     <tr>
         <td colspan="6" style="text-align:right">Total Price:	</td>
         <td> Tk.{{ $total_price }}.00</td>
-    </tr>
-        <tr>
-        <td colspan="6" style="text-align:right">Total Discount:	</td>
-        <td> Tk.{{ $totalDiscount }}.00</td>
+    <tr>
+        <td colspan="6" style="text-align:right">
+            Coupon Discount:
+        </td>
+        <td class="couponAmount">
+            @if(Session::has('couponAmount'))
+               Tk. {{ Session::get('couponAmount') }}
+            @else
+                Tk.00
+            @endif
+        </td>
     </tr>
     <tr>
-        <td colspan="6" style="text-align:right">Voucher Discount:	</td>
-        <td> Tk..00</td>
-        </tr>
-        <tr>
-        <td colspan="6" style="text-align:right"><strong>GRAND TOTAL (Tk.{{ $total_price }} - Tk.0) =</strong></td>
-        <td class="label label-important" style="display:block"> <strong> Tk.{{ $total_price }}.00 </strong></td>
+        <td colspan="6" style="text-align:right">
+            <strong>GRAND TOTAL( Tk.{{ $total_price }} - <span class="couponAmount">Tk.{{ Session::get('couponAmount') }}</span>)=</strong>
+        </td>
+        <td class="label label-important" style="display:block"><strong class="grand_total">Tk.{{ $total_price-Session::get('couponAmount') }} </strong></td>
     </tr>
     </tbody>
 </table>

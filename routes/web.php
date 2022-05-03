@@ -28,7 +28,7 @@ Route::prefix('/admin')->namespace('Admin')->group(function () {
     Route::group(['middleware' => ['admin']], function () {
         Route::get('/dashboard', 'AdminController@dashboard')->name('dashboard');
         Route::get('/settings', 'AdminController@settings');
-        Route::get('/logout', 'AdminController@logout');
+        Route::post('/logout', 'AdminController@logout');
         Route::post('/check-current-pass', 'AdminController@currentPassCheck');
         Route::post('/update-password', 'AdminController@updatePassword');
         Route::match(['get', 'post'], '/update-admin-info', 'AdminController@updateAdminInfo');
@@ -69,6 +69,19 @@ Route::prefix('/admin')->namespace('Admin')->group(function () {
         Route::post('/update-banner-status', 'BannersController@updateBannerStatus');
         Route::get('/delete-banner/{id}','BannersController@deleteBanner');
         Route::match(['get', 'post'], 'add-edit-banner/{id?}', 'BannersController@addEditBanner');
+        //Coupons
+        Route::get('/coupons','CouponsController@coupons');
+        Route::post('/update-coupon-status', 'CouponsController@updateCouponStatus');
+        Route::get('/delete-coupon/{id}','CouponsController@deleteCoupon');
+        Route::match(['get','post'],'add-edit-coupon/{id?}', 'CouponsController@addEditCoupon');
+        //Get Orders 
+        Route::get('/orders','OrdersController@orders');
+        //Get Order Details
+        Route::get('/orders/{id}','OrdersController@orderDetails');
+        //Update Order Stauts
+        Route::post('/update-order-status','OrdersController@updateOrderStatus');
+        //View Order Invoice
+        Route::get('/view-order-invoice/{id}','OrdersController@viewOrderInvoice');
     });
 });
 
@@ -125,6 +138,20 @@ Route::namespace('Front')->group(function(){
         Route::post('/check-user-pwd','UsersController@chkUserPassword');
         //update user password
         Route::post('/update-user-pwd','UsersController@updateUserPassword');
+        //Added Coupon code
+        Route::post('/apply-coupon','ProductsController@applyCoupon');
+        //Checkout
+        Route::match(['get','post'],'/checkout','ProductsController@checkout');
+        //delivery address
+        Route::match(['get', 'post'], '/add-edit-delivery-address/{id?}','ProductsController@addEditDeliveryAddress');
+        //Delete Delivery Address
+        Route::get('/delete-delivery-address/{id}','ProductsController@deleteDeliveryAddress');
+        //Thanks
+        Route::get('/thanks','ProductsController@thanks');
+        //Users Orders
+        Route::get('/orders','OrdersController@orders');
+        //Order Details
+        Route::get('/orders/{id}','OrdersController@ordersDetails');
     });
    
 

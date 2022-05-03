@@ -31,9 +31,9 @@
 			<form id="registerForm" action="{{ url('/register') }}" method="post">
                 @csrf
                 <div class="control-group">
-                    <label class="control-label" for="name">Name</label>
+                    <label class="control-label" for="name">Full Name</label>
                     <div class="controls">
-                        <input class="span3"  type="text" id="name" name="name" placeholder="Enter Name">
+                        <input class="span3"  type="text" id="name" name="name" placeholder="Enter Full Name">
                     </div>
                 </div>
                 <div class="control-group">

@@ -12,10 +12,10 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
-        <button class="btn btn-sm btn-dark">
-          <a class="nav-link text-white" href="{{ url('/admin/logout') }}">
+        <button class="btn btn-sm btn-secondary logout">
+          <a class="nav-link text-white" href="javascript:void(0)">
             <i class="fas fa-sign-out-alt"></i>
-            Logout
+            Log Out
           </a>
         </button>
       </li>

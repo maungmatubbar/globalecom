@@ -82,6 +82,7 @@
 <script src="{{asset('/')}}plugins/jquery-knob/jquery.knob.min.js"></script>
 <!-- daterangepicker -->
 <script src="{{asset('/')}}plugins/moment/moment.min.js"></script>
+<script src="{{asset('/')}}plugins/inputmask/jquery.inputmask.min.js"></script>
 <script src="{{asset('/')}}plugins/daterangepicker/daterangepicker.js"></script>
 <!--Data Tables-->
 <script src="{{asset('/')}}plugins/datatables/jquery.dataTables.min.js"></script>
@@ -120,6 +121,8 @@
     $("#section").DataTable();                
     $("#categories").DataTable();  
     $("#products").DataTable();  
+    $("#coupons").DataTable();  
+    $("#orders").DataTable();  
 
     $('.select2').select2();
     //Initialize Select2 Elements

@@ -10,9 +10,18 @@ use App\ProductsAttribute;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Mail;
 use Session;
-use App\Cart;
+use App\Cart;                 
+use App\Coupon;   
+use App\User;              
+use App\DeliveryAddress;    
+use App\Country;        
+use App\Order;  
+use App\OrdersProduct;
+use App\Sms;
 use Auth;
+use DB;
 class ProductsController extends Controller
 {
     public function listing(Request $request){
@@ -232,8 +241,10 @@ class ProductsController extends Controller
 
         Cart::where('id',$data['cartid'])->update(['quantity'=>$data['qty']]);
         $userCartItems = Cart::userCartItems();
+        $totalCartItems = totalCartItems();
         return response()->json([
           'status'=>true,
+          'totalCartItems' => $totalCartItems,
           'view'=>(String)View::make('front.products.cart_items')->with(compact('userCartItems'))]);
       }
     }
@@ -242,8 +253,299 @@ class ProductsController extends Controller
            $data =  $request->all();
            Cart::where('id',$data['cartid'])->delete();
            $userCartItems = Cart::userCartItems();
+           $totalCartItems = totalCartItems();
         return response()->json([
+          'totalCartItems' => $totalCartItems,
           'view'=>(String)View::make('front.products.cart_items')->with(compact('userCartItems'))]);
         }
     }
+    //Apply Coupon code
+    public function applyCoupon(Request $request){
+       if($request->ajax()){
+         //echo "<pre>"; print_r($request->all());die;
+         $data = $request->all();
+         $couponCount = Coupon::where('coupon_code',$data['code'])->count();
+         $userCartItems = Cart::userCartItems();
+         $totalCartItems = totalCartItems();
+         if($couponCount == 0){
+           return response()->json([
+             'status'=> false,
+             'message'=> 'This coupon is not valid!',
+             'totalCartItems' => $totalCartItems,
+             'view'=>(String)View::make('front.products.cart_items')->with(compact('userCartItems'))
+            ]);
+         }
+         else
+         {
+            //Get Coupon details
+            $couponDetails = Coupon::where('coupon_code',$data['code'])->first();
+            //Check Coupon Inactive
+            if($couponDetails->status==0){
+              $message = "The coupon code is inactive";
+            }
+            //Check if coupon is expired
+            $expiry_date = $couponDetails->expiry_date;
+            $current_data = date('Y-m-d');
+            if($expiry_date<$current_data){
+              $message = "The coupon is expired!";
+            }
+            //check if coupon is selected categories
+            //Get all selected categories from coupon
+            $categoryArr = explode(',',$couponDetails->categories);
+            //Check if coupon belongs to logged in users
+            //Get all selected users of coupon
+            if(!empty($couponDetails->users)){
+              $userArr = explode(',',$couponDetails->users);//users= emails 
+              foreach($userArr as $user){
+                $getUserId = User::select('id')->where('email',$user)->first()->toArray();
+                $userId[] = $getUserId['id'];
+              }
+            }
+            
+            
+            //Total Amount
+            $total_amount = 0;
+            foreach($userCartItems as $item){
+              if(!in_array($item->product->category_id,$categoryArr)){
+                $message = "This coupon is not for one of the selected products!";
+              }
+              if(!empty($couponDetails->users)){
+                  if(!in_array($item->user_id,$userId)){
+                    $message = "This coupon is not for you!";
+                  }
+              }
+              //get Total price
+              $attrPrice = Product::getAttrDiscountedPrice($item->product_id,$item->size);
+              $total_amount = $total_amount + ($attrPrice['final_price']*$item->quantity);
+              
+            }
+            
+            if(isset($message)){
+              return response()->json([
+                'status'=> false,
+                'message'=> $message,
+                'totalCartItems' => $totalCartItems,
+                'view'=>(String)View::make('front.products.cart_items')->with(compact('userCartItems'))
+               ]);
+             }
+             else
+             {
+                //Check amount type  Fixed or Percentage
+                if($couponDetails->amount_type == "Fixed"){
+                    $couponAmount = $couponDetails->amount_type;
+                }
+                else
+                {
+                    $couponAmount = $total_amount * ($couponDetails->amount/100);
+                }
+                $grand_total = $total_amount - $couponAmount;
+                //Add coupon code and amount in session variable
+                Session::put('couponAmount',$couponAmount);
+                Session::put('couponCode',$data['code']);
+                $message = "Coupon code successfully applied.You are availing discount!";
+                $userCartItems = Cart::userCartItems();
+                $totalCartItems = totalCartItems();
+                return response()->json([
+                  'status'=> true,
+                  'message'=> $message,
+                  'totalCartItems' => $totalCartItems,
+                  'couponAmount' => $couponAmount,
+                  'grand_total' => $grand_total,
+                  'view'=>(String)View::make('front.products.cart_items')->with(compact('userCartItems'))
+                ]);
+             }
+         }
+
+       }
+    }
+
+  //Place Order
+  public function checkout(Request $request){
+    if($request->isMethod('post')){
+
+      $data = $request->all();
+      if(empty($data['address_id'])){
+        $message = "Please select delivery address!";
+        Session::flash('error_message',$message);
+        return redirect()->back();
+      }
+      if(empty($data['payment_gateway'])){
+        $message = "Please select payment method!";
+        Session::flash('error_message',$message);
+        return redirect()->back();
+      }
+      
+      if($data['payment_gateway']=="COD"){
+        $payment_method = "COD";
+      }
+      else
+      {
+        echo "Prepaid Method Coming Soon";die;
+        $payment_method = "Prepaid";
+      }
+      //get delivery address from address_id
+      $deliveryAddress = DeliveryAddress::where('id',$data['address_id'])->first()->toArray();
+      DB::beginTransaction();
+      //dd($deliveryAddress);
+      $order = new Order();
+      $order->user_id = Auth::user()->id;
+      $order->name = $deliveryAddress['name'];
+      $order->address = $deliveryAddress['address'];
+      $order->city = $deliveryAddress['city'];
+      $order->state = $deliveryAddress['state'];
+      $order->country = $deliveryAddress['country'];
+      $order->pincode = $deliveryAddress['pincode'];
+      $order->mobile = $deliveryAddress['mobile'];
+      $order->email = Auth::user()->email;
+      $order->shipping_charges = 0;
+      $order->coupon_code = Session::get('couponCode');
+      $order->coupon_amount =Session::get('couponAmount');
+      $order->order_status = "New";
+      $order->payment_method = $payment_method;
+      $order->payment_gateway = $data['payment_gateway'];
+      $order->grand_total = Session::get('grand_total');
+      $order->save();
+
+
+      //Get Last Insert Order ID
+      $order_id = DB::getPdo()->lastInsertId();
+
+     //Get User Cart Items
+     $cartItems = Cart::where('user_id',Auth::user()->id)->get()->toArray();
+     foreach($cartItems as $item){
+      $cartItem = new OrdersProduct();//Store OrdersProduct Table
+      $cartItem->order_id = $order_id;
+      $cartItem->user_id = Auth::user()->id;
+      $getProductDetails = Product::select('product_name','product_code','product_color')->where('id',$item['product_id'])->first()->toArray();
+      $cartItem->product_id = $item['product_id'];
+      $cartItem->product_code = $getProductDetails['product_code'];
+      $cartItem->product_name = $getProductDetails['product_name'];
+      $cartItem->product_color = $getProductDetails['product_color'];
+      $cartItem->product_size = $item['size'];
+      //Get Discount Price
+      $getAttrDiscountedPrice = Product::getAttrDiscountedPrice($item['product_id'],$item['size']);
+      $cartItem->product_price = $getAttrDiscountedPrice['final_price'];
+      $cartItem->product_qty = $item['quantity'];
+      $cartItem->save();
+
+     }
+     //Empty The user cart
+     Cart::where('user_id',Auth::user()->id)->delete();
+     //Insert order_id in session  Variable
+     Session::put('order_id',$order_id);
+     DB::commit();
+     
+     if($data['payment_gateway']=="COD"){
+        $message = "Dear Customer,Your order".$order_id."has been successfully placed with Ecom Shop BD. We will intimate you once your order is shipped";
+        $mobile = Auth::user()->mobile;
+        //Sms::sendSms($message,$mobile);
+        $orderDetails = Order::with('orders_products')->where('id',$order_id)->first()->toArray();
+        //Send Email 
+        $email = Auth::user()->email;
+        $messageData = [
+          'email' => $email,
+          'name' => Auth::user()->name,
+          'order_id' => $order_id,
+          'orderDetails' => $orderDetails,
+        ];
+        Mail::send('emails.order',$messageData,function($message) use($email){
+          $message->to($email)->subject('Order Placed - EcomShopBD Cloth Store');
+        });
+        return redirect('/thanks');
+     }
+     else
+     {
+        echo "Prepaid Method Coming Soon";die;
+     }
+    }
+
+    $userCartItems = Cart::userCartItems();
+    $deliveryAddresses = DeliveryAddress::deliveryAddresses();
+    return view('front.products.checkout')->with(compact('userCartItems','deliveryAddresses'));
+  }
+  public function thanks(){
+    //Empty The User Cart
+    if(Session::has('order_id')){
+      Cart::where('user_id',Auth::user()->id)->delete();
+      return view('front.products.thanks');
+    }
+    else
+    {
+      return redirect('/cart');
+    }
+  
+  }
+  public function validation($request){
+    $rules = [
+      'name' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
+      'address' => 'required',
+      'city' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
+      'state' => 'required|regex:/^([a-zA-Z]+)(\s[a-zA-Z]+)*$/',
+      'country' => 'required',
+      'pincode' => 'required|numeric|digits:4',
+      'mobile' => 'required|numeric|digits:11'
+    ];
+    $customMessage = [
+      'name.required' => 'Name is required',
+      'name.regex' => 'Valid name is required',
+      'address.required' => 'Address is required',
+      'city.required' => 'City is required',
+      'city.regex' => 'Valid city is required',
+      'state.required' => "The state is required",
+      'country.required' => 'Country is required',
+      'pincode.required' => 'Pincode is required',
+      'pincode.numeric' => 'Valid pincode is required',
+      'pincode.digits' => 'Pincode must be 4 digits',
+      'mobile.required' => 'Mobile number is required',
+      'mobile.numeric' => 'Valid mobile number is required',
+      'mobile.digits' => 'Mobile number must be 11 digits'
+    ];
+    $this->validate($request,$rules,$customMessage);
+
+}
+  //Delivery Address
+  public function addEditDeliveryAddress($id=null,Request $request){
+    if($id == null)
+    {
+      $title = "Add Delivery Address";
+      $message = "Your delivery address have been saved successfully";
+      $deliveryAddresse = new DeliveryAddress();
+    }
+    else
+    {
+      $title = "Edit Delivery Address";
+      $message = "Your delivery address have been updated successfully";
+      $deliveryAddresse = DeliveryAddress::find($id);
+    }
+    if($request->isMethod('post')){
+      //validation
+      $this->validation($request);
+    //save delivery address
+      $deliveryAddresse->user_id = Auth::User()->id;
+      $deliveryAddresse->name = $request->name;
+      $deliveryAddresse->address = $request->address;
+      $deliveryAddresse->city = $request->city;
+      $deliveryAddresse->state = $request->state;
+      $deliveryAddresse->country = $request->country ;
+      $deliveryAddresse->pincode = $request->pincode;
+      $deliveryAddresse->mobile = $request->mobile;
+      $deliveryAddresse->status = 1;
+      $deliveryAddresse->save();
+
+      
+    
+      Session::flash('success_message',$message);
+      Session::forget('error_message');
+      return redirect('/checkout');
+    }
+    $countries = Country::where('status',1)->get()->toArray();
+    return view('front.products.add_edit_delivery_address')->with(compact('countries','title','deliveryAddresse'));
+  }
+  public function deleteDeliveryAddress(Request $request){
+    if($request->ajax()){
+      DeliveryAddress::where('id',$request->id)->delete();
+      $message = "Your delivery address have been deleted successfully";
+      return response()->json(['id'=>$request->id,'success_message'=>$message]);
+    }
+  }
 }

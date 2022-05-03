@@ -11,6 +11,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ url('/admin/dashboard') }}">Home</a></li>
+              <li class="breadcrumb-item"><a href="{{ url('/admin/bannars') }}">Banners</a></li>
               <li class="breadcrumb-item active">{{ $title }}</li>
             </ol>
           </div>
@@ -107,8 +108,6 @@
                     </div>
                 <!-- /.col -->
                 </div>
-                 
-                
                   <!-- /.row -->
               </div>
               <!-- /.card-body -->

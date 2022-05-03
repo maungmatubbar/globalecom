@@ -66,9 +66,14 @@ class Product extends Model
         }
         else
         {
-            $final_price = 0;
+            $final_price = $proAttrPrice['price'];
             $discount = 0;
         }
         return array('price'=>$proAttrPrice['price'],'final_price'=>$final_price,'discount'=>$discount);
+    }
+    //Get Product Image for Order Details
+    public static function getProductImage($product_id){
+        $getProductImage = Product::select('main_image')->where('id',$product_id)->first()->toArray();
+        return $getProductImage['main_image'];
     }
 }

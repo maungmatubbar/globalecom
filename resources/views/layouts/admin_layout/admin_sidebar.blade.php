@@ -73,76 +73,105 @@
             </ul>
           </li>
               <!-- Catelogues-->
-              @if(Session::get('page')=="sections" ||  Session::get('page')=="brands"|| Session::get('page')=="categories" || Session::get('page')=="products"|| Session::get('page')=="banners")
+              @if(Session::get('page')=="sections" ||  Session::get('page')=="brands"|| Session::get('page')=="categories" || Session::get('page')=="products"|| Session::get('page')=="banners" || Session::get('page')=="coupons"|| Session::get('page')=='orders')
               <?php $active = 'active'; $menuopen = 'menu-open'; ?>
               @else 
-              <?php $active=""; $menuopen=''; ?>
+                <?php $active=""; $menuopen=''; ?>
               @endif
-              <li class="nav-item has-treeview {{ $menuopen }}">
-                <a href="#" class="nav-link {{ $active }}">
-                  <i class="fas fa-th"></i>
-                  <p>
-                    Catelogues
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-            <ul class="nav nav-treeview">
-              @if(Session::get('page')=="sections")
-                <?php $active = 'active'; ?>
+            <li class="nav-item has-treeview {{ $menuopen }}">
+              <a href="#" class="nav-link {{ $active }}">
+                <i class="fas fa-th"></i>
+                <p>
+                  Catelogues
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+              <ul class="nav nav-treeview">
+                <!--Sections-->
+                  @if(Session::get('page')=="sections")
+                    <?php $active = 'active'; ?>
+                  @else 
+                    <?php $active="";?>
+                  @endif
+                <li class="nav-item">
+                  <a href="{{ url('/admin/sections') }}" class="nav-link {{ $active }}">
+                    <i class="fas fa-dot-circle nav-icon"></i>
+                    <p>Sections</p>
+                  </a>
+                </li>
+                <!--Brands-->
+                @if(Session::get('page')=="brands")
+                  <?php $active = 'active'; ?>
                 @else 
-                <?php $active="";?>
+                  <?php $active="";?>
                 @endif
-              <li class="nav-item">
-                <a href="{{ url('/admin/sections') }}" class="nav-link {{ $active }}">
-                  <i class="fas fa-dot-circle nav-icon"></i>
-                  <p>Sections</p>
-                </a>
-              </li>
-              @if(Session::get('page')=="brands")
-              <?php $active = 'active'; ?>
-              @else 
-              <?php $active="";?>
-              @endif
-              <li class="nav-item">
-                <a href="{{ url('/admin/brands') }}" class="nav-link {{ $active }}">
-                  <i class="fas fa-dot-circle nav-icon"></i>
-                  <p>Brands</p>
-                </a>
-              </li>
-              <li class="nav-item">
+                <li class="nav-item">
+                  <a href="{{ url('/admin/brands') }}" class="nav-link {{ $active }}">
+                    <i class="fas fa-dot-circle nav-icon"></i>
+                    <p>Brands</p>
+                  </a>
+                </li>
+                <!--Categories-->
                 @if(Session::get('page')=="categories")
-                <?php $active = 'active'; ?>
-                @else 
-                <?php $active="";?>
-                @endif
-                <a href="{{ url('/admin/categories') }}" class="nav-link {{ $active }}">
-                  <i class="fas fa-dot-circle nav-icon"></i>
-                  <p>Categories</p>
-                </a>
-              </li>
-              <li class="nav-item">
+                    <?php $active = 'active'; ?>
+                  @else 
+                    <?php $active="";?>
+                  @endif
+                <li class="nav-item">
+                  <a href="{{ url('/admin/categories') }}" class="nav-link {{ $active }}">
+                    <i class="fas fa-dot-circle nav-icon"></i>
+                    <p>Categories</p>
+                  </a>
+                </li>
+                <!--Products-->
                 @if(Session::get('page')=="products")
-                <?php $active = 'active'; ?>
-                @else 
-                <?php $active="";?>
-                @endif
-                <a href="{{ url('/admin/products') }}" class="nav-link {{ $active }}">
-                  <i class="fas fa-dot-circle nav-icon"></i>
-                  <p>Products</p>
-                </a>
-              </li>
-              <li class="nav-item">
+                    <?php $active = 'active'; ?>
+                  @else 
+                    <?php $active="";?>
+                  @endif
+                <li class="nav-item">
+                  <a href="{{ url('/admin/products') }}" class="nav-link {{ $active }}">
+                    <i class="fas fa-dot-circle nav-icon"></i>
+                    <p>Products</p>
+                  </a>
+                </li>
+                <!--Banners-->
                 @if(Session::get('page')=="banners")
-                <?php $active = 'active'; ?>
+                  <?php $active = 'active'; ?>
                 @else 
-                <?php $active="";?>
+                  <?php $active="";?>
                 @endif
-                <a href="{{ url('/admin/banners') }}" class="nav-link {{ $active }}">
-                  <i class="fas fa-dot-circle nav-icon"></i>
-                  <p>Banners</p>
-                </a>
-              </li>
-            </ul>
+                <li class="nav-item">
+                  <a href="{{ url('/admin/banners') }}" class="nav-link {{ $active }}">
+                    <i class="fas fa-dot-circle nav-icon"></i>
+                    <p>Banners</p>
+                  </a>
+                </li>
+                <!--Coupons-->
+                <li class="nav-item">
+                  @if(Session::get('page')=="coupons")
+                    <?php $active = 'active'; ?>
+                  @else 
+                    <?php $active="";?>
+                  @endif
+                    <a href="{{ url('/admin/coupons') }}" class="nav-link {{ $active }}">
+                      <i class="fas fa-dot-circle nav-icon"></i>
+                      <p>Coupons</p>
+                    </a>
+                </li>
+                <!--Orders-->
+                @if(Session::get('page')=="orders")
+                    <?php $active = 'active'; ?>
+                  @else 
+                    <?php $active="";?>
+                  @endif
+                <li class="nav-item">
+                  <a href="{{ url('/admin/orders') }}" class="nav-link {{ $active }}">
+                    <i class="fas fa-dot-circle nav-icon"></i>
+                    <p>Orders</p>
+                  </a>
+                </li>
+              </ul>
           </li>
         </ul>
       </nav>

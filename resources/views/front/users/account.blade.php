@@ -31,7 +31,7 @@
 			<form id="accountForm" action="{{ url('/account') }}" method="post">
                 @csrf
                 <div class="control-group">
-                    <label class="control-label" for="name">Name*</label>
+                    <label class="control-label" for="name">Full Name*</label>
                     <div class="controls">
                         <input class="span3" class="@error('name') is-invalid @enderror"  type="text" id="name" name="name" value="{{ $userDetails['name'] }}" placeholder="Enter Name">
                     </div>

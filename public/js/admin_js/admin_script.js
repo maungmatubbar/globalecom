@@ -21,6 +21,38 @@ $(document).ready(function() {
             }
         });
     });
+    //Logout function
+    $('.logout').click(function() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Are you logout?!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#44bd32',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Logout!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    method: 'post',
+                    url: '/admin/logout',
+                    success: function() {
+                        Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Your are logged out successfully!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }),
+                            location.reload();
+                    },
+                    error: function() {
+                        alert('problem');
+                    }
+                });
+            }
+        });
+    });
     //update section status
     $('.SectionStatus').click(function() {
         var status = $(this).children("i").attr("status");
@@ -448,7 +480,6 @@ $(document).ready(function() {
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-
                 $.ajax({
                     method: "get",
                     url: '/admin/delete-' + record + '/' + record_id,
@@ -471,5 +502,32 @@ $(document).ready(function() {
             }
         })
     });
+    //Coupon Automatic and Manual show/hide Coupon Field
+    $('#AutomaticCoupon').click(function() {
+        $('#couponField').hide();
+    });
+    $('#ManualCoupon').click(function() {
+        $('#couponField').show();
+    });
+    //Datemask dd/mm/yyyy
+    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+        //Datemask2 mm/dd/yyyy
+    $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+        //Money Euro
+    $('[data-mask]').inputmask()
+
+    //Update Order Status for Shipped
+    $('#courier_name').hide();
+    $('#tracking_number').hide();
+    $('#order_status').on('change', function() {
+        if ($(this).val() == "Shipped") {
+            $('#courier_name').show();
+            $('#tracking_number').show();
+        } else {
+            $('#courier_name').hide();
+            $('#tracking_number').hide();
+        }
+    })
+
 
 });

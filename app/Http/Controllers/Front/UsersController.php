@@ -119,6 +119,8 @@ class UsersController extends Controller
         }
     }
     public function logout(){
+        Session::forget('couponAmount');
+        Session::forget('couponCode');
         Auth::logout();
         return redirect('/');
     }

@@ -179,6 +179,7 @@ $(document).ready(function() {
                 if (resp.status == false) {
                     alert(resp.message);
                 }
+                $(".totalCartItems").html(resp.totalCartItems);
                 $("#AppendCartItems").html(resp.view);
             },
             error: function(resp) {
@@ -199,6 +200,7 @@ $(document).ready(function() {
                 url: '/delete-cart-item',
                 type: 'post',
                 success: function(resp) {
+                    $(".totalCartItems").html(resp.totalCartItems);
                     $("#AppendCartItems").html(resp.view);
                 },
                 error: function(resp) {
@@ -329,6 +331,7 @@ $(document).ready(function() {
 
         });
     });
+    //User password Validation
     $("#passwordForm").validate({
         rules: {
             currentPassword: {
@@ -349,5 +352,64 @@ $(document).ready(function() {
             }
 
         },
+    });
+    //Coupom Code Add
+    $('#ApplyCoupon').submit(function() {
+        var user = $(this).attr('user');
+        if (user == 1) {
+            ///
+        } else {
+            alert("Please login to apply coupon!");
+            return false;
+        }
+        var code = $('#code').val();
+        $.ajax({
+            type: 'post',
+            url: '/apply-coupon',
+            data: { code: code },
+            success: function(resp) {
+                if (resp.message != "") {
+                    alert(resp.message);
+                }
+                $(".totalCartItems").html(resp.totalCartItems);
+                $("#AppendCartItems").html(resp.view);
+                if (resp.couponAmount >= 0) {
+                    $('.couponAmount').text("Tk." + resp.couponAmount);
+                }
+                if (resp.grand_total) {
+                    $('.grand_total').text("Tk." + resp.grand_total);
+                }
+
+
+            },
+            error: function() {
+                alert('Error');
+            }
+
+        });
+    });
+    //Delete Delivery Address
+    $('.deliveryDelete').click(function() {
+        var record_id = $(this).attr('record_id');
+        var result = confirm('Want to delete this address?');
+        if (!result) {
+            return false;
+        } else {
+            $.ajax({
+                method: 'get',
+                url: '/delete-delivery-address/' + record_id,
+                data: { id: record_id },
+                success: function(resp) {
+                    $('#tableRow-' + record_id).fadeOut(1000, function() {
+                        $(this).hide();
+                    });
+                    $('.message').html("<div class='alert alert-success'>" + resp.success_message + "</div>");
+                },
+                error: function() {
+                    alert('error');
+                }
+
+            });
+        }
     });
 });

@@ -11,6 +11,7 @@ class Sms extends Model
     public static function sendSms($message,$mobile){
 
         //https://portal.sms.net.bd/login/
+        //email:maungmatubbar@gmail.com//password::Maung6969##@
         $curl = curl_init();
 
         curl_setopt_array($curl, array(

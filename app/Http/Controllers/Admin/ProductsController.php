@@ -24,7 +24,7 @@ class ProductsController extends Controller
                 ,'section'=>function($query){
                     $query->select('id','name');
                 }
-            ])->get();
+            ])->orderBy('id','Desc')->get();
         // $products = json_decode(json_encode($products));
         // echo "<pre>";
         // print_r($products);
@@ -292,7 +292,6 @@ class ProductsController extends Controller
 
     public function addAttributes(Request $request,$id){
         
-      
         if($request->isMethod('post')){
             $data = $request->all();
             foreach($data['sku'] as $key => $value ){
