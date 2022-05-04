@@ -208,6 +208,9 @@ class ProductsController extends Controller
     //Cart
     public function cart(){
       $userCartItems = Cart::userCartItems();
+      if(empty($userCartItems)){
+        return redirect('/');
+      }
       return view('front.products.cart')->with(compact('userCartItems'));
     }
     //Update Cart Item Quantity
@@ -460,6 +463,11 @@ class ProductsController extends Controller
     }
 
     $userCartItems = Cart::userCartItems();
+    if(count($userCartItems)==0){
+      $message = "Shopping Cart is empty! Please add product to checkout.";
+      Session::flash('success_message',$message);
+      return redirect('/cart');
+    }
     $deliveryAddresses = DeliveryAddress::deliveryAddresses();
     return view('front.products.checkout')->with(compact('userCartItems','deliveryAddresses'));
   }

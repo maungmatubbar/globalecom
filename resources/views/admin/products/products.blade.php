@@ -87,12 +87,16 @@
                           <h4><a class="ProductStatus" id="product-{{ $product->id }}" product_id="{{ $product->id }}"  href="javascript:void(0)"><i class='fas fa-toggle-off' status="Inactive"></i></a></h4>
                           @endif
                       </td>
-                      <td class="btn-group">
-                        <a href="{{ url('admin/add-attributes/'.$product->id) }}" title="Add Attributes" class="btn btn-info"><i class="fas fa-plus"></i></a>
-                        <a href="{{ url('admin/add-images/'.$product->id) }}" title="Add Images" class="btn btn-secondary"><i class="fas fa-cloud-upload-alt"></i></a>
-                        <a title="Edit Product" href="{{ url('admin/add-edit-product/'.$product->product_url) }}" class="btn b btn-primary"><i class="fas fa-pencil-alt"></i></a>
+                      <td>
+                        <span class="btn-group">
+                          <a href="{{ url('admin/add-attributes/'.$product->id) }}" title="Add Attributes" class="btn btn-info btn-sm"><i class="fas fa-plus"></i></a>
 
-                        <a title="Delete" class="ConfirmDelete btn btn-danger" record="product" recordurl="{{ $product->product_url }}" href="javascript:void(0)"><i class="fas fa-trash-alt"></i></a>
+                          <a href="{{ url('admin/add-images/'.$product->id) }}" title="Add Images" class="btn btn-secondary btn-sm"><i class="fas fa-cloud-upload-alt"></i></a>
+
+                          <a title="Edit Product" href="{{ url('admin/add-edit-product/'.$product->product_url) }}" class="btn btn-primary btn-sm"><i class="fas fa-pencil-alt"></i></a>
+
+                          <a title="Delete" class="ConfirmDelete btn btn-danger btn-sm" record="product" recordurl="{{ $product->product_url }}" href="javascript:void(0)"><i class="fas fa-trash-alt"></i></a>
+                        </span>
                       </td>
                     </tr>
                     @endforeach

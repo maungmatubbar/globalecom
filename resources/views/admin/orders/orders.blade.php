@@ -68,14 +68,19 @@
                             <td>{{ $order['order_status'] }}</td>
                             <td>{{ $order['payment_method'] }}</td>
                             <td>
-                              <a href="{{ url('admin/orders/'.$order['id']) }}" title="View Order Details" class="btn btn-default">
-                                <i class="fa fa-search-plus"></i>
-                              </a>
-                               @if($order['order_status']=='Shipped' || $order['order_status'] == 'Delivered')
-                                <a href="{{ url('admin/view-order-invoice/'.$order['id']) }}" title="Print View Invoice" class="btn btn-default">
-                                  <i class="fa fa-print"></i>
+                              <span class="btn-group">
+                                <a href="{{ url('admin/orders/'.$order['id']) }}" title="View Order Details" class="btn btn-default btn-sm">
+                                  <i class="fa fa-search-plus"></i>
                                 </a>
-                                @endif
+                                 @if($order['order_status']=='Shipped' || $order['order_status'] == 'Delivered')
+                                  <a href="{{ url('admin/view-order-invoice/'.$order['id']) }}" title="Print View Invoice" class="btn btn-default btn-sm">
+                                    <i class="fa fa-print"></i>
+                                  </a>
+                                  <a href="{{ url('admin/print-pdf-invoice/'.$order['id']) }}" title="Print PDF Invoice" class="btn btn-default btn-sm">
+                                    <i class="fa fa-file-pdf"></i>
+                                  </a>
+                                  @endif
+                              </span>
                             </td>
                         </tr>
                     @endforeach

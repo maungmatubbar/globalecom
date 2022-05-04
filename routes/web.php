@@ -82,6 +82,8 @@ Route::prefix('/admin')->namespace('Admin')->group(function () {
         Route::post('/update-order-status','OrdersController@updateOrderStatus');
         //View Order Invoice
         Route::get('/view-order-invoice/{id}','OrdersController@viewOrderInvoice');
+        //Print Order Invoice
+        Route::get('/print-pdf-invoice/{id}','OrdersController@printPdfInvoice');
     });
 });
 

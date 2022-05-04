@@ -33,8 +33,7 @@
     		</div>
             <div class="row">
                 <span class="pull-left"><img src="{{ asset('images/logo/logo.png') }}" alt=""></span>
-                <h3 class="align-middle pull-right">Tracking No: #{{ $orderDetails['tracking_number'] }}</h3>
-                
+                <h3 class="pull-right">Tracking No: #{{ $orderDetails['tracking_number'] }}</h3>
             </div>
     		<hr>
     		<div class="row">
@@ -95,7 +94,7 @@
     						<thead>
                                 <tr>
         							<td><strong>Item</strong></td>
-                                    <td><strong>QRCODE</strong></td>
+                                    <td><strong>BARCODE</strong></td>
         							<td class="text-center"><strong>Price</strong></td>
         							<td class="text-center"><strong>Quantity</strong></td>
         							<td class="text-right"><strong>Totals</strong></td>
@@ -126,12 +125,14 @@
                                     @endphp
                                 @endforeach
                                 <tr>
+									<td class="no-line"></td>
     								<td class="no-line"></td>
     								<td class="no-line"></td>
     								<td class="no-line text-center"><strong>Sub Total</strong></td>
     								<td class="no-line text-right">BDT {{ $subTotal }}</td>
     							</tr>
     							<tr>
+									<td class="no-line"></td>
     								<td class="no-line"></td>
     								<td class="no-line"></td>
     								<td class="no-line text-center"><strong>Shipping</strong></td>
@@ -139,6 +140,7 @@
     							</tr>
                                 @if($orderDetails['coupon_amount']>0)
                                     <tr>
+										<td class="no-line"></td>
                                         <td class="no-line"></td>
                                         <td class="no-line"></td>
                                         <td class="no-line text-center"><strong>Discount</strong></td>
@@ -146,6 +148,7 @@
                                     </tr>
                                 @endif
     							<tr>
+									<td class="no-line"></td>
     								<td class="no-line"></td>
     								<td class="no-line"></td>
     								<td class="no-line text-center"><strong>Grand Total</strong></td>
