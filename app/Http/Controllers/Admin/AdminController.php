@@ -40,7 +40,7 @@ class AdminController extends Controller
                 return redirect()->intended('/admin/dashboard');
             } else {
                 Session::flash('error_message', 'These credentials do not match our records.');
-                return redirect()->back();
+                return redirect()->back()->withInput($request->only('email','remember'));
             }
         }
         if (auth('admin')->user()) {

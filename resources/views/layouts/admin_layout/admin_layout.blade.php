@@ -123,6 +123,7 @@
     $("#products").DataTable();  
     $("#coupons").DataTable();  
     $("#orders").DataTable();  
+    $("#shipping").DataTable();  
 
     $('.select2').select2();
     //Initialize Select2 Elements

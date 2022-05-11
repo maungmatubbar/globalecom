@@ -49,7 +49,7 @@
                     </tr>
                     <tr>
                         <td>Coupon Amount</td>
-                        <td>{{ $orderDetails['coupon_amount'] }}</td>
+                        <td>BDT {{ $orderDetails['coupon_amount'] }}</td>
                     </tr>
                     <tr>
                         <td>Payment Method</td>

@@ -73,7 +73,7 @@
             </ul>
           </li>
               <!-- Catelogues-->
-              @if(Session::get('page')=="sections" ||  Session::get('page')=="brands"|| Session::get('page')=="categories" || Session::get('page')=="products"|| Session::get('page')=="banners" || Session::get('page')=="coupons"|| Session::get('page')=='orders')
+              @if(Session::get('page')=="sections" ||  Session::get('page')=="brands"|| Session::get('page')=="categories" || Session::get('page')=="products"|| Session::get('page')=="banners" || Session::get('page')=="coupons"|| Session::get('page')=='orders' || Session::get('page')=='shipping')
               <?php $active = 'active'; $menuopen = 'menu-open'; ?>
               @else 
                 <?php $active=""; $menuopen=''; ?>
@@ -171,6 +171,18 @@
                     <p>Orders</p>
                   </a>
                 </li>
+                <!--Orders-->
+                @if(Session::get('page')=="shipping")
+                    <?php $active = 'active'; ?>
+                  @else 
+                    <?php $active="";?>
+                  @endif
+                  <li class="nav-item">
+                    <a href="{{ url('/admin/view-shipping-charges') }}" class="nav-link {{ $active }}">
+                      <i class="fas fa-dot-circle nav-icon"></i>
+                      <p>Shipping Charges</p>
+                    </a>
+                  </li>
               </ul>
           </li>
         </ul>
