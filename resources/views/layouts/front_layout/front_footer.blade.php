@@ -26,6 +26,6 @@
                 <a href="https://www.youtube.com/StackDevelopers"><img width="60" height="60" src="{{ asset('/') }}images/front_images/youtube.png" title="youtube" alt="youtube"/></a>
             </div>
         </div>
-        <p class="pull-right"><a target="_blank" href="https://www.youtube.com/StackDevelopers">&copy; Stack Developers</a></p>
+        <p class="pull-right"><a target="_blank" href="https://www.youtube.com/StackDevelopers">&copy; Developed by Green Family</a></p>
     </div><!-- Container End -->
 </div>
