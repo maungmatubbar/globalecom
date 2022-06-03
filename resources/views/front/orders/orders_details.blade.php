@@ -25,7 +25,7 @@
                     </tr>
                     <tr>
                         <td>Order Total</td>
-                        <td>{{ $orderDetails['grand_total'] }}</td>
+                        <td>BDT {{ $orderDetails['grand_total'] }}</td>
                     </tr>
                     @if(!empty($orderDetails['courier_name']))
                         <tr>

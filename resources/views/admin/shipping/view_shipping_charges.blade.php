@@ -74,7 +74,7 @@
                           @endif
                       </td>
                       <td>
-                        <a title="Edit" class="btn btn-primary" href="{{ url('/admin/add-edit-brand/'.$shipping['id']) }}"><i class="fas fa-edit"></i></a>
+                        <a title="Edit" class="btn btn-primary" href="{{ url('/admin/edit-shipping-charges/'.$shipping['id']) }}"><i class="fas fa-edit"></i></a>
                         <a title="Delete" class="deleteTableRow btn btn-danger" record="brand" record_id="{{ $shipping['id'] }}"  href="javascript:void(0)"><i class="fas fa-trash-alt"></i></a>
                       </td>
                     </tr>

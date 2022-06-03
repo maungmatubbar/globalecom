@@ -11,13 +11,17 @@
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <button class="btn btn-sm btn-secondary logout">
-          <a class="nav-link text-white" href="javascript:void(0)">
-            <i class="fas fa-sign-out-alt"></i>
-            Log Out
+      <li class="dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="">{{ Auth::guard('admin')->user()->name }}
           </a>
-        </button>
+          <ul class="dropdown-menu">
+            <li><a href="{{ url('admin/update-admin-info') }}" class="dropdown-item">My Profile</a></li>
+            <li>
+              <a href="javascript:void(0)" class="dropdown-item logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </a>
+            </li>
+          </ul>
       </li>
     </ul>
   </nav>

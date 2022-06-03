@@ -64,7 +64,7 @@
                                     {{ $product['product_code'] }}
                                 @endforeach
                             </td>
-                            <td>{{ $order['grand_total'] }}</td>
+                            <td>BDT {{ $order['grand_total'] }}</td>
                             <td>{{ $order['order_status'] }}</td>
                             <td>{{ $order['payment_method'] }}</td>
                             <td>
