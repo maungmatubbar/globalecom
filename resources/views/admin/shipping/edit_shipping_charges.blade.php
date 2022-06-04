@@ -24,7 +24,7 @@
       <div class="container-fluid">
         <!-- SELECT2 EXAMPLE -->
         <div class="row">
-          <div class="col-md-8 mx-auto">
+          <div class="col-md-6 mx-auto">
             <div class="card card-primary">
               <div class="card-header">
                 <h3 class="card-title">Edit Shipping Charges</h3>
@@ -41,16 +41,32 @@
               <form name="shippingForm" id="shippingForm" action="{{ url('admin/edit-shipping-charges/'.$shippingDetails['id']) }}" method="POST">@csrf
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label for="name">Shipping Country</label>
                                 <input readonly  class="form-control" value="{{ $shippingDetails['country'] }}">
                             </div>
                             <!-- /.form-group -->
                             <div class="form-group">
-                                <label for="name">Shipping Charges</label>
-                                <input type="number" name="shipping_charges"  class="form-control" value="{{ $shippingDetails['shipping_charges'] }}" placeholder="Enter Shipping Charge">
+                                <label for="name">0g to 500g</label>
+                                <input type="number" name="0_500g"  class="form-control" value="{{ $shippingDetails['0_500g'] }}" placeholder="Enter Shipping Charge">
                             </div>
+                            <div class="form-group">
+                              <label for="name">501g to 1000g</label>
+                              <input type="number" name="501_1000g"  class="form-control" value="{{ $shippingDetails['501_1000g'] }}" placeholder="Enter Shipping Charge">
+                          </div>
+                          <div class="form-group">
+                            <label for="name">1001g to 2000g</label>
+                            <input type="number" name="1001_2000g"  class="form-control" value="{{ $shippingDetails['1001_2000g'] }}" placeholder="Enter Shipping Charge">
+                        </div>
+                        <div class="form-group">
+                          <label for="name">2001g to 5000g</label>
+                          <input type="number" name="2001_5000g"  class="form-control" value="{{ $shippingDetails['2001_5000g'] }}" placeholder="Enter Shipping Charge">
+                      </div>
+                      <div class="form-group">
+                        <label for="name">Above 5000g</label>
+                        <input type="number" name="above_5000g"  class="form-control" value="{{ $shippingDetails['above_5000g'] }}" placeholder="Enter Shipping Charge">
+                    </div>
                         </div>
                     </div>
                     <!-- /.row -->

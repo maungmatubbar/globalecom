@@ -7,8 +7,8 @@
     </ul>
 	<h3>THANKS</h3>	
 	<hr class="soft"/>
-    <div class="text-center">
-        <h3>Your order has been placed successfully.</h3>
+    <div align="center">
+        <h3 class="text-uppercase">Your order has been placed successfully.</h3>
         <p>Your order id is {{ Session::get('order_id') }} and grand total is BDT {{ Session::get('grand_total') }}</p>
     </div>
 </div>

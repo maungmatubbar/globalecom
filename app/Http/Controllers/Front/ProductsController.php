@@ -489,16 +489,24 @@ class ProductsController extends Controller
         }
         $deliveryAddresses = DeliveryAddress::deliveryAddresses();
         
-        foreach($deliveryAddresses as $key=> $value)
-        {
-            $shippingCharges = ShippingCharge::getShippingCharges($value['country']);
-            $deliveryAddresses[$key]['shipping_charges'] = $shippingCharges;
-        }
+       
         $total_price = 0;
+        $total_weight = 0;
         foreach ($userCartItems as $item)
         {
+            //Calculate Total Product weight
+            $product_weight = $item->product->product_weight;
+            $total_weight += $product_weight;
+            //Get Attribute Price
             $attrPrice = Product::getAttrDiscountedPrice($item->product_id,$item->size);
             $total_price = $total_price+( $attrPrice['final_price']*$item->quantity);
+        }
+
+        foreach($deliveryAddresses as $key=> $value)
+        {
+            $shippingCharges = ShippingCharge::getShippingCharges($total_weight,$value['country']);
+            //Make shipping charges insert array
+            $deliveryAddresses[$key]['shipping_charges'] = $shippingCharges;
         }
         
         if ($request->isMethod("post")) {
@@ -527,7 +535,7 @@ class ProductsController extends Controller
                 ->first()
                 ->toArray();
             //Get shipping charges
-            $shippingCharges = ShippingCharge::getShippingCharges($deliveryAddress['country']);
+            $shippingCharges = ShippingCharge::getShippingCharges($total_weight,$deliveryAddress['country']);
             //Calculate total Price
             $grand_total = $total_price + $shippingCharges - Session::get('couponAmount');
             
