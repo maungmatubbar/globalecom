@@ -23,25 +23,24 @@ use App\ShippingCharge;
 use Auth;
 use DB;
 use Session;
+use Validator;
 class ProductsController extends Controller
 {
     public function listing(Request $request)
     {
         Paginator::useBootstrap();
-        if ($request->ajax()) {
+        if ($request->ajax()) 
+        {
             $data = $request->all();
             //echo "<pre>";print_r($data);die;
             Paginator::useBootstrap();
             $url = $data["url"];
-            $categoryCount = Category::where([
-                "url" => $url,
-                "status" => 1,
-            ])->count();
+            $categoryCount = Category::where(["url" => $url,"status" => 1])->count();
             if ($categoryCount > 0) {
                 $categoryDetails = Category::categoryDetails($url); //-->this categoryDetails in Category Model
-                $categoryProducts = Product::with("brand")
-                    ->whereIn("category_id", $categoryDetails["categoryIds"])
-                    ->where("status", 1);
+                
+                $categoryProducts = Product::with("brand")->whereIn("category_id", $categoryDetails["categoryIds"])->where("status", 1);
+
                 //If fabric filter is selected
                 if (isset($data["fabric"]) && !empty($data["fabric"])) {
                     //database products and column fabric
@@ -61,10 +60,7 @@ class ProductsController extends Controller
                 //If pattern is selected
                 if (isset($data["pattern"]) && !empty($data["pattern"])) {
                     //database products and column fabric
-                    $categoryProducts->whereIn(
-                        "products.pattern",
-                        $data["pattern"]
-                    );
+                    $categoryProducts->whereIn("products.pattern",$data["pattern"]);
                 }
                 //If fit is selected
                 if (isset($data["fit"]) && !empty($data["fit"])) {
@@ -74,10 +70,7 @@ class ProductsController extends Controller
                 //If occasion is selected
                 if (isset($data["occasion"]) && !empty($data["occasion"])) {
                     //database products and column fabric
-                    $categoryProducts->whereIn(
-                        "products.occasion",
-                        $data["occasion"]
-                    );
+                    $categoryProducts->whereIn("products.occasion",$data["occasion"]);
                 }
                 //If sort option ise selected
                 if (isset($data["sort"]) && !empty($data["sort"])) {
@@ -92,7 +85,9 @@ class ProductsController extends Controller
                     } elseif ($data["sort"] == "highest_price_first") {
                         $categoryProducts->orderBy("product_price", "Desc");
                     }
-                } else {
+                }
+                else
+                {
                     $categoryProducts->orderBy("id", "Asc");
                 }
                 $categoryProducts = $categoryProducts->paginate(3);
@@ -100,24 +95,39 @@ class ProductsController extends Controller
                     compact("categoryDetails", "categoryProducts", "url")
                 );
                 // echo"<pre>";print_r($categoryProducts);die;
-            } else {
+            }
+            else 
+            {
                 abort(404, "Page Not Found");
             }
-        } else {
-            $url = Route::getFacadeRoot()
-                ->current()
-                ->uri();
-            $categoryCount = Category::where([
-                "url" => $url,
-                "status" => 1,
-            ])->count();
-            if ($categoryCount > 0) {
-                $categoryDetails = Category::categoryDetails($url); //-->this categoryDetails in Category Model
-                $categoryProducts = Product::with("brand")
-                    ->whereIn("category_id", $categoryDetails["categoryIds"])
-                    ->where("status", 1);
-                //If sort option select by user
-                /* if(isset($_GET['sort']) && !empty($_GET['sort'])){
+        }
+        else 
+        {
+            $url = Route::getFacadeRoot()->current()->uri();
+            $categoryCount = Category::where(["url" => $url,"status" => 1])->count();
+            if(isset($_REQUEST['search']) && !empty($_REQUEST['search']))
+            {
+                $search_product = $_REQUEST['search'];
+                $categoryDetails['breadcrumbs']                 =  $search_product;
+                $categoryDetails['catDetails']['category_name'] =   $search_product;
+                $categoryDetails['catDetails']['description']   = 'Search Results for '. $search_product;
+                $categoryProducts = Product::with('brand')->where(function($query)use($search_product){
+                  $query->where('product_name','like','%'.$search_product.'%')
+                  ->orWhere('product_code','like','%'.$search_product.'%')
+                  ->orWhere('product_color','like','%'.$search_product.'%')
+                  ->orWhere('description','like','%'.$search_product.'%');
+                })->where('status',1)->get();
+                $page_name = "listing";
+                return view("front.products.listing")->with(compact("categoryDetails","categoryProducts","page_name"));
+
+
+            }
+            else if ($categoryCount > 0)
+            {
+                $categoryDetails  = Category::categoryDetails($url); //-->this categoryDetails in Category Model
+                $categoryProducts = Product::with("brand")->whereIn("category_id", $categoryDetails["categoryIds"])->where("status", 1);
+            //If sort option select by user
+            /* if(isset($_GET['sort']) && !empty($_GET['sort'])){
   
             if($_GET['sort']=="product_latest"){
               $categoryProducts->orderBy('id','Desc');
@@ -139,15 +149,16 @@ class ProductsController extends Controller
           {
             $categoryProducts->orderBy('id','Desc');
           }*/
+                //Paginate link show products
                 $categoryProducts = $categoryProducts->paginate(3);
                 //Products filers
                 $productFilters = Product::productFilters();
-                $fabricArray = $productFilters["fabricArray"];
-                $sleeveArray = $productFilters["sleeveArray"];
-                $fitArray = $productFilters["fitArray"];
-                $occasionArray = $productFilters["occasionArray"];
-                $patternArray = $productFilters["patternArray"];
-                $page_name = "listing";
+                $fabricArray    = $productFilters["fabricArray"];
+                $sleeveArray    = $productFilters["sleeveArray"];
+                $fitArray       = $productFilters["fitArray"];
+                $occasionArray  = $productFilters["occasionArray"];
+                $patternArray   = $productFilters["patternArray"];
+                $page_name      = "listing";
                 return view("front.products.listing")->with(
                     compact(
                         "categoryDetails",
@@ -162,39 +173,32 @@ class ProductsController extends Controller
                     )
                 );
                 // echo"<pre>";print_r($categoryProducts);die;
-            } else {
+            }
+            else
+            {
                 abort(404, "Page Not Found");
             }
         }
     }
     public function detail($id)
     {
-        $productDetails = Product::with([
-            "brand",
-            "category",
-            "section",
-            "attributes" => function ($query) {
-                $query->where("status", 1);
-            },
-            "images" => function ($query) {
-                $query->where("status", 1);
-            },
-        ])->find($id);
+        $productDetails = Product::with(["brand","category","section","attributes" =>function ($query) { $query->where("status", 1);},"images" => function ($query) { $query->where("status", 1);}, ])->find($id);
         $productDetails = json_decode(json_encode($productDetails));
         $total_stock = ProductsAttribute::where("product_id", $id)->sum(
             "stock"
         );
-        $relatedProducts = Product::where(
-            "category_id",
-            $productDetails->category->id
-        )
-            ->where("id", "!=", $id)
-            ->limit(3)
-            ->inRandomOrder()
-            ->get();
+        
+        $relatedProducts = Product::where("category_id",$productDetails->category->id)->where("id", "!=", $id)->limit(3)->inRandomOrder()->get();
         $relatedProducts = json_decode(json_encode($relatedProducts));
+        //Group Code Products Show
+        $groupProducts = [];
+        if(!empty($productDetails->group_code))
+        {
+            $groupProducts = Product::select('id','main_image')->where('id','!=',$id)->where(['group_code'=>$productDetails->group_code,'status'=>1])->get();
+        }
+
         return view("front.products.detail")->with(
-            compact("productDetails", "total_stock", "relatedProducts")
+            compact("productDetails", "total_stock", "relatedProducts","groupProducts")
         );
     }
     public function getPrice(Request $request)
@@ -213,10 +217,14 @@ class ProductsController extends Controller
     public function addtocart(Request $request)
     {
         if ($request->isMethod("post")) {
+            if($request->quantity<=0 || $request->quantity=="")
+            {
+                $request->quantity = 1;
+            }
             //check stock product are available or not
             $getProductStock = ProductsAttribute::where([
                 "product_id" => $request->product_id,
-                "size" => $request->size,
+                "size"       => $request->size,
             ])->first();
             if ($getProductStock->stock < $request->quantity) {
                 $message = "Required quantity is not available!";
@@ -234,13 +242,13 @@ class ProductsController extends Controller
             if (Auth::check()) {
                 $countProduct = Cart::where([
                     "product_id" => $request->product_id,
-                    "size" => $request->size,
-                    "user_id" => Auth::user()->id,
+                    "size"       => $request->size,
+                    "user_id"    => Auth::user()->id,
                 ])->count();
             } else {
                 $countProduct = Cart::where([
                     "product_id" => $request->product_id,
-                    "size" => $request->size,
+                    "size"       => $request->size,
                     "session_id" => Session::get("session_id"),
                 ])->count();
             }
@@ -258,10 +266,10 @@ class ProductsController extends Controller
             //Save product in cart
             Cart::insert([
                 "session_id" => $session_id,
-                "user_id" => $user_id,
+                "user_id"    => $user_id,
                 "product_id" => $request->product_id,
-                "size" => $request->size,
-                "quantity" => $request->quantity,
+                "size"       => $request->size,
+                "quantity"   => $request->quantity,
             ]);
             $message = "Product has been added in cart!";
             session::flash("success_message", $message);
@@ -289,7 +297,7 @@ class ProductsController extends Controller
             $availableStock = ProductsAttribute::select("stock")
                 ->where([
                     "product_id" => $cartDetails["product_id"],
-                    "size" => $cartDetails["size"],
+                    "size"       => $cartDetails["size"],
                 ])
                 ->first()
                 ->toArray();
@@ -298,9 +306,9 @@ class ProductsController extends Controller
             if ($data["qty"] > $availableStock["stock"]) {
                 $userCartItems = Cart::userCartItems();
                 return response()->json([
-                    "status" => false,
+                    "status"  => false,
                     "message" => "Product stock is not available!",
-                    "view" => (string) View::make(
+                    "view"    => (string) View::make(
                         "front.products.cart_items"
                     )->with(compact("userCartItems")),
                 ]);
@@ -309,15 +317,15 @@ class ProductsController extends Controller
             //Check Size Available
             $availableSize = ProductsAttribute::where([
                 "product_id" => $cartDetails["product_id"],
-                "size" => $cartDetails["size"],
-                "status" => 1,
+                "size"       => $cartDetails["size"],
+                "status"     => 1,
             ])->count();
             if ($availableSize == 0) {
                 $userCartItems = Cart::userCartItems();
                 return response()->json([
-                    "status" => false,
+                    "status"  => false,
                     "message" => "Product size is not available!",
-                    "view" => (string) View::make(
+                    "view"    => (string) View::make(
                         "front.products.cart_items"
                     )->with(compact("userCartItems")),
                 ]);
@@ -477,7 +485,7 @@ class ProductsController extends Controller
         }
     }
 
-    //Place Order
+    //Place Order Checkout
     public function checkout(Request $request)
     {
         $userCartItems = Cart::userCartItems();
@@ -496,10 +504,11 @@ class ProductsController extends Controller
         {
             //Calculate Total Product weight
             $product_weight = $item->product->product_weight;
-            $total_weight += $product_weight;
+            $total_weight = $total_weight + ($product_weight * $item->quantity);
             //Get Attribute Price
             $attrPrice = Product::getAttrDiscountedPrice($item->product_id,$item->size);
-            $total_price = $total_price+( $attrPrice['final_price']*$item->quantity);
+            $total_price = $total_price + ( $attrPrice['final_price']*$item->quantity);
+         
         }
 
         foreach($deliveryAddresses as $key=> $value)
@@ -507,6 +516,52 @@ class ProductsController extends Controller
             $shippingCharges = ShippingCharge::getShippingCharges($total_weight,$value['country']);
             //Make shipping charges insert array
             $deliveryAddresses[$key]['shipping_charges'] = $shippingCharges;
+            //Check if delivery pincode exists In COD pincode list
+            $deliveryAddresses[$key]['cod_pincode_count'] = DB::table('cod_pincodes')->where('pincode',$value['pincode'])->count();
+             //Check if delivery pincode exists In Prepaid pincode list
+             $deliveryAddresses[$key]['prepaid_pincode_count'] = DB::table('prepaid_pincodes')->where('pincode',$value['pincode'])->count();
+            
+        }
+        //Web security Check
+        // echo "<pre>";
+        // print_r($userCartItems);die;
+        //Fatch user cart item
+        foreach($userCartItems as $kry => $cart)
+        {
+            $product_status = Product::getProductStatus($cart->product_id);
+            if($product_status == 0 )
+            {
+                //Product::deleteCartProduct($cart->product_id);
+                $message = $cart->product->product_code.' is not available so please removed from cart.';
+                Session::flash('error_message',$message);
+                return redirect('/cart');
+            }
+            //Prevent out of stock products to order
+            $product_stock = Product::getProductStock($cart->product_id,$cart->size);
+            if($product_stock==0)
+            {
+                $message = $cart->product->product_code.' is not available so please removed from cart.';
+                Session::flash('error_message',$message);
+                return redirect('/cart');
+            }
+            //Prevent disabled or Delete Product Attributes to order
+            $productCount = Product::getAttributeCount($cart->product_id,$cart->size);
+            if($productCount==0)
+            {
+                $message = $cart->product->product_code.' is not available so please removed from cart.';
+                Session::flash('error_message',$message);
+                return redirect('/cart');
+            }
+             //Prevent disabled Categories Products to order
+             $categoryStatus = Product::getCategoryStatus($cart->product->category_id);
+             if($categoryStatus == 0)
+             {
+                $message = $cart->product->product_code.' is not available so please removed from cart.';
+                Session::flash('error_message',$message);
+                return redirect('/cart');
+             }
+
+
         }
         
         if ($request->isMethod("post")) {
@@ -525,7 +580,13 @@ class ProductsController extends Controller
 
             if ($data["payment_gateway"] == "COD") {
                 $payment_method = "COD";
-            } else {
+            }
+            else if ($data["payment_gateway"] == "Paypal")
+            {
+                $payment_method = "Paypal";
+            }
+            else
+            {
                 echo "Prepaid Method Coming Soon";
                 die();
                 $payment_method = "Prepaid";
@@ -588,14 +649,22 @@ class ProductsController extends Controller
                 $cartItem->product_color = $getProductDetails["product_color"];
                 $cartItem->product_size = $item["size"];
                 //Get Discount Price
-                $getAttrDiscountedPrice = Product::getAttrDiscountedPrice(
-                    $item["product_id"],
-                    $item["size"]
-                );
-                $cartItem->product_price =
-                    $getAttrDiscountedPrice["final_price"];
+                $getAttrDiscountedPrice = Product::getAttrDiscountedPrice($item["product_id"],$item["size"]);
+                $cartItem->product_price = $getAttrDiscountedPrice["final_price"];
                 $cartItem->product_qty = $item["quantity"];
                 $cartItem->save();
+                
+                //Reduce Stock Management Script Start
+                if($data['payment_gateway'] == "COD")
+                {
+                    //Current stock
+                    $getProductStock = ProductsAttribute::where(['product_id'=>$item['product_id'],'size'=>$item['size']])->first()->toArray();
+                    //Calculate Stock
+                    $newStock = $getProductStock['stock'] - $item['quantity'];
+                    //Update Stock
+                    ProductsAttribute::where(['product_id'=>$item['product_id'],'size'=>$item['size']])->update(['stock'=>$newStock]);
+                }
+                //Reduce Stock Management Script End
             }
             //Empty The user cart
             Cart::where("user_id", Auth::user()->id)->delete();
@@ -608,6 +677,7 @@ class ProductsController extends Controller
                     "Dear Customer,Your order" .
                     $order_id .
                     "has been successfully placed with Ecom Shop BD. We will intimate you once your order is shipped";
+                //Send SMS Mobile
                 $mobile = Auth::user()->mobile;
                 //Sms::sendSms($message,$mobile);
                 $orderDetails = Order::with("orders_products")
@@ -630,8 +700,14 @@ class ProductsController extends Controller
                         ->subject("Order Placed - EcomShopBD Cloth Store");
                 });
                 return redirect("/thanks");
-            } else {
-                echo "Prepaid Method Coming Soon";
+            }
+            elseif($data["payment_gateway"] == "Paypal")
+            {
+                return redirect('paypal');
+            }
+            else
+            {
+                echo "Other Prepaid Method Coming Soon";
                 die();
             }
         }
@@ -728,6 +804,32 @@ class ProductsController extends Controller
                 "id" => $request->id,
                 "success_message" => $message,
             ]);
+        }
+    }
+    public function checkPincode(Request $request)
+    {
+        if($request->isMethod('post'))
+        {
+           $validator = Validator::make($request->all(),['pincode'=>'numeric']);
+           if(!$validator->passes())
+           {
+                return response()->json(['status'=>0,'error'=>$validator->errors()->toArray()]);
+           }
+        
+            
+           $codPincodeCount = DB::table('cod_pincodes')->where('pincode',$request->pincode)->count();
+           $prepaidPincodeCount = DB::table('prepaid_pincodes')->where('pincode',$request->pincode)->count();
+           if($codPincodeCount == 0 && $prepaidPincodeCount == 0)
+           {
+                $status = 1;
+                $message = "This pincode is not available for delivery.";
+           }
+           else
+           {
+                $status = 2;
+                $message = "This pincode is available for delivery.";
+           }
+            return response()->json(['status' => $status,'message'=>$message]);
         }
     }
 }

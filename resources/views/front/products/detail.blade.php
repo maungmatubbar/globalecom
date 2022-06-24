@@ -67,6 +67,14 @@
             <h3>{{ $productDetails->product_name }}  </h3>
             <small>- {{ $productDetails->brand->name }}</small>
             <hr class="soft"/>
+            @if(count($groupProducts)>0)
+                  <div>
+                        <div><strong>More Colors: </strong></div>
+                        @foreach ($groupProducts as $product)
+                            <a href="{{ url('/product/'.$product->id) }}"><img style="width: 50px" src="{{ asset('images/product_images/small/'.$product->main_image) }}"  alt="{{ $product->image }}"></a>
+                        @endforeach
+                  </div>
+            @endif
             <small>{{ $total_stock }} items in stock</small>
             <form class="form-horizontal qtyFrm" action="{{ url('add-to-cart') }}" method="post">
                 @csrf
@@ -76,10 +84,10 @@
                     @if($discounted_price>0)
                      <del style="color:red"><h4 class="getAttrPrice">Tk.{{ $productDetails->product_price }}</h4></del>
                     @else
-                     <h4 class="getAttrPrice">Tk.{{ $productDetails->product_price }}</h4>
+                    <h5 class="getAttrPrice">TK.{{ $productDetails->product_price }}</h5>
                     @endif
                     @if($discounted_price>0)
-                    <h5 class="discountedPrice">Discount Price Tk.{{ $discounted_price }}</h5>
+                        <h5 class="discountedPrice">Discount Price TK.{{ $discounted_price }}</h5>
                     @endif
                         <select name="size" class="span2 pull-left" id="getPrice" product-id="{{ $productDetails->id }}" required>
                             <option value="">Select Size</option>
@@ -87,11 +95,21 @@
                             <option value="{{ $attribute->size }}">{{ $attribute->size }}</option>
                             @endforeach
                         </select>
-                        <input type="number" name="quantity" class="span1" value="1" placeholder="Qty." min="1" required />
+                        <input type="number" name="quantity" class="span1" min="1" placeholder="Qty."  required />
                         <button type="submit" class="btn btn-large btn-primary pull-right"> Add to cart <i class=" icon-shopping-cart"></i></button>
+                    </div>
+                    <div class="control-group">
+                        <strong>Delivery: </strong>
+                       <div>
+                            <input type="text" class="span2" name="pincode" id="pincode" placeholder="Check Pincode">
+                            <button type="button" class="btn" min="1" id="checkPincode">Check</button>
+                            <p class="pincode_error" style="color: red"></p>
+                            <p class="pincode_success" style="color: green"></p>
+                       </div>
                     </div>
                 </div>
             </form>
+
         
             <hr class="soft clr"/>
             <p class="span6">

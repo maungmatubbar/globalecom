@@ -121,6 +121,7 @@ class UsersController extends Controller
     public function logout(){
         Session::forget('couponAmount');
         Session::forget('couponCode');
+        Session::flush();
         Auth::logout();
         return redirect('/');
     }

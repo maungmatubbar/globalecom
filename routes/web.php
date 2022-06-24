@@ -88,6 +88,9 @@ Route::prefix('/admin')->namespace('Admin')->group(function () {
         Route::get('/view-shipping-charges','ShippingController@viewShippingCharges');
         Route::get('/update-shipping-status','ShippingController@updateShippingStatus');
         Route::match(['get','post'],'edit-shipping-charges/{id}','ShippingController@editShippingCharges');
+        //Get All User
+        Route::get('users','UsersController@users');
+        Route::post('/update-user-status','UsersController@updateUserStatus');
         
     });
 });
@@ -138,6 +141,11 @@ Route::namespace('Front')->group(function(){
     Route::match(['GET','POST'],'/confirm/{code}','UsersController@confirmAccount');
     //Forget Password
     Route::match(['get', 'post'], '/forgot-password','UsersController@forgotPassword');
+    //Check Delivery Pincode
+    Route::post('/check-pincode','ProductsController@checkPincode');
+    //Search Products
+    Route::post('/search-products','ProductsController@listing');
+    //For Customer Login a Or Registration
     Route::group(['middleware'=>['checkUser']],function(){
         //My Account
          Route::match(['get', 'post'], '/account','UsersController@account');
@@ -159,6 +167,14 @@ Route::namespace('Front')->group(function(){
         Route::get('/orders','OrdersController@orders');
         //Order Details
         Route::get('/orders/{id}','OrdersController@ordersDetails');
+        //Paypal Payment method
+        Route::get('/paypal','PaypalController@paypal');
+        //Paypal success
+        Route::get('/paypal/success','PaypalController@success');
+        //Paypal Fail
+        Route::get('/paypal/fail','PaypalController@fail');
+        // Paypal IPN
+        Route::any('/paypal/ipn','PaypalController@ipn');
     });
    
 

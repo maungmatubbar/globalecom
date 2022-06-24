@@ -3,28 +3,30 @@
 <div class="span9">
     <ul class="breadcrumb">
         <li><a href="{{ url('/') }}">Home</a> <span class="divider">/</span></li>
-        <li class="active"><?php echo $categoryDetails['breadcrumbs'] ?></li>
+        <li class="active">{!! $categoryDetails['breadcrumbs'] !!}</li>
     </ul>
     <h3> {{ $categoryDetails['catDetails']['category_name'] }} <small class="pull-right"> {{ count($categoryProducts) }} products are available </small></h3>
     <hr class="soft"/>
     <p>
         {{ $categoryDetails['catDetails']['description'] }}
     </p>
-    <hr class="soft"/>
-    <form name="sortProducts" id="sortProducts" class="form-horizontal span6">
-        <div class="control-group">
-            <input type="hidden" name="url" id="url" value="{{ $url }}">
-            <label class="control-label alignL">Sort By </label>
-            <select name="sort" id="sort">
-                <option value="">Select</option>
-                <option value="product_latest">Latest Products</option>
-                <option value="product_name_a_z">Price name A - z</option>
-                <option value="product_name_z_a">Price name Z - A</option>
-                <option value="lowest_price_first">Lowest Price first</option>
-                <option value="highest_price_first">Highest Price first</option>
-            </select>
-        </div>
-    </form>
+    @if (!isset($_REQUEST['search']))
+        <hr class="soft"/>
+        <form name="sortProducts" id="sortProducts" class="form-horizontal span6">
+            <div class="control-group">
+                <input type="hidden" name="url" id="url" value="{{ $url }}">
+                <label class="control-label alignL">Sort By </label>
+                <select name="sort" id="sort">
+                    <option value="">Select</option>
+                    <option value="product_latest">Latest Products</option>
+                    <option value="product_name_a_z">Price name A - z</option>
+                    <option value="product_name_z_a">Price name Z - A</option>
+                    <option value="lowest_price_first">Lowest Price first</option>
+                    <option value="highest_price_first">Highest Price first</option>
+                </select>
+            </div>
+        </form>
+    @endif
     
    <!-- <div id="myTab" class="pull-right">
         <a href="#listView" data-toggle="tab"><span class="btn btn-large"><i class="icon-list"></i></span></a>
@@ -33,7 +35,7 @@
     <br class="clr"/>
     <div class="tab-content filter_products" id="filter_products">
         <!--<div class="tab-pane" id="listView">
-            @foreach ($categoryProducts as $product)
+            {{-- @foreach ($categoryProducts as $product)
                 <div class="row">
                     <div class="span2">
                        @if(isset($product['main_image']))
@@ -71,15 +73,17 @@
                     </div>
                 </div>
                 <hr class="soft"/>
-            @endforeach
+            @endforeach --}}
         </div>-->
         @include('front.products.ajax_products_list')
        
     </div>
     <a href="compair.html" class="btn btn-large pull-right">Compair Product</a>
+    @if (!isset($_REQUEST['search']))
         <div class="pagination">
             {{  $categoryProducts->appends(['sort'=>'lowest_price_first'])->links()  }}
         </div>
-    <br class="clr"/>
+        <br class="clr"/>
+    @endif
 </div>
 @endsection

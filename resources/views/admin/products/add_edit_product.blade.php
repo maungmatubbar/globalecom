@@ -146,6 +146,10 @@
                           </select>
                         </div>
                         <div class="form-group">
+                          <label for="group_code">Group Code</label>
+                          <input type="text"  name="group_code" class="form-control" id="group_code"  @if(!empty($productdata)) value="{{ $productdata->group_code}}" @else value="{{ old('group_code') }}"@endif placeholder="Enter Group Code.." />
+                        </div>
+                        <div class="form-group">
                           <label for="meta_title">Meta title</label>
                           <textarea class="form-control" name="meta_title" id="meta_title" rows="3" placeholder="Enter ...">@if(!empty($productdata)) {{ $productdata->meta_title}} @else {{ old('meta_title') }} @endif</textarea>
                         </div>
@@ -261,6 +265,7 @@
                   <!-- /.row -->
               </div>
               <!-- /.card-body -->
+              <hr/>
               <div class="card-footer">
                   <button type="submit" class="btn btn-primary">@if(empty($productdata))Save product info @else Update product info @endif</button>
               </div>

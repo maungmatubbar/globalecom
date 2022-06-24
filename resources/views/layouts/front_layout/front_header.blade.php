@@ -44,8 +44,10 @@
                     @endforeach
                     <li><a href="#">About</a></li>
                 </ul>
-                <form class="navbar-search pull-left" action="#">
-                    <input type="text" class="search-query span2" placeholder="Search"/>
+                <form class="navbar-search pull-left" action="{{ url('/search-products') }}" method="post">
+                    @csrf
+                    <input type="text" name="search" class="search-query span2" placeholder="Search"/>
+                    <button type="submit">Go</button>
                 </form>
                 <ul class="nav pull-right">
                     

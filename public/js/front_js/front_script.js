@@ -144,7 +144,7 @@ $(document).ready(function() {
                     $('.getAttrPrice').html("<del style='color:red'> Tk." + resp['price'] + "<del>");
                     $('.discountedPrice').html("<h5> Discount Price TK." + resp['final_price'] + "</h5>");
                 } else {
-                    $('.getAttrPrice').html(resp['price']);
+                    $('.getAttrPrice').html("<h5>TK." + resp['price'] + "</h5>");
                 }
             },
             error: function(resp) {
@@ -417,6 +417,22 @@ $(document).ready(function() {
         var shipping_charges = $(this).attr("shipping_charges");
         var total_price = $(this).attr("total_price");
         var coupon_amount = $(this).attr("coupon_amount");
+        var codpincodeCount = $(this).attr("codpincodeCount");
+        var prepaidpincodeCount = $(this).attr("prepaidpincodeCount");
+        if (codpincodeCount > 0) {
+            //Show COD Method
+            $('.codMethod').show();
+        } else {
+            //Hide COD Method
+            $('.codMethod').hide();
+        }
+        if (prepaidpincodeCount > 0) {
+            //Show Prepaid Method
+            $('.prepaidMethod').show();
+        } else {
+            //Hide Prepaid Method
+            $('.prepaidMethod').hide();
+        }
         if (coupon_amount == "") {
             coupon_amount = 0;
         }
@@ -424,5 +440,36 @@ $(document).ready(function() {
         $('.shipping_charges').html('TK.' + shipping_charges);
         var grand_total = parseInt(total_price) + parseInt(shipping_charges) - parseInt(coupon_amount);
         $('.grand_total').html('Tk.' + grand_total);
+    });
+    //Check Pincode for Delivery
+    $('#checkPincode').click(function() {
+        var pincode = $('#pincode').val();
+        if (pincode == "") {
+            alert("Please enter delivery pincode");
+        }
+        $.ajax({
+            type: 'post',
+            url: '/check-pincode',
+            data: { pincode: pincode },
+            beforeSend: function() {
+                $('.pincode_error').text('');
+                $('.pincode_success').text('');
+            },
+            success: function(resp) {
+                if (resp.status == 0) {
+                    $.each(resp.error, function(key, value) {
+                        $('p.' + key + '_error').text(value[0]);
+                    });
+                } else if (resp.status == 1) {
+                    $('.pincode_error').text(resp.message);
+                } else {
+                    $('.pincode_success').text(resp.message);
+                }
+
+            },
+            error: function(resp) {
+                alert('Error');
+            }
+        })
     });
 });

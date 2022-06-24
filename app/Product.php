@@ -76,4 +76,38 @@ class Product extends Model
         $getProductImage = Product::select('main_image')->where('id',$product_id)->first()->toArray();
         return $getProductImage['main_image'];
     }
+    //Get Prduct Status
+    public static function getProductStatus($product_id)
+    {
+        $getProductStatus =  Product::select('status')->where('id',$product_id)->first();
+        return $getProductStatus->status;
+    }
+    //Chcck Product Stock 
+    public static function getProductStock($product_id,$size)
+    {
+        $getProductStock = ProductsAttribute::select('stock')->where(['product_id'=>$product_id,'size'=>$size])->first();
+        return $getProductStock->stock; 
+    }
+    //Prevent Disable
+    public static function getAttributeCount($product_id,$product_size)
+    {
+        $getAttributeCount = ProductsAttribute::where([
+            'product_id'=>$product_id,
+            'size'      => $product_size,
+            'status'    => 1
+        ])->count();
+        return $getAttributeCount;    
+    }
+    public static function getCategoryStatus($category_id)
+    {
+        $getCategoryStatus = Category::select('status')->where('id',$category_id)->first();
+        return $getCategoryStatus->status;
+    }
+    //Delete Cart Product
+    public static function deleteCartProduct($product_id)
+    {
+        Cart::where('product_id',$product_id) ->delete();
+    }
+    
+    
 }

@@ -42,7 +42,7 @@
                     <tr id="tableRow-{{ $deliveryAddress['id'] }}"> 
                         <td> 
                             <div class="control-group" style="float:left; margin-top:-2px; margin-right:5px">
-                                <input type="radio" id="address{{ $deliveryAddress['id'] }}" name="address_id" value="{{ $deliveryAddress['id'] }}" shipping_charges="{{ $deliveryAddress['shipping_charges'] }}" total_price="{{ $total_price }}" coupon_amount="{{ Session::get('couponAmount') }}">
+                                <input type="radio" id="address{{ $deliveryAddress['id'] }}" name="address_id" value="{{ $deliveryAddress['id'] }}" shipping_charges="{{ $deliveryAddress['shipping_charges'] }}" total_price="{{ $total_price }}" coupon_amount="{{ Session::get('couponAmount') }}" codpincodeCount="{{ $deliveryAddress['cod_pincode_count'] }}" prepaidpincodeCount = "{{ $deliveryAddress['prepaid_pincode_count'] }}">
                                 </div>
                             </div>
                             <div class="control-group">
@@ -141,14 +141,20 @@
                             <div class="control-group">
                                 <label class="control-label"><strong> PAYMENT METHODS: </strong></label>
                                 <div class="controls">
-                                    <span>
+                                    <span class="codMethod">
                                         <label>
                                             <input class="form-check-input" type="radio" name="payment_gateway" id="COD" value="COD">
                                             <strong> COD(Cash On Delivery)</strong>
-                                        </label>&nbsp;&nbsp;
+                                        </label>&nbsp;
+                                    </span>
+                                    <span class="prepaidMethod">
                                         <label>
                                             <input class="form-check-input" type="radio" name="payment_gateway" id="SSL" value="SSL">
                                             <strong>SSL</strong>
+                                        </label>&nbsp;
+                                        <label>
+                                            <input class="form-check-input" type="radio" name="payment_gateway" id="Paypal" value="Paypal">
+                                            <strong>Paypal</strong>
                                         </label>
                                     </span>
                                 </div>

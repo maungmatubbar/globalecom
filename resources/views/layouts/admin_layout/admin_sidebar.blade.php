@@ -66,14 +66,14 @@
                 <?php $active="";?>
                 @endif
                 <a href="{{ url('/admin/settings') }}" class="nav-link {{ $active }}">
-                  <i class="fas fa-user-shield nav-icon"></i>
+                  <i class="fas fa-lock nav-icon"></i>
                   <p>Admin password update</p>
                 </a>
               </li>
             </ul>
           </li>
               <!-- Catelogues-->
-              @if(Session::get('page')=="sections" ||  Session::get('page')=="brands"|| Session::get('page')=="categories" || Session::get('page')=="products"|| Session::get('page')=="banners" || Session::get('page')=="coupons"|| Session::get('page')=='orders' || Session::get('page')=='shipping')
+              @if(Session::get('page')=="sections" ||  Session::get('page')=="brands"|| Session::get('page')=="categories" || Session::get('page')=="products"|| Session::get('page')=="banners" || Session::get('page')=="coupons"|| Session::get('page')=='orders' || Session::get('page')=='shipping' || Session::get('page')=='users')
               <?php $active = 'active'; $menuopen = 'menu-open'; ?>
               @else 
                 <?php $active=""; $menuopen=''; ?>
@@ -107,7 +107,7 @@
                 @endif
                 <li class="nav-item">
                   <a href="{{ url('/admin/brands') }}" class="nav-link {{ $active }}">
-                    <i class="fas fa-dot-circle nav-icon"></i>
+                    <i class="fa fa-campground nav-icon"></i>
                     <p>Brands</p>
                   </a>
                 </li>
@@ -119,7 +119,7 @@
                   @endif
                 <li class="nav-item">
                   <a href="{{ url('/admin/categories') }}" class="nav-link {{ $active }}">
-                    <i class="fas fa-dot-circle nav-icon"></i>
+                    <i class="fas fa-list-alt nav-icon"></i>
                     <p>Categories</p>
                   </a>
                 </li>
@@ -131,7 +131,7 @@
                   @endif
                 <li class="nav-item">
                   <a href="{{ url('/admin/products') }}" class="nav-link {{ $active }}">
-                    <i class="fas fa-dot-circle nav-icon"></i>
+                    <i class="fas fa-store nav-icon"></i>
                     <p>Products</p>
                   </a>
                 </li>
@@ -143,7 +143,7 @@
                 @endif
                 <li class="nav-item">
                   <a href="{{ url('/admin/banners') }}" class="nav-link {{ $active }}">
-                    <i class="fas fa-dot-circle nav-icon"></i>
+                    <i class="fas fa-sliders-h nav-icon"></i>
                     <p>Banners</p>
                   </a>
                 </li>
@@ -155,7 +155,7 @@
                     <?php $active="";?>
                   @endif
                     <a href="{{ url('/admin/coupons') }}" class="nav-link {{ $active }}">
-                      <i class="fas fa-dot-circle nav-icon"></i>
+                      <i class="fas fa-gift nav-icon"></i>
                       <p>Coupons</p>
                     </a>
                 </li>
@@ -167,7 +167,7 @@
                   @endif
                 <li class="nav-item">
                   <a href="{{ url('/admin/orders') }}" class="nav-link {{ $active }}">
-                    <i class="fas fa-dot-circle nav-icon"></i>
+                    <i class="fas fa-cube nav-icon"></i>
                     <p>Orders</p>
                   </a>
                 </li>
@@ -179,8 +179,20 @@
                   @endif
                   <li class="nav-item">
                     <a href="{{ url('/admin/view-shipping-charges') }}" class="nav-link {{ $active }}">
-                      <i class="fas fa-dot-circle nav-icon"></i>
+                      <i class="fas fa-shipping-fast nav-icon"></i>
                       <p>Shipping Charges</p>
+                    </a>
+                  </li>
+                  <!--Users-->
+                @if(Session::get('page')=="users")
+                    <?php $active = 'active'; ?>
+                  @else 
+                    <?php $active="";?>
+                  @endif
+                  <li class="nav-item">
+                    <a href="{{ url('/admin/users') }}" class="nav-link {{ $active }}">
+                      <i class="fas fa-user-circle nav-icon"></i>
+                      <p>Users</p>
                     </a>
                   </li>
               </ul>

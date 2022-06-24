@@ -181,6 +181,7 @@ class ProductsController extends Controller
         $product->product_url = str_slug($request->product_name."-".rand(11,999));
         $product->product_code = $request->product_code;
         $product->product_color = $request->product_color;
+        $product->group_code = $request->group_code;
         $product->product_price = $request->product_price;
         $product->product_discount = $request->product_discount;
         $product->product_weight = $request->product_weight;
