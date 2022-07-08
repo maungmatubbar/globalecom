@@ -13827,7 +13827,7 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
 }
 
 [class*="sidebar-dark-"] {
-    background-color: #343a40;
+    background-color: #092c4e;
 }
 
 [class*="sidebar-dark-"] .user-panel a:hover {
@@ -13902,7 +13902,7 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
 [class*="sidebar-dark-"] .nav-treeview>.nav-item>.nav-link.active,
 [class*="sidebar-dark-"] .nav-treeview>.nav-item>.nav-link.active:hover,
 [class*="sidebar-dark-"] .nav-treeview>.nav-item>.nav-link.active:focus {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: #c2c7d0;
     color: #343a40;
 }
 
@@ -13917,7 +13917,7 @@ body:not(.layout-fixed) .main-sidebar .sidebar {
 
 .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active,
 .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
-    background-color: #007bff;
+    background-color: #203348;
     color: #fff;
 }
 
@@ -19210,7 +19210,7 @@ body.text-sm .control-sidebar {
 }
 
 .navbar-white {
-    background-color: #fff;
+    background-color: #cbd3db;
     color: #1f2d3d;
 }
 

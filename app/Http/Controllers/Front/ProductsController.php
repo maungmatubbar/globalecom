@@ -103,8 +103,12 @@ class ProductsController extends Controller
         }
         else 
         {
+            //Give Request current url
             $url = Route::getFacadeRoot()->current()->uri();
+            //print_r($url);die;
             $categoryCount = Category::where(["url" => $url,"status" => 1])->count();
+            
+           
             if(isset($_REQUEST['search']) && !empty($_REQUEST['search']))
             {
                 $search_product = $_REQUEST['search'];
@@ -119,12 +123,12 @@ class ProductsController extends Controller
                 })->where('status',1)->get();
                 $page_name = "listing";
                 return view("front.products.listing")->with(compact("categoryDetails","categoryProducts","page_name"));
-
-
             }
             else if ($categoryCount > 0)
             {
                 $categoryDetails  = Category::categoryDetails($url); //-->this categoryDetails in Category Model
+                $category= Category::select('section_id')->where(["url" => $url,"status" => 1])->first();
+                Session::put('section_id',$category->section_id);
                 $categoryProducts = Product::with("brand")->whereIn("category_id", $categoryDetails["categoryIds"])->where("status", 1);
             //If sort option select by user
             /* if(isset($_GET['sort']) && !empty($_GET['sort'])){
@@ -758,9 +762,9 @@ class ProductsController extends Controller
         $this->validate($request, $rules, $customMessage);
     }
     //Delivery Address
-    public function addEditDeliveryAddress($id = null, Request $request)
+    public function addEditDeliveryAddress(Request $request,$id=null)
     {
-        if ($id == null) {
+       if ($id=="") {
             $title = "Add Delivery Address";
             $message = "Your delivery address have been saved successfully";
             $deliveryAddresse = new DeliveryAddress();
@@ -769,7 +773,8 @@ class ProductsController extends Controller
             $message = "Your delivery address have been updated successfully";
             $deliveryAddresse = DeliveryAddress::find($id);
         }
-        if ($request->isMethod("post")) {
+        if ($request->isMethod("post")) 
+        {
             //validation
             $this->validation($request);
             //save delivery address
@@ -788,12 +793,9 @@ class ProductsController extends Controller
             Session::forget("error_message");
             return redirect("/checkout");
         }
-        $countries = Country::where("status", 1)
-            ->get()
-            ->toArray();
-        return view("front.products.add_edit_delivery_address")->with(
-            compact("countries", "title", "deliveryAddresse")
-        );
+        $countries = Country::where("status", 1)->get()->toArray();
+        return view("front.products.add_edit_delivery_address")->with(compact("countries", "title", "deliveryAddresse"));
+        echo "hello";
     }
     public function deleteDeliveryAddress(Request $request)
     {

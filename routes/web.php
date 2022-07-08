@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 //Route::get('/home', 'HomeController@index')->name('home');
 
 use App\Category;
+use App\CmsPage;
 Route::prefix('/admin')->namespace('Admin')->group(function () {
     //All the admin routes will be defined here:-
     Route::match(['get', 'post'], '/', 'AdminController@login');
@@ -86,11 +87,15 @@ Route::prefix('/admin')->namespace('Admin')->group(function () {
         Route::get('/print-pdf-invoice/{id}','OrdersController@printPdfInvoice');
         //View Shipping Charges
         Route::get('/view-shipping-charges','ShippingController@viewShippingCharges');
-        Route::get('/update-shipping-status','ShippingController@updateShippingStatus');
+        Route::post('/update-shipping-status','ShippingController@updateShippingStatus');
         Route::match(['get','post'],'edit-shipping-charges/{id}','ShippingController@editShippingCharges');
         //Get All User
         Route::get('users','UsersController@users');
         Route::post('/update-user-status','UsersController@updateUserStatus');
+        //CMS
+        Route::get('/cms-pages','CmsController@cmsPages');
+        Route::post('/update-cms-page-status','CmsController@updateCmsPageStatus');
+        Route::match(['get','post'],'add-edit-cms-page/{id?}','CmsController@addEditCmsPage');
         
     });
 });
@@ -107,6 +112,14 @@ Route::namespace('Front')->group(function(){
       //$url = $catUrl['url'];
      // Route::get('/'.$url,'ProductsController@listing');
       Route::get('/'.$catUrl,'ProductsController@listing');
+    }
+    //CMSPages
+    $cmsUrls = CmsPage::select('url')->where('status',1)->get()->pluck('url')->toArray();
+    // echo "<pre>";
+    // print_r($cmsUrls);die;
+    foreach( $cmsUrls  as $cmsUrl){
+        
+        Route::get('/'.$cmsUrl,'CmsController@cmsPage');
     }
     Route::get('/ajax-pagination','ProductsController@ajaxPagination');
     //Product Detail Route
@@ -145,6 +158,8 @@ Route::namespace('Front')->group(function(){
     Route::post('/check-pincode','ProductsController@checkPincode');
     //Search Products
     Route::post('/search-products','ProductsController@listing');
+    //Contact
+    Route::match(['get','post'],'/contact','CmsController@contact');
     //For Customer Login a Or Registration
     Route::group(['middleware'=>['checkUser']],function(){
         //My Account
@@ -177,5 +192,4 @@ Route::namespace('Front')->group(function(){
         Route::any('/paypal/ipn','PaypalController@ipn');
     });
    
-
 });

@@ -17,7 +17,7 @@
     @endif
 	<div class="row">
 		<div class="span4">
-			<div class="well">
+			<div class="well text-center">
                 <h3>{{ $title }}</h3><br/>
                 <h6>Enter Your Delivery Address Information.</h6>
                 <form id="deliveryAddress" action="{{ url('/add-edit-delivery-address/'.$deliveryAddresse->id) }}" method="post">
@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <div class="controls">
-                        <button type="submit" class="btn block btn-info">Save</button>
+                        <button type="submit" class="btn block btn-info">@if(empty($deliveryAddresse->id)) Save @else Update @endif</button>
                     </div>
                 </form>
             </div>

@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="{{asset('/')}}plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
   <link rel="stylesheet" href="{{asset('/')}}plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{asset('/')}}css/admin_css/adminlte.min.css">
+  <link rel="stylesheet" href="{{asset('/')}}css/admin_css/adminlte.css">
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="{{asset('/')}}plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   <!-- Daterange picker -->
@@ -119,12 +119,15 @@
    // Summernote
    $('#summernote').summernote()
     $("#section").DataTable();                
+    $("#brand").DataTable();                
     $("#categories").DataTable();  
     $("#products").DataTable();  
+    $("#banner").DataTable();  
     $("#coupons").DataTable();  
     $("#orders").DataTable();  
     $("#shipping").DataTable();  
     $("#userDatatable").DataTable();  
+    $("#cmsPage").DataTable();  
 
     $('.select2').select2();
     //Initialize Select2 Elements

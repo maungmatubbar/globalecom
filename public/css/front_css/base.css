@@ -1,5 +1,5 @@
 #mainBody {
-    /* background: url(../images/seperator.png) repeat-x 0 0; */
+    background: url(../images/seperator.png) repeat-x 0 0;
     border-top: 2px solid #dedede;
     padding-top: 18px;
 }
@@ -208,7 +208,7 @@
 .navbar .nav>.active>a:hover,
 .navbar .nav>.active>a:focus {
     color: #fff;
-    background-color: #CF0007;
+    background-color: #00cf11;
     text-shadow: none;
 }
 
@@ -216,11 +216,14 @@
 /* Footer section--------------- */
 
 #footerSection {
-    background: #202020;
+    background: #175258;
     color: white;
     padding: 28px 0 44px;
     margin-top: 20px;
     border-top: 1px solid #444;
+    background-image: url('../../images/front_images/map-bg.png');
+    background-repeat: no-repeat;
+    background-position: 100% 50%;
 }
 
 #footerSection a {
@@ -590,4 +593,11 @@ input.error {
 
 form.cmxform .gray * {
     color: gray;
+}
+
+.search_btn {
+    background: #00cf11;
+    border: none;
+    border-radius: 8px;
+    color: #ccc;
 }

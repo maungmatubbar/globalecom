@@ -1,12 +1,12 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="{{ url('/') }}" class="brand-link">
       <!--<img src="{{asset('/')}}images/admin_images/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">-->
-      <span class="brand-text font-weight-light"> <strong>E-commerce Admin</strong></span>
-    </a>
+      <span class="brand-text font-weight-light"><i class="fas fa-rainbow"></i> <strong style="color:#4cd137;font-weight:italic; ">ECOMSHOP BD</strong></span>
+    </a> 
 
     <!-- Sidebar -->
-    <div class="sidebar">
+     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
@@ -15,7 +15,7 @@
         <div class="info">
           <a href="#" class="d-block">{{ ucwords(Auth::guard('admin')->user()->name) }}</a>
         </div>
-      </div>
+      </div> 
 
       <!-- Sidebar Menu -->
       <nav class="mt-2">
@@ -73,7 +73,7 @@
             </ul>
           </li>
               <!-- Catelogues-->
-              @if(Session::get('page')=="sections" ||  Session::get('page')=="brands"|| Session::get('page')=="categories" || Session::get('page')=="products"|| Session::get('page')=="banners" || Session::get('page')=="coupons"|| Session::get('page')=='orders' || Session::get('page')=='shipping' || Session::get('page')=='users')
+              @if(Session::get('page')=="sections" ||  Session::get('page')=="brands"|| Session::get('page')=="categories" || Session::get('page')=="products"|| Session::get('page')=="banners" || Session::get('page')=="coupons"|| Session::get('page')=='orders' || Session::get('page')=='shipping' || Session::get('page')=='users' || Session::get('page')=="cms-pages")
               <?php $active = 'active'; $menuopen = 'menu-open'; ?>
               @else 
                 <?php $active=""; $menuopen=''; ?>
@@ -193,6 +193,18 @@
                     <a href="{{ url('/admin/users') }}" class="nav-link {{ $active }}">
                       <i class="fas fa-user-circle nav-icon"></i>
                       <p>Users</p>
+                    </a>
+                  </li>
+                  <!--CMS Pages-->
+                  @if(Session::get('page')=="cms-pages")
+                    <?php $active = 'active'; ?>
+                  @else 
+                    <?php $active="";?>
+                  @endif
+                  <li class="nav-item">
+                    <a href="{{ url('/admin/cms-pages') }}" class="nav-link {{ $active }}">
+                      <i class="fas fa-tasks nav-icon"></i>
+                      <p>CMS Pages</p>
                     </a>
                   </li>
               </ul>

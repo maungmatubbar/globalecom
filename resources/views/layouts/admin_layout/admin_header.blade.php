@@ -1,4 +1,4 @@
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<nav class="main-header navbar sticky-top navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
       <li class="nav-item">
@@ -12,7 +12,9 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
       <li class="dropdown">
-          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="">{{ Auth::guard('admin')->user()->name }}
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="">
+            <i class="fa fa-user"></i> 
+            <strong>{{ Auth::guard('admin')->user()->name }}</strong>
           </a>
           <ul class="dropdown-menu">
             <li><a href="{{ url('admin/update-admin-info') }}" class="dropdown-item">My Profile</a></li>

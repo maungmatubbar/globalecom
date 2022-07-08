@@ -11,7 +11,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ url('/admin/dashboard') }}">Home</a></li>
-              <li class="breadcrumb-item active">Banners</li>
+              <li class="breadcrumb-item active">CMS Pages</li>
             </ol>
           </div>
         </div>
@@ -34,43 +34,40 @@
                       </button>
                   </div>
                 @endif 
-                <h3 class="card-title">Banners</h3>
-                <a href="{{ url('/admin/add-edit-banner') }}" class="btn btn-success float-right"><i class="fas fa-plus"></i> Add banner</a>
+                <h3 class="card-title">CMS Pages</h3>
+                <a href="{{ url('/admin/add-edit-cms-page') }}" class="btn btn-success float-right"><i class="fas fa-plus"></i> Add CMS Page</a>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="banner" class="table table-bordered table-hover">
+                <table id="cmsPage" class="table table-bordered table-hover">
                   <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Image</th>
-                    <th>Title</th> 
-                    <th>Link</th>   
-                    <th>Alt</th> 
+                    <th>Title</th>
+                    <th>URL</th>
+                    <th>Created On</th>
                     <th>Status</th>
                     <th>Action</th>
                   </tr>
                   </thead>
                   <tbody>
                     <?php $i=1; ?>
-                    @foreach ($banners as $banner)
-                    
-                    <tr id="tableRow-{{ $banner->id }}">
+                    @foreach ($cmsPages as $page)
+                    <tr id="tableRow-{{ $page->id }}">
                         <td>{{ $i++ }}</td>
-                        <td><img width="200px" src="{{ asset('images/banner_images/'.$banner->image) }}" alt=""></td>
-                        <td>{{ $banner->title }}</td>
-                        <td>{{ $banner->link }}</td>
-                        <td>{{ $banner->alt }}</td>
+                        <td>{{ $page->title }}</td>
+                        <td>{{ $page->url }}</td>
+                        <td>{{ $page->created_at }}</td>
                         <td>
-                          @if($banner->status == 1)
-                              <h4 ><a class="status" id="status-{{ $banner->id }}" record="banner" record_id="{{ $banner->id }}"  href="javascript:void(0)"><i class="fas fa-toggle-on" status="Active"></i></a></h4>
-                          @else()
-                            <h4><a class="status" id="status-{{ $banner->id }}" record="banner" record_id="{{ $banner->id }}"  href="javascript:void(0)" ><i class="fas fa-toggle-off" status="Inactive"></i></a></h4>
+                          @if($page->status == 1)
+                              <h4 ><a class="pagestatus" id="status-{{ $page->id }}" record="cms-page" record_id="{{ $page->id }}"  href="javascript:void(0)"><i class="fas fa-toggle-on" status="Active"></i></a></h4>
+                          @else
+                            <h4><a class="pagestatus" id="status-{{ $page->id }}" record="cms-page" record_id="{{ $page->id }}"  href="javascript:void(0)" ><i class="fas fa-toggle-off" status="Inactive"></i></a></h4>
                           @endif
                       </td>
                       <td>
-                        <a title="Edit" class="btn btn-primary" href="{{ url('/admin/add-edit-banner/'.$banner->id) }}"><i class="fas fa-pencil-alt"></i></a>
-                        <a title="Delete" class="DeleteTableRow1 btn btn-danger" record="banner" record_id="{{ $banner->id }}"  href="javascript:void(0)"><i class="fas fa-trash-alt"></i></a>
+                        <a title="Edit" class="btn btn-primary" href="{{ url('/admin/add-edit-cms-page/'.$page->id) }}"><i class="fas fa-edit"></i></a>
+                        <a title="Delete" class="deleteTableRow btn btn-danger" record="page" record_id="{{ $page->id }}"  href="javascript:void(0)"><i class="fas fa-trash-alt"></i></a>
                       </td>
                     </tr>
                     @endforeach
