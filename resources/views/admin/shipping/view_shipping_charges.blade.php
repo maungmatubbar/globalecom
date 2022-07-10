@@ -38,7 +38,7 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="shipping" class="table table-bordered table-hover">
+                <table id="shipping" class="table table-bordered table-hover table-responsive">
                   <thead>
                   <tr>
                     <th>ID</th>

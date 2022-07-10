@@ -37,7 +37,7 @@
               <h2 class="card-title text-bold">ORDERS</h2>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="orders" class="table table-bordered table-hover">
+                <table id="orders" class="table table-bordered table-hover table-responsive">
                   <thead>
                     <tr>
                         <th>Order ID</th>
@@ -69,17 +69,19 @@
                             <td>{{ $order['payment_method'] }}</td>
                             <td>
                               <span class="btn-group">
-                                <a href="{{ url('admin/orders/'.$order['id']) }}" title="View Order Details" class="btn btn-default btn-sm">
-                                  <i class="fa fa-search-plus"></i>
-                                </a>
-                                 @if($order['order_status']=='Shipped' || $order['order_status'] == 'Delivered')
-                                  <a href="{{ url('admin/view-order-invoice/'.$order['id']) }}" title="Print View Invoice" class="btn btn-default btn-sm">
-                                    <i class="fa fa-print"></i>
+                                @if($orderModule['edit_access']==1 || $orderModule['full_access']==1)
+                                  <a href="{{ url('admin/orders/'.$order['id']) }}" title="View Order Details" class="btn btn-default btn-sm">
+                                    <i class="fa fa-search-plus"></i>
                                   </a>
-                                  <a href="{{ url('admin/print-pdf-invoice/'.$order['id']) }}" title="Print PDF Invoice" class="btn btn-default btn-sm">
-                                    <i class="fa fa-file-pdf"></i>
-                                  </a>
+                                  @if($order['order_status']=='Shipped' || $order['order_status'] == 'Delivered')
+                                    <a href="{{ url('admin/view-order-invoice/'.$order['id']) }}" title="Print View Invoice" class="btn btn-default btn-sm">
+                                      <i class="fa fa-print"></i>
+                                    </a>
+                                    <a href="{{ url('admin/print-pdf-invoice/'.$order['id']) }}" title="Print PDF Invoice" class="btn btn-default btn-sm">
+                                      <i class="fa fa-file-pdf"></i>
+                                    </a>
                                   @endif
+                                @endif
                               </span>
                             </td>
                         </tr>

@@ -447,7 +447,7 @@ $(document).ready(function() {
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
-                        title: 'Product ' + record + ' status inactive successfully!',
+                        title: record + ' status inactive successfully!',
                         showConfirmButton: false,
                         timer: 1500
                     });
@@ -456,7 +456,7 @@ $(document).ready(function() {
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
-                        title: 'Product ' + record + ' status active successfully!',
+                        title: record + ' status active successfully!',
                         showConfirmButton: false,
                         timer: 1500
                     });
@@ -481,7 +481,7 @@ $(document).ready(function() {
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
-                        title: 'Product ' + record + ' status inactive successfully!',
+                        title: record + ' status inactive successfully!',
                         showConfirmButton: false,
                         timer: 1500
                     });
@@ -490,7 +490,7 @@ $(document).ready(function() {
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
-                        title: 'Product ' + record + ' status active successfully!',
+                        title: record + ' status active successfully!',
                         showConfirmButton: false,
                         timer: 1500
                     });
@@ -577,7 +577,7 @@ $(document).ready(function() {
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
-                        title: 'Product ' + record + ' status inactive successfully!',
+                        title: record + ' status inactive successfully!',
                         showConfirmButton: false,
                         timer: 1500
                     });
@@ -586,7 +586,7 @@ $(document).ready(function() {
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
-                        title: 'Product ' + record + ' status active successfully!',
+                        title: record + ' status active successfully!',
                         showConfirmButton: false,
                         timer: 1500
                     });
@@ -612,7 +612,7 @@ $(document).ready(function() {
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
-                        title: 'Product ' + record + ' status inactive successfully!',
+                        title: record + ' status inactive successfully!',
                         showConfirmButton: false,
                         timer: 1500
                     });
@@ -621,7 +621,43 @@ $(document).ready(function() {
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
-                        title: 'Product ' + record + ' status active successfully!',
+                        title: record + ' status active successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            },
+            error: function() {
+                alert('Problem');
+            }
+        });
+    });
+    //Update admin status
+    $(document).on('click', '.updateAdminStatus', function() {
+
+        var status = $(this).children('h4').children("i").attr("status");
+        var record = $(this).attr('record');
+        var record_id = $(this).attr('record_id');
+        $.ajax({
+            type: 'get',
+            url: '/admin/update-' + record + '-status',
+            data: { status: status, record_id: record_id },
+            success: function(res) {
+                if (res['status'] == 0) {
+                    $('#status-' + record_id).html("<h4><i class='fas fa-toggle-off' status='Inactive'></i></h4>");
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: record + ' status inactive successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } else if (res['status'] == 1) {
+                    $('#status-' + record_id).html("<h4><i class='fas fa-toggle-on' status='Active'></i></h4>");
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: record + ' status active successfully!',
                         showConfirmButton: false,
                         timer: 1500
                     });

@@ -45,7 +45,7 @@
                 <a href="{{ url('/admin/add-edit-product') }}" class="btn btn-success float-right"><i class="fas fa-plus"></i> Add product</a>
               </div>
               <!-- /.card-header -->
-              <div class="card-body">
+              <div class="card-body table-responsive">
                 <table id="products" class="table table-bordered table-hover">
                   <thead>
                   <tr>
@@ -81,21 +81,27 @@
                         <td>{{  $product->category->category_name }}</td>
                         <td>{{  $product->section->name }}</td>
                         <td>
-                          @if($product->status == 1)
-                              <h4><a class="ProductStatus" id="product-{{ $product->id }}" product_id="{{ $product->id }}"  href="javascript:void(0)"><i class='fas fa-toggle-on' status="Active"></i></a></h4>
-                          @else()
-                          <h4><a class="ProductStatus" id="product-{{ $product->id }}" product_id="{{ $product->id }}"  href="javascript:void(0)"><i class='fas fa-toggle-off' status="Inactive"></i></a></h4>
+                          @if($productModule['edit_access']==1 || $productModule['full_access']==1)
+                            @if($product->status == 1)
+                                <h4><a class="ProductStatus" id="product-{{ $product->id }}" product_id="{{ $product->id }}"  href="javascript:void(0)"><i class='fas fa-toggle-on' status="Active"></i></a></h4>
+                            @else()
+                            <h4><a class="ProductStatus" id="product-{{ $product->id }}" product_id="{{ $product->id }}"  href="javascript:void(0)"><i class='fas fa-toggle-off' status="Inactive"></i></a></h4>
+                            @endif
                           @endif
                       </td>
                       <td>
                         <span class="btn-group">
-                          <a href="{{ url('admin/add-attributes/'.$product->id) }}" title="Add Attributes" class="btn btn-info btn-sm"><i class="fas fa-plus"></i></a>
+                          @if($productModule['edit_access']==1 || $productModule['full_access']==1)
+                            <a href="{{ url('admin/add-attributes/'.$product->id) }}" title="Add Attributes" class="btn btn-info btn-sm"><i class="fas fa-plus"></i></a>
 
-                          <a href="{{ url('admin/add-images/'.$product->id) }}" title="Add Images" class="btn btn-secondary btn-sm"><i class="fas fa-cloud-upload-alt"></i></a>
+                            <a href="{{ url('admin/add-images/'.$product->id) }}" title="Add Images" class="btn btn-secondary btn-sm"><i class="fas fa-cloud-upload-alt"></i></a>
 
-                          <a title="Edit Product" href="{{ url('admin/add-edit-product/'.$product->product_url) }}" class="btn btn-primary btn-sm"><i class="fas fa-pencil-alt"></i></a>
-
-                          <a title="Delete" class="ConfirmDelete btn btn-danger btn-sm" record="product" recordurl="{{ $product->product_url }}" href="javascript:void(0)"><i class="fas fa-trash-alt"></i></a>
+                            <a title="Edit Product" href="{{ url('admin/add-edit-product/'.$product->product_url) }}" class="btn btn-primary btn-sm"><i class="fas fa-pencil-alt"></i></a>
+                          @endif
+                          
+                          @if($productModule['full_access']==1)
+                            <a title="Delete" class="ConfirmDelete btn btn-danger btn-sm" record="product" recordurl="{{ $product->product_url }}" href="javascript:void(0)"><i class="fas fa-trash-alt"></i></a>
+                          @endif
                         </span>
                       </td>
                     </tr>

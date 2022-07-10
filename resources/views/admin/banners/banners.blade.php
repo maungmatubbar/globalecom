@@ -38,7 +38,7 @@
                 <a href="{{ url('/admin/add-edit-banner') }}" class="btn btn-success float-right"><i class="fas fa-plus"></i> Add banner</a>
               </div>
               <!-- /.card-header -->
-              <div class="card-body">
+              <div class="card-body table-responsive">
                 <table id="banner" class="table table-bordered table-hover">
                   <thead>
                   <tr>

@@ -38,7 +38,7 @@
                 <a href="{{ url('/admin/add-edit-cms-page') }}" class="btn btn-success float-right"><i class="fas fa-plus"></i> Add CMS Page</a>
               </div>
               <!-- /.card-header -->
-              <div class="card-body">
+              <div class="card-body table-responsive">
                 <table id="cmsPage" class="table table-bordered table-hover">
                   <thead>
                   <tr>

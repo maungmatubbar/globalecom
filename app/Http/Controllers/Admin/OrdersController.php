@@ -11,13 +11,35 @@ use App\OrderStatus;
 use App\OrdersLog;
 use Dompdf\Dompdf;
 use Session;
-
+use Auth;
+use App\AdminsRole;
 class OrdersController extends Controller
 {
     public function orders(){
         Session::put('page','orders');
+         //Admin Role And Permission
+         $orderModuleCount = AdminsRole::where(['admin_id'=>Auth::guard('admin')->user()->id,'module'=>'orders'])->count();
+         if(Auth::guard('admin')->user()->type == 'superadmin')
+         {
+            $orderModule['view_access'] = 1;
+            $orderModule['edit_access'] = 1;
+            $orderModule['full_access'] = 1;
+          
+         }
+         else if($orderModuleCount==0)
+         {
+             $message = 'This feature is restricted for you.';
+             Session::flash('error_message',$message);
+             return redirect('/admin/dashboard');
+         }
+         else
+         {
+     
+             $orderModule = AdminsRole::where(['admin_id'=>Auth::guard('admin')->user()->id,'module'=>'orders'])->first();
+         }
+         //End Admin Role
         $orders = Order::with('orders_products')->orderBy('id','Desc')->get()->toArray();
-        return view('admin.orders.orders')->with(compact('orders'));
+        return view('admin.orders.orders')->with(compact('orders','orderModule'));
     }
     public function orderDetails($id){
         $orderDetails = Order::with('orders_products')->where('id',$id)->first()->toArray();

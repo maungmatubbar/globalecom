@@ -73,7 +73,7 @@
             </ul>
           </li>
               <!-- Catelogues-->
-              @if(Session::get('page')=="sections" ||  Session::get('page')=="brands"|| Session::get('page')=="categories" || Session::get('page')=="products"|| Session::get('page')=="banners" || Session::get('page')=="coupons"|| Session::get('page')=='orders' || Session::get('page')=='shipping' || Session::get('page')=='users' || Session::get('page')=="cms-pages")
+              @if(Session::get('page')=="sections" ||  Session::get('page')=="brands"|| Session::get('page')=="categories" || Session::get('page')=="products"|| Session::get('page')=="banners" || Session::get('page')=="coupons"|| Session::get('page')=='orders' || Session::get('page')=='shipping' || Session::get('page')=='users' || Session::get('page')=="cms-pages" || Session::get('page')=="admins_subadmins")
               <?php $active = 'active'; $menuopen = 'menu-open'; ?>
               @else 
                 <?php $active=""; $menuopen=''; ?>
@@ -191,7 +191,7 @@
                   @endif
                   <li class="nav-item">
                     <a href="{{ url('/admin/users') }}" class="nav-link {{ $active }}">
-                      <i class="fas fa-user-circle nav-icon"></i>
+                      <i class="fas fa-users nav-icon"></i>
                       <p>Users</p>
                     </a>
                   </li>
@@ -207,6 +207,20 @@
                       <p>CMS Pages</p>
                     </a>
                   </li>
+                  <!--Admin / Sub-Admin Role Pages-->
+                  @if (Auth::guard('admin')->user()->type=='superadmin' || Auth::guard('admin')->user()->type=='admin')
+                    @if(Session::get('page')=="admins_subadmins")
+                      <?php $active = 'active'; ?>
+                    @else 
+                      <?php $active="";?>
+                    @endif
+                    <li class="nav-item">
+                      <a href="{{ url('/admin/admins-subadmins') }}" class="nav-link {{ $active }}">
+                        <i class="fa fa-unlock" aria-hidden="true"></i>
+                        <p>Admin / Sub-Admin Role</p>
+                      </a>
+                    </li>
+                  @endif
               </ul>
           </li>
         </ul>

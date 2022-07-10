@@ -38,7 +38,7 @@
                 <a href="{{ url('/admin/add-edit-coupon') }}" class="btn btn-success float-right"><i class="fas fa-plus"></i> Add coupon</a>
               </div>
               <!-- /.card-header -->
-              <div class="card-body">
+              <div class="card-body table-responsive">
                 <table id="coupons" class="table table-bordered table-hover">
                   <thead>
                   <tr>
@@ -69,15 +69,21 @@
                         </td>
                         <td>{{ $coupon->expiry_date }}</td>
                         <td>
-                          @if($coupon->status == 1)
-                              <h4 ><a class="status" id="status-{{ $coupon->id }}" record="coupon" record_id="{{ $coupon->id }}"  href="javascript:void(0)"><i class="fas fa-toggle-on" status="Active"></i></a></h4>
-                          @else()
-                            <h4><a class="status" id="status-{{ $coupon->id }}" record="coupon" record_id="{{ $coupon->id }}"  href="javascript:void(0)" ><i class="fas fa-toggle-off" status="Inactive"></i></a></h4>
+                          @if($couponModule['edit_access']==1 || $couponModule['full_access']==1)
+                            @if($coupon->status == 1)
+                                <h4 ><a class="status" id="status-{{ $coupon->id }}" record="coupon" record_id="{{ $coupon->id }}"  href="javascript:void(0)"><i class="fas fa-toggle-on" status="Active"></i></a></h4>
+                            @else()
+                              <h4><a class="status" id="status-{{ $coupon->id }}" record="coupon" record_id="{{ $coupon->id }}"  href="javascript:void(0)" ><i class="fas fa-toggle-off" status="Inactive"></i></a></h4>
+                            @endif
                           @endif
                       </td>
                       <td>
-                        <a title="Edit" class="btn btn-primary" href="{{ url('/admin/add-edit-coupon/'.$coupon->id) }}"><i class="fas fa-pencil-alt"></i></a>
-                        <a title="Delete" class="DeleteTableRow1 btn btn-danger" record="coupon" record_id="{{ $coupon->id }}"  href="javascript:void(0)"><i class="fas fa-trash-alt"></i></a>
+                        @if($couponModule['edit_access']==1 || $couponModule['full_access']==1)
+                          <a title="Edit" class="btn btn-primary" href="{{ url('/admin/add-edit-coupon/'.$coupon->id) }}"><i class="fas fa-pencil-alt"></i></a>
+                        @endif
+                        @if($couponModule['full_access']==1)
+                          <a title="Delete" class="DeleteTableRow1 btn btn-danger" record="coupon" record_id="{{ $coupon->id }}"  href="javascript:void(0)"><i class="fas fa-trash-alt"></i></a>
+                        @endif
                       </td>
                     </tr>
                     @endforeach

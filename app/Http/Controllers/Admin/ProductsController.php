@@ -12,6 +12,8 @@ use App\ProductsImage;
 use App\Brand;
 use Session;
 use Image;
+use App\AdminsRole;
+use Auth;
 class ProductsController extends Controller
 {
     public function products(){
@@ -25,11 +27,28 @@ class ProductsController extends Controller
                     $query->select('id','name');
                 }
             ])->orderBy('id','Desc')->get();
-        // $products = json_decode(json_encode($products));
-        // echo "<pre>";
-        // print_r($products);
-        // exit;
-       return view('admin.products.products')->with(compact('products'));
+        //Admi Role
+        $productModuleCount = AdminsRole::where(['admin_id'=>Auth::guard('admin')->user()->id,'module'=>'products'])->count();
+        if(Auth::guard('admin')->user()->type == 'superadmin')
+        {
+           $productModule['view_access'] = 1;
+           $productModule['edit_access'] = 1;
+           $productModule['full_access'] = 1;
+         
+        }
+        else if($productModuleCount==0)
+        {
+            $message = 'This feature is restricted for you.';
+            Session::flash('error_message',$message);
+            return redirect('/admin/dashboard');
+        }
+        else
+        {
+    
+            $productModule = AdminsRole::where(['admin_id'=>Auth::guard('admin')->user()->id,'module'=>'products'])->first();
+        }
+        //End Admin Role
+       return view('admin.products.products')->with(compact('products','productModule'));
     }
     public function updateProductStatus(Request $request)
     {

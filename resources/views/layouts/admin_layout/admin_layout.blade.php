@@ -128,6 +128,7 @@
     $("#shipping").DataTable();  
     $("#userDatatable").DataTable();  
     $("#cmsPage").DataTable();  
+    $("#adminDataTable").DataTable();  
 
     $('.select2').select2();
     //Initialize Select2 Elements

@@ -8,13 +8,36 @@ use App\Coupon;
 use App\Section;
 use App\User;
 use Session;
+use App\AdminsRole;
+use Auth;
 class CouponsController extends Controller
 {
     public function coupons(){
         Session::put('page','coupons');
+        //Admin Role And Permission
+        $couponModuleCount = AdminsRole::where(['admin_id'=>Auth::guard('admin')->user()->id,'module'=>'coupons'])->count();
+        if(Auth::guard('admin')->user()->type == 'superadmin')
+        {
+           $couponModule['view_access'] = 1;
+           $couponModule['edit_access'] = 1;
+           $couponModule['full_access'] = 1;
+         
+        }
+        else if($couponModuleCount==0)
+        {
+            $message = 'This feature is restricted for you.';
+            Session::flash('error_message',$message);
+            return redirect('/admin/dashboard');
+        }
+        else
+        {
+    
+            $couponModule = AdminsRole::where(['admin_id'=>Auth::guard('admin')->user()->id,'module'=>'coupons'])->first();
+        }
+        //End Admin Role
         $coupons = Coupon::get();
         $coupons = json_decode(json_encode($coupons));
-        return view('admin.coupons.coupons')->with(compact('coupons'));
+        return view('admin.coupons.coupons')->with(compact('coupons','couponModule'));
     }
     public function updateCouponStatus(Request $request){
         if($request->ajax()){

@@ -45,7 +45,7 @@
                 <h3 class="card-title text-bold text-uppercase">Order Details Table</h3>
               </div>
               <!-- /.card-header -->
-              <div class="card-body p-0">
+              <div class="card-body p-0 table-responsive">
                 <table class="table table-striped table-bordered">
                   <tbody>
                     <tr>
@@ -104,7 +104,7 @@
                 <h3 class="card-title text-bold text-uppercase">Delivery Address Table</h3>
               </div>
               <!-- /.card-header -->
-              <div class="card-body p-0">
+              <div class="card-body p-0 table-responsive">
                 <table class="table table-bordered table-striped">
                   <tbody>
                     <tr>
@@ -149,7 +149,7 @@
                 <h3 class="card-title text-bold text-uppercase">Billing Address</h3>
               </div>
               <!-- /.card-header -->
-              <div class="card-body p-0">
+              <div class="card-body p-0 table-responsive">
                 <table class="table table-bordered table-striped">
                   <tbody>
                     <tr>

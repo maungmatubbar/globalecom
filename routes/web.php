@@ -96,6 +96,12 @@ Route::prefix('/admin')->namespace('Admin')->group(function () {
         Route::get('/cms-pages','CmsController@cmsPages');
         Route::post('/update-cms-page-status','CmsController@updateCmsPageStatus');
         Route::match(['get','post'],'add-edit-cms-page/{id?}','CmsController@addEditCmsPage');
+        //Admin/Sub-Admin
+        Route::get('/admins-subadmins','AdminController@adminsSubadmins');
+        Route::get('/update-admin-status','AdminController@updateAdminStatus');
+        Route::get('/delete-admin/{id}','AdminController@deleteAdminSubadmin');
+        Route::match(['get','post'],'/add-edit-admin-subadmin/{id?}','AdminController@addEditAdminSubadmin');
+        Route::match(['get','post'],'/update-role/{id?}','AdminController@updateRole');
         
     });
 });

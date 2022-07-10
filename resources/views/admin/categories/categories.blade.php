@@ -37,7 +37,7 @@
                 <a href="{{ url('/admin/add-edit-category') }}" class="btn btn-success float-right"><i class="fas fa-plus"></i> Add Category</a>
               </div>
               <!-- /.card-header -->
-              <div class="card-body">
+              <div class="card-body table-responsive">
                 <table id="categories" class="table table-bordered table-hover">
                   <thead>
                   <tr>
@@ -69,15 +69,21 @@
                         <td>{{  $category->section->name }}</td>
                         <td>{{ $category->url }}</td>
                         <td>
-                          @if($category->status == 1)
-                              <h4><a class="CategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}"  href="javascript:void(0)"><i class='fas fa-toggle-on' status="Active"></i></a></h4>
-                          @else()
-                            <h4><a class="CategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}"  href="javascript:void(0)"><i class='fas fa-toggle-off' status="Inactive"></i></a></h4>
+                          @if($categoryModule['edit_access']==1 || $categoryModule['full_access']==1)
+                            @if($category->status == 1)
+                                <h4><a class="CategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}"  href="javascript:void(0)"><i class='fas fa-toggle-on' status="Active"></i></a></h4>
+                            @else()
+                              <h4><a class="CategoryStatus" id="category-{{ $category->id }}" category_id="{{ $category->id }}"  href="javascript:void(0)"><i class='fas fa-toggle-off' status="Inactive"></i></a></h4>
+                            @endif
                           @endif
                       </td>
                       <td>
-                        <a href="{{ url('admin/add-edit-category/'.$category->url) }}" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
-                        <a class="confirmDelete btn btn-sm btn-danger" record="category" recordurl="{{ $category->url }}" href="javascript:void(0)"><i class="fas fa-trash-alt"></i></a>
+                        @if($categoryModule['edit_access']==1 || $categoryModule['full_access']==1)
+                          <a href="{{ url('admin/add-edit-category/'.$category->url) }}" class="btn btn-sm btn-primary"><i class="fas fa-pencil-alt"></i></a>
+                        @endif
+                        @if($categoryModule['full_access']==1)
+                          <a class="confirmDelete btn btn-sm btn-danger" record="category" recordurl="{{ $category->url }}" href="javascript:void(0)"><i class="fas fa-trash-alt"></i></a>
+                        @endif
                       </td>
                     </tr>
                     @endforeach

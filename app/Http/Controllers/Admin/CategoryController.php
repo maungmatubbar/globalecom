@@ -8,6 +8,8 @@ use App\Section;
 use Illuminate\Http\Request;
 use Session;
 use Image;
+use App\AdminsRole;
+use Auth;
 class CategoryController extends Controller
 {
     public function categories()
@@ -15,10 +17,28 @@ class CategoryController extends Controller
         Session::put('page', 'categories');
         $categories = Category::with(['section','parentcategory'])->get();
         $categories = json_decode(json_encode($categories));
-        // echo '<pre>';
-        // print_r($categories);
-        // exit;
-        return view('admin.categories.categories')->with(compact('categories'));
+        //Admin Role And Permission
+        $categoryModuleCount = AdminsRole::where(['admin_id'=>Auth::guard('admin')->user()->id,'module'=>'categories'])->count();
+        if(Auth::guard('admin')->user()->type == 'superadmin')
+        {
+           $categoryModule['view_access'] = 1;
+           $categoryModule['edit_access'] = 1;
+           $categoryModule['full_access'] = 1;
+         
+        }
+        else if($categoryModuleCount==0)
+        {
+            $message = 'This feature is restricted for you.';
+            Session::flash('error_message',$message);
+            return redirect('/admin/dashboard');
+        }
+        else
+        {
+    
+            $categoryModule = AdminsRole::where(['admin_id'=>Auth::guard('admin')->user()->id,'module'=>'categories'])->first();
+        }
+        //End Admin Role
+        return view('admin.categories.categories')->with(compact('categories','categoryModule'));
     }
     public function updateCategoryStatus(Request $request)
     {
