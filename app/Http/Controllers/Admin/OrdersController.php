@@ -10,6 +10,7 @@ use App\User;
 use App\OrderStatus;
 use App\OrdersLog;
 use Dompdf\Dompdf;
+use Carbon\Carbon;
 use Session;
 use Auth;
 use App\AdminsRole;
@@ -369,13 +370,13 @@ class OrdersController extends Controller
                     <tr>
                         <td colspan="3"></td>
                         <td colspan="2">Shipping Charges</td>
-                        <td>BDT 0</td>
+                        <td>BDT '.round($orderDetails['shipping_charges']).'</td>
                     </tr>
                     <tr>
                         <td colspan="3"></td>
                         <td colspan="2">Coupon Discount</td>';
                         if($orderDetails['coupon_amount']>0){
-                            $output .= '<td>BDT '.$orderDetails['coupon_amount'].'</td>';
+                            $output .= '<td>BDT '.round($orderDetails['coupon_amount']).'</td>';
                         }
                         else
                         {
@@ -386,18 +387,13 @@ class OrdersController extends Controller
                     <tr>
                         <td colspan="3"></td>
                         <td colspan="2">GRAND TOTAL</td>
-                        <td>BDT '.$orderDetails['grand_total'].'</td>
+                        <td>BDT '.round($orderDetails['grand_total']).'</td>
                     </tr>
                 </tfoot>
             </table>
             <div id="thanks">Thank you!</div>
-            <div id="notices">
-                <div>NOTICE:</div>
-                <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
-            </div>
         </main>
         <footer>
-            Invoice was created on a computer and is valid without the signature and seal.
         </footer>
     </body>
 </html>';
@@ -410,5 +406,14 @@ class OrdersController extends Controller
         $dompdf->render();
         // Output the generated PDF to Browse
         $dompdf->stream();
+    }
+    public function viewOrdersChats()
+    {
+      $currentMonthOrders = Order::whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',Carbon::now()->month)->count();
+      $lastMonthOrders = Order::whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',Carbon::now()->subMonth(1))->count();
+      $lastTwoMonthOrders= Order::whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',Carbon::now()->subMonth(2))->count();
+      $lastThreeMonthOrders= Order::whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',Carbon::now()->subMonth(3))->count();
+      $ordersCount = [$currentMonthOrders,$lastMonthOrders,$lastTwoMonthOrders,$lastThreeMonthOrders];
+      return view('admin.orders.view_orders_charts')->with(compact('ordersCount'));
     }
 }

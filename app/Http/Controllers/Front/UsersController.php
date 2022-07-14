@@ -15,6 +15,7 @@ use Auth;
 class UsersController extends Controller
 {
     public function loginRegister(){
+        Session::forget('success_message');
         return view('front.users.login_register');
     }
     public function registerUser(Request $request){
@@ -35,6 +36,10 @@ class UsersController extends Controller
                 $user->mobile = $data['mobile'];
                 $user->email = $data['email'];
                 $user->password =bcrypt($data['password']);
+                //Set timezone to Bangladesh for customer module
+                date_default_timezone_set("Asia/Dhaka");
+                $user->created_at = date('Y-m-d H:i:s');
+                $user->updated_at = date('Y-m-d H:i:s');
                 $user->save();
                 //Send Confirmation Email
                 $email = $data['email'];
@@ -43,7 +48,7 @@ class UsersController extends Controller
                     $message->to($email)->subject('Confirm Your Cloth Store Account');
                 });
                 $message = "Please confirm your email to activate your account";
-                Session::put('success_message',$message);
+                Session::flash('success_message',$message);
                 return redirect()->back();
                 /*if(Auth::attempt(['email' => $data['email'], 'password' => $data['password']])){
                     if(!empty(Session::get('session_id'))){

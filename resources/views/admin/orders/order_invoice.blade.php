@@ -136,7 +136,7 @@
     								<td class="no-line"></td>
     								<td class="no-line"></td>
     								<td class="no-line text-center"><strong>Shipping</strong></td>
-    								<td class="no-line text-right">BDT 0</td>
+    								<td class="no-line text-right">BDT {{ $orderDetails['shipping_charges'] }}</td>
     							</tr>
                                 @if($orderDetails['coupon_amount']>0)
                                     <tr>
@@ -144,15 +144,19 @@
                                         <td class="no-line"></td>
                                         <td class="no-line"></td>
                                         <td class="no-line text-center"><strong>Discount</strong></td>
-                                        <td class="no-line text-right">BDT 0</td>
+										<?php $discount = $orderDetails['coupon_amount'] ?>
+                                        <td class="no-line text-right">BDT {{ round($discount) }}</td>
+
                                     </tr>
+								@else
+									{{ $discount = 0 }}
                                 @endif
     							<tr>
 									<td class="no-line"></td>
     								<td class="no-line"></td>
     								<td class="no-line"></td>
     								<td class="no-line text-center"><strong>Grand Total</strong></td>
-    								<td class="no-line text-right">BDT {{ $orderDetails['grand_total'] }}</td>
+    								<td class="no-line text-right">BDT {{ round($orderDetails['grand_total']) }}</td>
     							</tr>
     						</tbody>
     					</table>

@@ -1,5 +1,70 @@
 @extends('layouts.admin_layout.admin_layout')
 @section('content')
+<?php
+  $week = array();
+  $count=0;
+  while($count<=6)
+  {
+      $week[] = date('D',strtotime('-'.$count.'day'));
+      $count++;
+  }
+$dataPoints = array(
+  array("y" => $countDaysVisitors[6], "label" =>$week[6]),
+  array("y" => $countDaysVisitors[5], "label" =>$week[5]),
+  array("y" => $countDaysVisitors[4], "label" =>$week[4]),
+  array("y" => $countDaysVisitors[3], "label" =>$week[3]),
+  array("y" => $countDaysVisitors[2], "label" =>$week[2]),
+  array("y" => $countDaysVisitors[1], "label" =>$week[1]),
+	array("y" => $countDaysVisitors[0], "label" =>$week[0]),
+);
+$dataPieChart = array(
+	array("label"=> "Total Orders", "y"=> $orderCount),
+	array("label"=> "Register Users", "y"=> $usersCount),
+	array("label"=> "Total Visitors", "y"=> $visitorsCount),
+	
+);
+
+ 
+?>
+<script>
+  window.onload = function () {
+   
+  var chart = new CanvasJS.Chart("chartContainer", {
+    title: {
+      text: "Visitors Over a Week"
+    },
+    axisY: {
+      title: "Number of Visitors"
+    },
+    data: [{
+      type: "line",
+      dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+    }]
+  });
+  chart.render();
+  var chart = new CanvasJS.Chart("pieChart", {
+      animationEnabled: true,
+      exportEnabled: true,
+      title:{
+        text: "Average Orders,Register Users & Visitors"
+      },
+      subtitles: [{
+        text: ""
+      }],
+      data: [{
+        type: "pie",
+        showInLegend: "true",
+        legendText: "{label}",
+        indexLabelFontSize: 16,
+        indexLabel: "{label} - #percent%",
+        yValueFormatString: "฿#,##0",
+        dataPoints: <?php echo json_encode($dataPieChart, JSON_NUMERIC_CHECK); ?>
+      }]
+    });
+  chart.render();
+   
+  }
+</script>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
@@ -92,6 +157,12 @@
             </div>
           </div>
           <!-- ./col -->
+        </div>
+        <div class="row mb-5">
+          <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+        </div>
+        <div class="row mb-5">
+          <div id="pieChart" style="height: 370px; width: 100%;"></div>
         </div>
         <!-- /.row -->
       </div><!-- /.container-fluid -->

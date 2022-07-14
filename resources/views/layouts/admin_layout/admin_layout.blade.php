@@ -32,6 +32,7 @@
   <link rel="stylesheet" href="{{asset('/')}}plugins/daterangepicker/daterangepicker.css">
   <!-- summernote -->
   <link rel="stylesheet" href="{{asset('/')}}plugins/summernote/summernote-bs4.min.css">
+  <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=62cf80ecebc31f0019d5bda1&product=sticky-share-buttons" async="async"></script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -113,7 +114,10 @@
 <script src="{{asset('/')}}js/admin_js/pages/dashboard.js"></script>
 <!--custom js script-->
 <script src="{{ asset('/') }}js/admin_js/admin_script.js"></script>
+ <!-- sweetalert -->
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!--canvas js-->
+<script src="{{ asset('/') }}js/admin_js/canvas.js"></script>
 <script>
   $(function () {
    // Summernote

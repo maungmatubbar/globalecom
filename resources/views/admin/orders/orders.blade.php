@@ -34,7 +34,10 @@
                       </button>
                   </div>
                 @endif 
-              <h2 class="card-title text-bold">ORDERS</h2>
+                <h2 class="card-title">ORDERS |
+                  <a href="{{ url('/admin/view-orders-charts') }}">Orders Reports</a>
+                </h2>
+              </div>
               <!-- /.card-header -->
               <div class="card-body">
                 <table id="orders" class="table table-bordered table-hover table-responsive">

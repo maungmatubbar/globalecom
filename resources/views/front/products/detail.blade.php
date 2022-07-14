@@ -131,8 +131,7 @@
                     </div>
                 </div>
             </form>
-
-        
+            <div class="sharethis-sticky-share-buttons"></div>
             <hr class="soft clr"/>
             <p class="span6">
                 <?php echo $productDetails->description; ?>

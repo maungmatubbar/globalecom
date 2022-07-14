@@ -15,6 +15,7 @@ use App\AdminsRole;
 use App\Visitor;
 use App\User;
 use App\Order;
+use Carbon\Carbon;
 class AdminController extends Controller
 {
 
@@ -23,9 +24,17 @@ class AdminController extends Controller
         //dd(auth('admin')->user());
         Session::put('page', 'dashboard');
         $visitorsCount = Visitor::get()->count();
+        $currentDayVisitors = Visitor::whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',Carbon::now()->month)->whereDay('created_at',Carbon::now()->day)->count();
+        $before_1_day_visitors  = Visitor::whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',Carbon::now()->month)->whereDay('created_at',Carbon::now()->subDays(1))->count();
+        $before_2_day_visitors = Visitor::whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',Carbon::now()->month)->whereDay('created_at',Carbon::now()->subDays(2))->count();
+        $before_3_day_visitors = Visitor::whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',Carbon::now()->month)->whereDay('created_at',Carbon::now()->subDays(3))->count();
+        $before_4_day_visitors = Visitor::whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',Carbon::now()->month)->whereDay('created_at',Carbon::now()->subDays(4))->count();
+        $before_5_day_visitors = Visitor::whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',Carbon::now()->month)->whereDay('created_at',Carbon::now()->subDays(5))->count();
+        $before_6_day_visitors = Visitor::whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',Carbon::now()->month)->whereDay('created_at',Carbon::now()->subDays(6))->count();
+        $countDaysVisitors = [$currentDayVisitors,$before_1_day_visitors,$before_2_day_visitors,$before_3_day_visitors,$before_4_day_visitors,$before_5_day_visitors,$before_6_day_visitors];
         $usersCount = User::get()->count();
         $orderCount = Order::get()->count();
-        return view('admin.admin_dashboard')->with(compact('visitorsCount','usersCount','orderCount'));
+        return view('admin.admin_dashboard')->with(compact('visitorsCount','usersCount','orderCount','countDaysVisitors'));
     }
     public function login(Request $request)
     {

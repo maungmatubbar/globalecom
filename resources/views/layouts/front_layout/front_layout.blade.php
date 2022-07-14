@@ -49,7 +49,19 @@
     <script src="{{ url('js/front_js/front.js') }}"></script>
     <script src="{{ url('js/front_js/front_script.js') }}"></script>
     <script src="{{ url('js/front_js/jquery.lightbox-0.5.js') }}"></script>
-    
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        (function(){
+        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+        s1.async=true;
+        s1.src='https://embed.tawk.to/62d035697b967b1179998bfd/1g7ul1a6q';
+        s1.charset='UTF-8';
+        s1.setAttribute('crossorigin','*');
+        s0.parentNode.insertBefore(s1,s0);
+        })();
+    </script>
+    <!--End of Tawk.to Script-->
   <!--<script type="text/javascript">
         $(window).on('hashchange', function() {
             if (window.location.hash) {

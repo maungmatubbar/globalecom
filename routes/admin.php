@@ -58,6 +58,8 @@ Route::prefix('/admin')->namespace('Admin')->group(function () {
         Route::get('/orders','OrdersController@orders');
         //Get Order Details
         Route::get('/orders/{id}','OrdersController@orderDetails');
+        //View orders Chart
+        Route::get('/view-orders-charts','OrdersController@viewOrdersChats');
         //Update Order Stauts
         Route::post('/update-order-status','OrdersController@updateOrderStatus');
         //View Order Invoice
@@ -68,9 +70,14 @@ Route::prefix('/admin')->namespace('Admin')->group(function () {
         Route::get('/view-shipping-charges','ShippingController@viewShippingCharges');
         Route::post('/update-shipping-status','ShippingController@updateShippingStatus');
         Route::match(['get','post'],'edit-shipping-charges/{id}','ShippingController@editShippingCharges');
+       
         //Get All User
         Route::get('/users','UsersController@users');
         Route::post('/update-user-status','UsersController@updateUserStatus');
+        //View Users Chart
+        Route::get('/view-users-charts','UsersController@viewUsersCharts');
+        Route::get('/view-users-countries-charts','UsersController@viewUsersCountriesCharts');
+      
         //CMS
         Route::get('/cms-pages','CmsController@cmsPages');
         Route::post('/update-cms-page-status','CmsController@updateCmsPageStatus');

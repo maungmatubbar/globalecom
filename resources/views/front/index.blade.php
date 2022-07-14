@@ -34,7 +34,7 @@
                                                 $rate = 1;
                                              }
                                              
-                                             $currency_discount = round($discounted_price / $rate) ;
+                                             $currency_discount = round($discounted_price / $rate,2) ;
                                             ?>
                                         <h5>{{ $item['product_name'] }}</h5>
                                         <h5><a class="btn" href="{{ url('product/'.$item['id']) }}" >VIEW</a>
