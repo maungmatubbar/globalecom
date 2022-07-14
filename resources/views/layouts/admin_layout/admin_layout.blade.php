@@ -129,6 +129,7 @@
     $("#userDatatable").DataTable();  
     $("#cmsPage").DataTable();  
     $("#adminDataTable").DataTable();  
+    $("#ratingDatatable").DataTable();  
 
     $('.select2').select2();
     //Initialize Select2 Elements

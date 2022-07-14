@@ -20,6 +20,8 @@ use App\Category;
 use App\Product;
 use App\ProductsAttribute;
 use App\ShippingCharge;
+use App\Currency;
+use App\Rating;
 use Auth;
 use DB;
 use Session;
@@ -184,7 +186,7 @@ class ProductsController extends Controller
             }
         }
     }
-    public function detail($id)
+    public function detail(Product $data ,$id)
     {
         $productDetails = Product::with(["brand","category","section","attributes" =>function ($query) { $query->where("status", 1);},"images" => function ($query) { $query->where("status", 1);}, ])->find($id);
         $productDetails = json_decode(json_encode($productDetails));
@@ -200,9 +202,18 @@ class ProductsController extends Controller
         {
             $groupProducts = Product::select('id','main_image')->where('id','!=',$id)->where(['group_code'=>$productDetails->group_code,'status'=>1])->get();
         }
-
+        //Currencies 
+        //$currencies = Currency::where('status',1)->get(['currency_code','exchange_rate']);
+        $currencies = Currency::select('currency_code','exchange_rate')->where('status',1)->orderBy('id','ASC')->limit(3)->get();
+        $currencies = json_decode(json_encode($currencies));
+        //Get all ratings
+        $ratings = Rating::where(['product_id'=>$id,'status'=>1])->orderBy('id','desc')->get();  
+        $ratingsSum = Rating::where(['product_id'=>$id,'status'=>1])->sum('rating');  
+        $ratingsCount = Rating::where(['product_id'=>$id,'status'=>1])->count();  
+        $ratingsCount = $ratingsCount > 0 ? $ratingsCount : 1;
+        $avgStarRatings = round($ratingsSum / $ratingsCount);
         return view("front.products.detail")->with(
-            compact("productDetails", "total_stock", "relatedProducts","groupProducts")
+            compact("productDetails", "total_stock", "relatedProducts","groupProducts","currencies","ratings","avgStarRatings")
         );
     }
     public function getPrice(Request $request)
@@ -210,11 +221,19 @@ class ProductsController extends Controller
         if ($request->ajax()) {
             $data = $request->all();
             // $getPrice = ProductsAttribute::where(['product_id'=>$data['product_id'],'size'=>$data['size']])->first();
-            $getPrice = Product::getAttrDiscountedPrice(
-                $data["product_id"],
-                $data["size"]
-            );
-            return $getPrice;
+            $getPrice = Product::getAttrDiscountedPrice($data["product_id"],$data["size"]);
+            //Currency get and calculate
+            $currencies = Currency::select('currency_code','exchange_rate')->where('status',1)->limit(3)->get();
+
+            $currencies = json_decode(json_encode($currencies));
+            $getPrice['currency'] = '';
+            foreach($currencies as $currency)
+            {
+                $getPrice['currency'] .= "<br>";
+                $getPrice['currency'] .= $currency->currency_code;
+                $getPrice['currency'] .= ' '.round($getPrice['final_price']/$currency->exchange_rate,2);
+            }
+             return $getPrice;
         }
     }
     //Add to cart

@@ -5,8 +5,21 @@
 <div id="header">
     <div class="container">
         <div id="welcomeLine" class="row">
-            <div class="span6">Welcome!<strong> To Customer</strong></div>
-            <div class="span6">
+            <div class="span3">Welcome!<strong> To Customer</strong></div>
+            <div class="span3">
+                <form action="{{ url('/') }}" method="post">@csrf
+                    <div class="row">
+                        <select name="currency_code" id="currency_code" style="width: 40%; margin:0;">
+                            <option value="Tk">BDT</option>
+                            <option value="USD" @if(Session::get('currency_code')=='USD') selected @endif>USD</option>
+                            <option value="EUR" @if(Session::get('currency_code')=='EUR') selected @endif>EUR</option>
+                        </select>
+                        <button type="submit" class="btn btn-small btn-info">Convert</button>
+                    </div>
+                </form>
+            </div>
+            <div class="span3"></div>
+            <div class="span3">
                 <div class="pull-right">
                     <a href="{{ url('cart') }}"><span class="btn btn-mini btn-primary"><i class="icon-shopping-cart icon-white"></i> [ <span class="totalCartItems">{{ totalCartItems() }}</span> ] Items in your cart </span> </a>
                 </div>
@@ -47,7 +60,7 @@
                                 @endif
                             </li>
                         @endforeach
-                        <li><a href="#">About</a></li>
+                        <li class="{{ Request::path()=='about-us'?'active':'' }}"><a  href="{{ url('/about-us') }}">About</a></li>
                     </ul>
                     <form class="navbar-search pull-left" action="{{ url('/search-products') }}" method="post">
                         @csrf

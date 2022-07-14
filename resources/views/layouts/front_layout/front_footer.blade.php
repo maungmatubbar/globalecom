@@ -10,7 +10,7 @@
             <div class="span3">
                 <h5>INFORMATION</h5>
                 <a href="{{ url('/about-us') }}">ABOUT US</a>
-                <a href="contact.html">CONTACT</a>
+                <a href="{{ url('/contact') }}">CONTACT</a>
                 <a href="tac.html">TERMS AND CONDITIONS</a>
                 <a href="faq.html">FAQ</a>
             </div>
@@ -27,6 +27,10 @@
                 <a href=""><img width="60" height="60" src="{{ asset('/') }}images/front_images/youtube.png" title="youtube" alt="youtube"/></a>
             </div>
         </div>
-        <p class="pull-right"><a target="_blank" href="{{ url('/') }}">2020 &copy; DEVELOPED BY ESHOP DEVELOPERS TEAM</a></p>
+       
+        <div class="row m-3">
+            <p class="pull-right"><a target="_blank" href="{{ url('/') }}">2020 &copy; DEVELOPED BY ESHOP DEVELOPERS TEAM</a></p>
+        </div>
     </div><!-- Container End -->
+    
 </div>

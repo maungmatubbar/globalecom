@@ -141,8 +141,9 @@ $(document).ready(function() {
             data: { size: size, product_id: product_id },
             success: function(resp) {
                 if (resp['discount'] > 0) {
+                    $('.mainCurrentPrice').hide();
                     $('.getAttrPrice').html("<del style='color:red'> Tk." + resp['price'] + "<del>");
-                    $('.discountedPrice').html("<h5> Discount Price TK." + resp['final_price'] + "</h5>");
+                    $('.discountedPrice').html("<h5> Discount Price TK." + resp['final_price'] + resp['currency'] + "</h5>");
                 } else {
                     $('.getAttrPrice').html("<h5>TK." + resp['price'] + "</h5>");
                 }

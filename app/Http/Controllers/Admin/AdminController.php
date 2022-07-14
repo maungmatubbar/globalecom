@@ -12,7 +12,9 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Hash;
 use Image;
 use App\AdminsRole;
-
+use App\Visitor;
+use App\User;
+use App\Order;
 class AdminController extends Controller
 {
 
@@ -20,7 +22,10 @@ class AdminController extends Controller
     {
         //dd(auth('admin')->user());
         Session::put('page', 'dashboard');
-        return view('admin.admin_dashboard');
+        $visitorsCount = Visitor::get()->count();
+        $usersCount = User::get()->count();
+        $orderCount = Order::get()->count();
+        return view('admin.admin_dashboard')->with(compact('visitorsCount','usersCount','orderCount'));
     }
     public function login(Request $request)
     {

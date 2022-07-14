@@ -2,7 +2,7 @@
     <!-- Brand Logo -->
     <a href="{{ url('/') }}" class="brand-link">
       <!--<img src="{{asset('/')}}images/admin_images/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">-->
-      <span class="brand-text font-weight-light"><i class="fas fa-rainbow"></i> <strong style="color:#4cd137;font-weight:italic; ">ECOMSHOP BD</strong></span>
+      <span class="brand-text font-weight-light text-success"><i class="fas fa-rainbow"></i> <strong class="text-light"><i>ECOMSHOP BD</i></strong></span>
     </a> 
 
     <!-- Sidebar -->
@@ -34,10 +34,10 @@
             </a>
           </li>
           <!--Settings-->
-          @if(Session::get('page')=="settings" || Session::get('page')=="update-admin-info")
+          @if(Session::get('page')=="settings" || Session::get('page')=="update-admin-info" || Session::get('page')=="admins_subadmins" || Session::get('page')=="currencies") 
           <?php $active = 'active'; $menuopen = 'menu-open'; ?>
           @else 
-          <?php $active=""; $menuopen=''; ?>
+            <?php $active=""; $menuopen=''; ?>
           @endif
           <li class="nav-item has-treeview {{ $menuopen }}">
             <a href="#" class="nav-link {{ $active }}">
@@ -70,14 +70,42 @@
                   <p>Admin password update</p>
                 </a>
               </li>
+                <!--Admin / Sub-Admin Role Pages-->
+                @if (Auth::guard('admin')->user()->type=='superadmin' || Auth::guard('admin')->user()->type=='admin')
+                @if(Session::get('page')=="admins_subadmins")
+                  <?php $active = 'active'; ?>
+                @else 
+                  <?php $active="";?>
+                @endif
+                <li class="nav-item">
+                  <a href="{{ url('/admin/admins-subadmins') }}" class="nav-link {{ $active }}">
+                    <i class="fa fa-unlock nav-icon" aria-hidden="true"></i>
+                    <p>Admin/Sub-Admin Roles</p>
+                  </a>
+                </li>
+              @endif
+              <!--Currencies Pages-->
+              @if (Auth::guard('admin')->user()->type=='superadmin' || Auth::guard('admin')->user()->type=='admin')
+                @if(Session::get('page')=="currencies")
+                  <?php $active = 'active'; ?>
+                @else 
+                  <?php $active="";?>
+                @endif
+                <li class="nav-item">
+                  <a href="{{ url('/admin/currencies') }}" class="nav-link {{ $active }}">
+                    <i class="fas fa-dollar-sign nav-icon" aria-hidden="true"></i>
+                    <p>Currencies</p>
+                  </a>
+                </li>
+              @endif
             </ul>
           </li>
-              <!-- Catelogues-->
-              @if(Session::get('page')=="sections" ||  Session::get('page')=="brands"|| Session::get('page')=="categories" || Session::get('page')=="products"|| Session::get('page')=="banners" || Session::get('page')=="coupons"|| Session::get('page')=='orders' || Session::get('page')=='shipping' || Session::get('page')=='users' || Session::get('page')=="cms-pages" || Session::get('page')=="admins_subadmins")
-              <?php $active = 'active'; $menuopen = 'menu-open'; ?>
-              @else 
-                <?php $active=""; $menuopen=''; ?>
-              @endif
+            <!-- Catelogues-->
+            @if(Session::get('page')=="sections" ||  Session::get('page')=="brands"|| Session::get('page')=="categories" || Session::get('page')=="products"|| Session::get('page')=="banners" || Session::get('page')=="coupons"|| Session::get('page')=='orders' || Session::get('page')=='shipping' || Session::get('page')=='users' || Session::get('page')=="cms-pages" || Session::get('page')=="ratings")
+            <?php $active = 'active'; $menuopen = 'menu-open'; ?>
+            @else 
+              <?php $active=""; $menuopen=''; ?>
+            @endif
             <li class="nav-item has-treeview {{ $menuopen }}">
               <a href="#" class="nav-link {{ $active }}">
                 <i class="fas fa-th"></i>
@@ -207,20 +235,18 @@
                       <p>CMS Pages</p>
                     </a>
                   </li>
-                  <!--Admin / Sub-Admin Role Pages-->
-                  @if (Auth::guard('admin')->user()->type=='superadmin' || Auth::guard('admin')->user()->type=='admin')
-                    @if(Session::get('page')=="admins_subadmins")
-                      <?php $active = 'active'; ?>
-                    @else 
-                      <?php $active="";?>
-                    @endif
-                    <li class="nav-item">
-                      <a href="{{ url('/admin/admins-subadmins') }}" class="nav-link {{ $active }}">
-                        <i class="fa fa-unlock" aria-hidden="true"></i>
-                        <p>Admin / Sub-Admin Role</p>
-                      </a>
-                    </li>
-                  @endif
+                  <!--Review rating Pages-->
+                  @if(Session::get('page')=="ratings")
+                   <?php $active = 'active'; ?>
+                  @else 
+                   <?php $active="";?>
+                 @endif
+                 <li class="nav-item">
+                   <a href="{{ url('/admin/ratings') }}" class="nav-link {{ $active }}">
+                     <i class="fas fa-comment nav-icon"></i>
+                     <p>Ratings and Reviews</p>
+                   </a>
+                 </li>
               </ul>
           </li>
         </ul>

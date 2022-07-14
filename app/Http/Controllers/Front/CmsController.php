@@ -13,6 +13,7 @@ class CmsController extends Controller
     public function cmsPage()
     {                       
         //Also usable use url()->current();
+          Session::forget('section_id');
        $currentRoute =  Route::getFacadeRoot()->current()->uri();
        $cmsRoutes = CmsPage::where('status',1)->get()->pluck('url')->toArray();
        if(in_array($currentRoute,$cmsRoutes))

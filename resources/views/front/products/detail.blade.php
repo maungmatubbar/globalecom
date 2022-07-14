@@ -63,10 +63,23 @@
                       <span aria-hidden="true">&times;</span>
                       </button>
                   </div>
-            @endif  
+            @endif 
+            @if($errors->any())
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>
+                        {!! implode('<br/>', $errors->all('<span>:message</span>')) !!}
+                    </strong>
+                </div>
+            @endif
             <h3>{{ $productDetails->product_name }}  </h3>
             <small>- {{ $productDetails->brand->name }}</small>
             <hr class="soft"/>
+                <span>Rating: </span>
+                <?php $star =1; while ($star <= $avgStarRatings) { ?>
+                        <span>&#9733;</span>
+                <?php $star++; } ?>
+                <div>&nbsp;</div>
             @if(count($groupProducts)>0)
                   <div>
                         <div><strong>More Colors: </strong></div>
@@ -89,15 +102,24 @@
                     @if($discounted_price>0)
                         <h5 class="discountedPrice">Discount Price TK.{{ $discounted_price }}</h5>
                     @endif
-                        <select name="size" class="span2 pull-left" id="getPrice" product-id="{{ $productDetails->id }}" required>
-                            <option value="">Select Size</option>
-                            @foreach ($productDetails->attributes as $attribute)
-                            <option value="{{ $attribute->size }}">{{ $attribute->size }}</option>
+                    <span class="mainCurrentPrice">
+                        <h5>
+                            @foreach ($currencies as $currency)
+                                {{ $currency->currency_code }}
+                                <?php echo round($productDetails->product_price/$currency->exchange_rate,2); ?><br/>
                             @endforeach
-                        </select>
-                        <input type="number" name="quantity" class="span1" min="1" placeholder="Qty."  required />
-                        <button type="submit" class="btn btn-large btn-primary pull-right"> Add to cart <i class=" icon-shopping-cart"></i></button>
-                    </div>
+                        </h5>
+                    </span>
+                    
+                    <select name="size" class="span2 pull-left" id="getPrice" product-id="{{ $productDetails->id }}" required>
+                        <option value="">Select Size</option>
+                        @foreach ($productDetails->attributes as $attribute)
+                        <option value="{{ $attribute->size }}">{{ $attribute->size }}</option>
+                        @endforeach
+                    </select>
+                    <input type="number" name="quantity" class="span1" min="1" placeholder="Qty."  required />
+                    <button type="submit" class="btn btn-large btn-primary pull-right"> Add to cart <i class=" icon-shopping-cart"></i></button>
+                </div>
                     <div class="control-group">
                         <strong>Delivery: </strong>
                        <div>
@@ -126,6 +148,10 @@
             <ul id="productDetail" class="nav nav-tabs">
                 <li class="active"><a href="#home" data-toggle="tab">Product Details</a></li>
                 <li><a href="#profile" data-toggle="tab">Related Products</a></li>
+                @if (isset($productDetails->product_video) && !empty($productDetails->product_video))
+                <li><a href="#product_video" data-toggle="tab">Product Video</a></li>
+                @endif
+                <li><a href="#review" data-toggle="tab">Product Reviews</a></li>
             </ul>
             <div id="myTabContent" class="tab-content">
                 <div class="tab-pane fade active in" id="home">
@@ -243,6 +269,62 @@
                         </div>
                     </div>
                     <br class="clr">
+                </div>
+                @if (isset($productDetails->product_video) && !empty($productDetails->product_video))
+                <div class="tab-pane fade" id="product_video">
+                    <video controls width="640" height="480">
+                        <source src="{{ url('/videos/product_videos/'.$productDetails->product_video) }}">
+                    </video>
+                </div>
+                @endif
+                <div class="tab-pane fade" id="review">
+                   <div class="row">
+                        <div class="span4">
+                            <h4>Write a Review</h4>
+                            <form action="{{ url('/add-rating') }}" method="post" class="form-horizontal">@csrf
+                                <input type="hidden" name="product_id" value="{{ $productDetails->id }}">
+                                <div class="rate">
+                                    <input type="radio" id="star5" name="rating" value="5" />
+                                    <label for="star5" title="text">5 stars</label>
+                                    <input type="radio" id="star4" name="rating" value="4" />
+                                    <label for="star4" title="text">4 stars</label>
+                                    <input type="radio" id="star3" name="rating" value="3" />
+                                    <label for="star3" title="text">3 stars</label>
+                                    <input type="radio" id="star2" name="rating" value="2" />
+                                    <label for="star2" title="text">2 stars</label>
+                                    <input type="radio" id="star1" name="rating" value="1" />
+                                    <label for="star1" title="text">1 star</label>
+                                </div>
+                                <div class="control-group"></div>
+                                <div class="form-group">
+                                    <label>Your Comments*</label>
+                                    <textarea name="review" id="reviews" class="error"></textarea>
+                                </div>
+                                &nbsp;&nbsp;
+                                <div class="form-group">
+                                    <input type="submit" name="submit" class="btn btn-primary" value="Submit">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="span4">
+                            <h4>Users Reviews</h4>
+                            @if(count($ratings)>0)
+                                @foreach ($ratings as $rating)
+                                    <div>
+                                        <?php $count = 1;
+                                        while($count<=$rating->rating): ?>
+                                        <span>&#9733;</span>
+                                        <?php $count++; endwhile; ?>
+                                        <p>{{ $rating->review }} <strong> By {{ $rating->user->name }}</strong></p>  
+                                        <p>{{ date('d-m-Y',strtotime($rating->created_at)) }}</p>
+                                    </div>
+                                    <hr/>
+                                @endforeach
+                            @else
+                                <p><b>Reviews are not available for this product!.</b></p>
+                            @endif
+                        </div>
+                   </div>
                 </div>
             </div>
         </div>

@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
-class Product extends Model
+use CyrildeWit\EloquentViewable\InteractsWithViews;
+use CyrildeWit\EloquentViewable\Contracts\Viewable;
+class Product extends Model implements Viewable
 {
+    use InteractsWithViews;
   /**
      * Get the user that owns the Product
      *
@@ -69,7 +71,7 @@ class Product extends Model
             $final_price = $proAttrPrice['price'];
             $discount = 0;
         }
-        return array('price'=>$proAttrPrice['price'],'final_price'=>$final_price,'discount'=>$discount);
+        return array('price'=>round($proAttrPrice['price']),'final_price'=>round($final_price),'discount'=>$discount);
     }
     //Get Product Image for Order Details
     public static function getProductImage($product_id){

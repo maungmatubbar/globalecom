@@ -522,13 +522,13 @@ $(document).ready(function() {
                         $('#tableRow-' + record_id).fadeOut(1000, function() {
                             $(this).hide();
                             $('.msg').append("<div class='alert alert-success alert-dismissible fade show' role='alert'>" + res['success_msg'] +
-                                "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>" +
+                                "<button class='close' data-dismiss='alert'>" +
                                 "<span aria-hidden='true'>&times;</span>" +
                                 "</button>" +
                                 +"</div>");
                         });
                     },
-                    error: function() {
+                    error: function(res) {
                         alert("Problem");
                     }
                 });
@@ -654,6 +654,79 @@ $(document).ready(function() {
                     });
                 } else if (res['status'] == 1) {
                     $('#status-' + record_id).html("<h4><i class='fas fa-toggle-on' status='Active'></i></h4>");
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: record + ' status active successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            },
+            error: function() {
+                alert('Problem');
+            }
+        });
+    });
+    //Update Currency Status
+    $(document).on('click', '.updateCurrencyStatus', function() {
+
+        var status = $(this).children("i").attr("status");
+        var record = $(this).attr('record');
+        var record_id = $(this).attr('record_id');
+        $.ajax({
+            type: 'get',
+            url: '/admin/update-' + record + '-status',
+            data: { status: status, record_id: record_id },
+            success: function(res) {
+                if (res['status'] == 0) {
+                    $('#status-' + record_id).html("<i class='fas fa-toggle-off' status='Inactive'></i>");
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: record + ' status inactive successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } else if (res['status'] == 1) {
+                    $('#status-' + record_id).html("<i class='fas fa-toggle-on' status='Active'></i>");
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: record + ' status active successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            },
+            error: function() {
+                alert('Problem');
+            }
+        });
+    });
+
+    //Update Rating Status
+    $(document).on('click', '.updateRatingStatus', function() {
+
+        var status = $(this).children("i").attr("status");
+        var record = $(this).attr('record');
+        var record_id = $(this).attr('record_id');
+        $.ajax({
+            type: 'get',
+            url: '/admin/update-' + record + '-status',
+            data: { status: status, record_id: record_id },
+            success: function(res) {
+                if (res['status'] == 0) {
+                    $('#status-' + record_id).html("<i class='fas fa-toggle-off' status='Inactive'></i>");
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: record + ' status inactive successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } else if (res['status'] == 1) {
+                    $('#status-' + record_id).html("<i class='fas fa-toggle-on' status='Active'></i>");
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
