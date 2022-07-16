@@ -116,7 +116,10 @@ Route::middleware('visitor')->namespace('Front')->group(function(){
         Route::get('/paypal/fail','PaypalController@fail');
         // Paypal IPN
         Route::any('/paypal/ipn','PaypalController@ipn');
-        
+        //Wishlist
+        Route::post('/update-wishlist','WishlistController@updateWishlist');
+        Route::get('/wishlist','WishlistController@wishlist');
+        Route::post('/delete-wishlist-item','WishlistController@deleteWishlistItem');
     });
    
 });

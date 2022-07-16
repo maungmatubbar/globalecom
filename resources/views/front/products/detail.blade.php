@@ -1,4 +1,7 @@
-<?php use App\Product; ?>
+<?php 
+use App\Product;
+use App\Wishlist;
+?>
 @extends('layouts.front_layout.front_layout')
 @section('content')
 <div class="span9">
@@ -24,18 +27,8 @@
                         <a href="{{asset('images/product_images/small/'.$image->image)}}"> <img style="width:29%" src="{{asset('images/product_images/small/'.$image->image)}}" alt=""/></a>
                         @endforeach
                     </div>
-                    {{-- <div class="item">
-                        @foreach ($productDetails->images as $image)
-                        <a href="{{asset('images/product_images/small/'.$image->image)}}"> <img style="width:29%" src="{{asset('images/product_images/small/'.$image->image)}}" alt=""/></a>
-                        @endforeach
-                    </div> --}}
                 </div>
-                <!--
-                            <a class="left carousel-control" href="#myCarousel" data-slide="prev">‹</a>
-                <a class="right carousel-control" href="#myCarousel" data-slide="next">›</a>
-                -->
             </div>
-            
             <div class="btn-toolbar">
                 <div class="btn-group">
                     <span class="btn"><i class="icon-envelope"></i></span>
@@ -75,7 +68,7 @@
             <h3>{{ $productDetails->product_name }}  </h3>
             <small>- {{ $productDetails->brand->name }}</small>
             <hr class="soft"/>
-                <span>Rating: </span>
+                <span>Average Rating: </span>
                 <?php $star =1; while ($star <= $avgStarRatings) { ?>
                         <span>&#9733;</span>
                 <?php $star++; } ?>
@@ -118,7 +111,19 @@
                         @endforeach
                     </select>
                     <input type="number" name="quantity" class="span1" min="1" placeholder="Qty."  required />
-                    <button type="submit" class="btn btn-large btn-primary pull-right"> Add to cart <i class=" icon-shopping-cart"></i></button>
+                   
+                    <button type="submit" class="btn btn-medium btn-primary btn-space"> Add to cart <i class=" icon-shopping-cart"></i></button>
+                    <!--Added Wishlist-->
+                    @php $countWishlist = 0 @endphp
+                    @if(Auth::check())
+                        @php $countWishlist = Wishlist::countWishlist($productDetails->id) @endphp
+                        <button type="button" class="btn btn-medium btn-warning btn-space updateWishlist" data-productid = "{{ $productDetails->id }}">Wishlist
+                                <i class="@if($countWishlist>0) icon-heart @else icon-heart-empty @endif"></i>
+                        </button>
+                    @else
+                        <button type="button" class="btn btn-medium btn-warning btn-space userLogin">Wishlist <i class="icon-heart-empty"></i></button>
+                    @endif
+                    <!--End Wishlist-->
                 </div>
                     <div class="control-group">
                         <strong>Delivery: </strong>
@@ -129,13 +134,15 @@
                             <p class="pincode_success" style="color: green"></p>
                        </div>
                     </div>
+                     <!-- ShareThis BEGIN -->
+                    <div class="sharethis-inline-share-buttons"></div>
+                    <!-- ShareThis END -->
                 </div>
             </form>
-            <div class="sharethis-sticky-share-buttons"></div>
             <hr class="soft clr"/>
+           
             <p class="span6">
                 <?php echo $productDetails->description; ?>
-                
             </p>
             <a class="btn btn-small pull-right" href="#detail">More Details</a>
             <br class="clr"/>
@@ -284,15 +291,15 @@
                                 <input type="hidden" name="product_id" value="{{ $productDetails->id }}">
                                 <div class="rate">
                                     <input type="radio" id="star5" name="rating" value="5" />
-                                    <label for="star5" title="text">5 stars</label>
+                                    <label for="star5" title="star5">5 stars</label>
                                     <input type="radio" id="star4" name="rating" value="4" />
-                                    <label for="star4" title="text">4 stars</label>
+                                    <label for="star4" title="star4">4 stars</label>
                                     <input type="radio" id="star3" name="rating" value="3" />
-                                    <label for="star3" title="text">3 stars</label>
+                                    <label for="star3" title="star3">3 stars</label>
                                     <input type="radio" id="star2" name="rating" value="2" />
-                                    <label for="star2" title="text">2 stars</label>
+                                    <label for="star2" title="star2">2 stars</label>
                                     <input type="radio" id="star1" name="rating" value="1" />
-                                    <label for="star1" title="text">1 star</label>
+                                    <label for="star1" title="star1">1 star</label>
                                 </div>
                                 <div class="control-group"></div>
                                 <div class="form-group">

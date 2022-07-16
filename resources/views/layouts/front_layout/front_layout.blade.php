@@ -17,12 +17,14 @@
         <!-- Google-code-prettify -->
         <link href="{{ url('js/front_js/google-code-prettify/prettify.css') }}" rel="stylesheet"/>
         <!-- fav and touch icons -->
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
         <link rel="shortcut icon" href="{{ asset('/') }}images/front_images/ico/favicon.ico">
         <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ asset('/') }}images/front_images/ico/apple-touch-icon-144-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ asset('/') }}images/front_images/ico/apple-touch-icon-114-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ asset('/') }}images/front_images/ico/apple-touch-icon-72-precomposed.png">
         <link rel="apple-touch-icon-precomposed" href="{{ asset('/') }}images/front_images/ico/apple-touch-icon-57-precomposed.png">
         <style type="text/css" id="enject"></style>
+        <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=62cf80ecebc31f0019d5bda1&product=sticky-share-buttons' async='async'></script>
     </head>
     <body>
         @include('layouts.front_layout.front_header')
@@ -49,6 +51,7 @@
     <script src="{{ url('js/front_js/front.js') }}"></script>
     <script src="{{ url('js/front_js/front_script.js') }}"></script>
     <script src="{{ url('js/front_js/jquery.lightbox-0.5.js') }}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <!--Start of Tawk.to Script-->
     <script type="text/javascript">
         var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();

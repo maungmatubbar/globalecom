@@ -57,8 +57,6 @@
 	<div id="AppendCartItems">
 		@include('front.products.cart_items')	
 	</div>	
-	
-		
 	<table class="table table-bordered">
 		<tbody>
 			<tr>

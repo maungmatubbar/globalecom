@@ -473,4 +473,81 @@ $(document).ready(function() {
             }
         })
     });
+    $('.userLogin').click(function() {
+        alert('Login to add this product in your wishlist');
+    });
+    $(document).on('click', '.updateWishlist', function() {
+        var product_id = $(this).data('productid');
+        $.ajax({
+            type: 'post',
+            url: '/update-wishlist',
+            data: { product_id: product_id },
+            success: function(resp) {
+                if (resp.action == 'add') {
+                    $('button[data-productid=' + product_id + ']').html('Wishlist <i class="icon-heart"></i>');
+                    Toastify({
+                        text: "Product added in your wishlist",
+                        duration: 3000,
+                        newWindow: true,
+                        close: true,
+                        gravity: "top", // `top` or `bottom`
+                        position: "center", // `left`, `center` or `right`
+                        stopOnFocus: true, // Prevents dismissing of toast on hover
+                        style: {
+                            background: "linear-gradient(to right, #3498db, #f1c40f)",
+                        },
+                        onClick: function() {} // Callback after click
+                    }).showToast();
+                } else if (resp.action == 'remove') {
+                    $('button[data-productid=' + product_id + ']').html('Wishlist <i class="icon-heart-empty"></i>');
+                    Toastify({
+                        text: "Product remove in your wishlist",
+                        duration: 3000,
+                        newWindow: true,
+                        close: true,
+                        gravity: "top", // `top` or `bottom`
+                        position: "center", // `left`, `center` or `right`
+                        stopOnFocus: true, // Prevents dismissing of toast on hover
+                        style: {
+                            background: "linear-gradient(to right, #3498db, #f1c40f)",
+                        },
+                        onClick: function() {} // Callback after click
+                    }).showToast();
+                }
+
+            },
+            error: function() {
+                alert("Error");
+            }
+        });
+    });
+    $(document).on('click', '.wishlistItemDelete', function() {
+        var wishlist_id = $(this).data('wishlistid');
+        $.ajax({
+            type: 'post',
+            url: 'delete-wishlist-item',
+            data: { wishlist_id: wishlist_id },
+            success: function(resp) {
+                $('#AppendWishlistItems').html(resp.view);
+                $('.totalWishlistItems').html(resp.totalWishlistItems);
+                Toastify({
+                    text: "Product remove in your wishlist",
+                    duration: 3000,
+                    newWindow: true,
+                    close: true,
+                    gravity: "top", // `top` or `bottom`
+                    position: "center", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "linear-gradient(to right, #27ae60, #3498db)",
+                    },
+                    onClick: function() {} // Callback after click
+                }).showToast();
+            },
+            error: function() {
+                alert('Error');
+            }
+
+        });
+    });
 });
