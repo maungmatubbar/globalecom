@@ -65,6 +65,8 @@ class OrdersController extends Controller
             $log = new OrdersLog();
             $log->order_id = $data['order_id'];
             $log->order_status = $data['order_status'];
+            $log->reason = '';
+            $log->updated_by = '';
             $log->save();
             //Send to message Mobile for update status
             $mobileMessage = "Dear Customer, Your order #".$data['order_id']." status has been updated to '".$data['order_status']."' placed with Ecom Shop BD.";
@@ -407,7 +409,7 @@ class OrdersController extends Controller
         // Output the generated PDF to Browse
         $dompdf->stream();
     }
-    public function viewOrdersChats()
+    public function viewOrdersCharts()
     {
       $currentMonthOrders = Order::whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',Carbon::now()->month)->count();
       $lastMonthOrders = Order::whereYear('created_at',Carbon::now()->year)->whereMonth('created_at',Carbon::now()->subMonth(1))->count();

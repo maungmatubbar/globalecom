@@ -15,7 +15,7 @@
                                 <option value="USD" @if(Session::get('currency_code')=='USD') selected @endif>USD</option>
                                 <option value="EUR" @if(Session::get('currency_code')=='EUR') selected @endif>EUR</option>
                             </select>
-                            <button type="submit" class="btn btn-mini btn-info">Convert</button>
+                            <button type="submit" class="btn btn-small">Convert</button>
                         </div>
                     </form>
                 </div>

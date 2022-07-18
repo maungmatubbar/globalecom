@@ -224,6 +224,9 @@
                     <tr>
                       <td>
                         <strong>{{ $log['order_status'] }}</strong><br/>
+                        @if(!empty($log['reason']))
+                          <p> {{ $log['reason'] }}</p>
+                          @endif
                         {{  date("j F, Y, g:i a",strtotime($log['created_at'])) }}
                       </td>
                     </tr>
@@ -254,6 +257,7 @@
                         <th>Product Size</th>
                         <th>Product Color</th>
                         <th>Product Qty</th>
+                        <th>Item Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -271,6 +275,7 @@
                           <td>{{ $product['product_size'] }}</td>
                           <td>{{ $product['product_color'] }}</td>
                           <td>{{ $product['product_qty'] }}</td>
+                          <td>{{ $product['item_status'] }}</td>
                       </tr>
                     @endforeach
                   </tbody>

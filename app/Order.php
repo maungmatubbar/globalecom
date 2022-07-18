@@ -11,4 +11,9 @@ class Order extends Model
     public function orders_products(){
         return $this->hasMany('App\OrdersProduct','order_id');
     }
+    public static function getOrderStatus($order_id)
+    {
+        $getOrderStatus = Order::select('order_status')->where('id',$order_id)->first();
+        return $getOrderStatus->order_status;
+    }
 }

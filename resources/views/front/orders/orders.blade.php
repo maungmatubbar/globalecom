@@ -6,6 +6,14 @@
 		<li class="active"> Orders</li>
     </ul>
 	<h3>Orders</h3>	
+    @if(Session::has('error_message'))
+		<div class="alert alert-danger">
+		{{ Session::get('error_message') }}
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+	@endif
 	<hr class="soft"/>
     <div class="row">
         <div class="span8">
@@ -40,7 +48,6 @@
             </table>
         </div>
     </div>
-   
 </div>
 
 @endsection

@@ -59,7 +59,7 @@ Route::prefix('/admin')->namespace('Admin')->group(function () {
         //Get Order Details
         Route::get('/orders/{id}','OrdersController@orderDetails');
         //View orders Chart
-        Route::get('/view-orders-charts','OrdersController@viewOrdersChats');
+        Route::get('/view-orders-charts','OrdersController@viewOrdersCharts');
         //Update Order Stauts
         Route::post('/update-order-status','OrdersController@updateOrderStatus');
         //View Order Invoice
@@ -96,5 +96,9 @@ Route::prefix('/admin')->namespace('Admin')->group(function () {
         //Reviews and Ratings
         Route::get('/ratings','RatingsController@ratings');
         Route::get('/update-rating-status','RatingsController@updateRatingStatus');
+        //Return Request
+        Route::get('/return-request','ReturnRequestController@returnRequest');
+        Route::post('/return-request-update','ReturnRequestController@returnRequestUpdate');
+        
     });
 });

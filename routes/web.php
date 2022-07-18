@@ -108,6 +108,10 @@ Route::middleware('visitor')->namespace('Front')->group(function(){
         Route::get('/orders','OrdersController@orders');
         //Order Details
         Route::get('/orders/{id}','OrdersController@ordersDetails');
+        //Order cancelletion
+        Route::match(['get','post'],'/order/cancel','OrdersController@orderCancel');
+        //Order Return
+        Route::match(['get','post'],'/order/return','OrdersController@orderReturn');
         //Paypal Payment method
         Route::get('/paypal','PaypalController@paypal');
         //Paypal success

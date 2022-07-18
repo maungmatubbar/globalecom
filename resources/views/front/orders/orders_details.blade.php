@@ -1,12 +1,41 @@
-<?php use App\product; ?>
+<?php
+ use App\Product;
+ use App\Order;
+ $getOrderStatus = Order::getOrderStatus($orderDetails['id']);
+ ?>
 @extends('layouts.front_layout.front_layout')
 @section('content')
 <div class="span9">
     <ul class="breadcrumb">
 		<li><a href="{{ url('/') }}">Home</a> <span class="divider">/</span></li>
 		<li class="active"><a href="{{ url('/orders') }}">Orders</a> </li>
+        <span class="divider">/</span>
+		<li class=""><a href="#">Order Details</a> </li>
     </ul>
-	<h3>Order #{{ $orderDetails['id'] }} Details</h3>
+	<h3>Order #{{ $orderDetails['id'] }} Details
+        @if($getOrderStatus == 'New')
+            <span class="pull-right">
+                <button type="button" class="btn" data-toggle="modal" data-target="#OrderCancelModal">
+                    <i class="icon-remove"></i> Cancel Order
+                  </button>
+            </span>
+        @endif
+        @if($getOrderStatus == 'Delivered')
+            <span class="pull-right">
+                <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#OrderReturnModal">
+                    Return Order
+                  </button>
+            </span>
+        @endif
+    </h3>
+    @if(Session::has('success_message'))
+		<div class="alert alert-success">
+		{{ Session::get('success_message') }}
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+	@endif  
 	<hr class="soft"/>
     <div class="row">
         <div class="span4">
@@ -107,6 +136,7 @@
                         <th>Product Size</th>
                         <th>Product Color</th>
                         <th>Product Qty</th>
+                        <th>Item Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -124,13 +154,78 @@
                             <td>{{ $product['product_size'] }}</td>
                             <td>{{ $product['product_color'] }}</td>
                             <td>{{ $product['product_qty'] }}</td>
+                            <td>{{ $product['item_status'] }}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
     </div>
-   
 </div>
-
+<!--Order Cancel Modal -->
+<div class="modal fade" id="OrderCancelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <form action="{{ url('/order/cancel') }}" method="post">@csrf
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="OrderCancelModalLabel">Reason For Cancelletion</h5>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="order_id" value="{{ $orderDetails['id'] }}">
+                    <select name="reason" id="reasonCancel" class="form-control">
+                        <option value="">Select reason</option> 
+                        <option value="Order Created By Mistake">Order Created By Mistake</option> 
+                        <option value="Item Not Arrive On time">Item Not Arrive On time</option> 
+                        <option value="Shipping Cost Too High">Shipping Cost Too High</option> 
+                        <option value="Found Cheaper Somewhere Else">Found Cheaper Somewhere Else</option> 
+                        <option value="Others">Others</option> 
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary btnCancelOrder">Cancel Order</button>
+                </div>
+            </div>
+      </div>
+   </form>
+</div>
+<!--Order Return Modal -->
+<div class="modal fade" id="OrderReturnModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" align="center">
+    <form action="{{ url('/order/return') }}" method="post">@csrf
+         <div class="modal-dialog" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                     <h5 class="modal-title" id="OrderCancelModalLabel">Reason For Return</h5>
+                 </div>
+                 <div class="modal-body">
+                    <input type="hidden" name="order_id" value="{{ $orderDetails['id'] }}">
+                    <select name="product_info" id="returnProduct">
+                       <option value="">Select Product</option>
+                       @foreach ($orderDetails['orders_products'] as $product)
+                            @if($product['item_status']!='Return Initiated' && $product['item_status']!='Return Approved' && $product['item_status']!='Return Rejected')
+                            <option value="{{  $product['product_code'].'-'.$product['product_size'] }}">{{  $product['product_code'].'-'.$product['product_size'] }}</option>
+                           @endif
+                       @endforeach
+                    </select>
+                 </div>
+                 <div class="modal-body">
+                     <select name="reason" id="returnReason" class="control-form">
+                         <option value="">Select Return Reason</option> 
+                         <option value="Product damaged, but shipping box ok">Product damaged, but shipping box ok</option> 
+                         <option value="Item arrive too late">Item arrived too late</option> 
+                         <option value="Wrong item was sent">Wrong item was sent</option> 
+                         <option value="Item defactive or doesn't work">Item defactive or doesn't work</option> 
+                     </select>
+                 </div>
+                 <div class="modal-body">
+                    <textarea name="comment" id="" placeholder="Comment"></textarea>
+                 </div>
+                 <div class="modal-footer">
+                     <button type="button" class="btn" data-dismiss="modal">Close</button>
+                     <button type="submit" class="btn btn-primary btnReturnOrder">Return Order</button>
+                 </div>
+             </div>
+       </div>
+    </form>
+ </div>
 @endsection

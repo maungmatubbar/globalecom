@@ -473,6 +473,7 @@ $(document).ready(function() {
             }
         })
     });
+    //Wishlish Start
     $('.userLogin').click(function() {
         alert('Login to add this product in your wishlist');
     });
@@ -550,4 +551,72 @@ $(document).ready(function() {
 
         });
     });
+    //End Wishlist
+    //Start Order Cancelletion
+    $(document).on('click', '.btnCancelOrder', function() {
+        var orderCancel = $('#reasonCancel').val();
+        if (orderCancel == "") {
+            Toastify({
+                text: "Please select reason for cancelling the order.",
+                duration: 3000,
+                newWindow: true,
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                position: "center", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: "linear-gradient(to right, #27ae60, #3498db)",
+                },
+                onClick: function() {} // Callback after click
+            }).showToast();
+            return false;
+        }
+        var result = confirm('Do you want to cancel this order?');
+        if (!result) {
+            return false;
+        }
+    });
+    //Start Order Return
+    $(document).on('click', '.btnReturnOrder', function() {
+
+        var product = $('#returnProduct').val();
+        var orderReturn = $('#returnReason').val();
+        if (product == "") {
+            Toastify({
+                text: "Please select which product do you want to return.",
+                duration: 3000,
+                newWindow: true,
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                position: "center", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: "linear-gradient(to right, #27ae60, #3498db)",
+                },
+                onClick: function() {} // Callback after click
+            }).showToast();
+            return false;
+        }
+        if (orderReturn == "") {
+            Toastify({
+                text: "Please select reason for return the order.",
+                duration: 3000,
+                newWindow: true,
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                position: "center", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: "linear-gradient(to right, #27ae60, #3498db)",
+                },
+                onClick: function() {} // Callback after click
+            }).showToast();
+            return false;
+        }
+        var result = confirm('Do you want to return this order?');
+        if (!result) {
+            return false;
+        }
+    });
+
 });
