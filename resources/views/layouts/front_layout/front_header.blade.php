@@ -5,25 +5,30 @@
 <div id="header">
     <div class="container">
         <div id="welcomeLine" class="row">
-            <div class="span3">Welcome!<strong> To Customer</strong></div>
-            <div class="span3">
-                <div class="pull-right">
-                    <form action="{{ url('/') }}" method="post">@csrf
-                        <div class="row">
+            <div class="span6">
+                <div class="">
+                    <span class="pull-left">
+                        Welcome!<strong> To Customer</strong>
+                    </span>
+                    <span class="pull-right">
+                        <form action="{{ url('/') }}" method="post">@csrf
                             <select name="currency_code" id="currency_code" style="height:25px; width:70px;margin:0;">
                                 <option value="Tk">BDT</option>
                                 <option value="USD" @if(Session::get('currency_code')=='USD') selected @endif>USD</option>
                                 <option value="EUR" @if(Session::get('currency_code')=='EUR') selected @endif>EUR</option>
                             </select>
                             <button type="submit" class="btn btn-small">Convert</button>
-                        </div>
-                    </form>
+                        </form>
+                    </span>
                 </div>
             </div>
-            <div class="span3"></div>
-            <div class="span3">
+            <div class="span6">
                 <div class="pull-right">
-                    <a href="{{ url('cart') }}"><span class="btn btn-mini btn-primary"><i class="icon-shopping-cart icon-white"></i> [ <span class="totalCartItems">{{ totalCartItems() }}</span> ] Items in your cart </span> </a>
+                    <div class="row">
+                        <input type="email" name="subscriber_email" id="subscriber_email" placeholder="Enter Email..." style="height:15px;margin:0;">&nbsp;
+                        <button class="btn btn-small btn-info ml-2" onclick="addSubscriber();">Subscribe</button>
+                        &nbsp;&nbsp;&nbsp;<a href="{{ url('cart') }}"><span class="btn btn-mini btn-primary"><i class="icon-shopping-cart icon-white"></i> [ <span class="totalCartItems">{{ totalCartItems() }}</span> ] Items in your cart </span> </a>
+                    </div>
                 </div>
             </div>
         </div>

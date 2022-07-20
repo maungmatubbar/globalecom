@@ -2,6 +2,7 @@ $(document).ready(function() {
     // $('#sort').on('change', function() {
     //     this.form.submit();
     // });
+    $('.product_size').hide();
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -577,10 +578,53 @@ $(document).ready(function() {
         }
     });
     //Start Order Return
-    $(document).on('click', '.btnReturnOrder', function() {
+    $(document).on('change', '#return_exchange', function() {
+        var return_exchange = $(this).val();
+        if (return_exchange == 'Exchange') {
+            $('.product_size').show();
+        } else {
+            $('.product_size').hide();
+        }
+    });
+    //exchange get product sizes
+    $(document).on('change', '#returnProduct', function() {
+        var productInfo = $(this).val();
+        var return_exchange = $('#return_exchange').val();
+        if (return_exchange == 'Exchange') {
+            $.ajax({
+                type: 'post',
+                url: '/get-product-sizes',
+                data: { productInfo: productInfo },
+                success: function(resp) {
+                    $('#productSize').html(resp);
+                },
+                error: function() {
+                    alert('Error');
+                }
+            });
+        }
 
+    });
+    $(document).on('click', '.btnReturnOrder', function() {
+        var return_exchange = $('#return_exchange').val();
         var product = $('#returnProduct').val();
         var orderReturn = $('#returnReason').val();
+        if (return_exchange == "") {
+            Toastify({
+                text: "Please select if you want to return or exchange.",
+                duration: 3000,
+                newWindow: true,
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                position: "center", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: "linear-gradient(to right, #27ae60, #3498db)",
+                },
+                onClick: function() {} // Callback after click
+            }).showToast();
+            return false;
+        }
         if (product == "") {
             Toastify({
                 text: "Please select which product do you want to return.",
@@ -613,10 +657,71 @@ $(document).ready(function() {
             }).showToast();
             return false;
         }
-        var result = confirm('Do you want to return this order?');
+        var result = confirm('Do you want to return or exchange this order?');
         if (!result) {
             return false;
         }
     });
 
+
 });
+//Newsletter Subscriber
+function addSubscriber() {
+    var subscriber_email = $('#subscriber_email').val();
+    var regex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
+    if (regex.test(subscriber_email) == false) {
+        Toastify({
+            text: "Please enter valid email.",
+            duration: 3000,
+            newWindow: true,
+            close: true,
+            gravity: "top", // `top` or `bottom`
+            position: "center", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+                background: "linear-gradient(to right, #27ae60, #3498db)",
+            },
+            onClick: function() {} // Callback after click
+        }).showToast();
+        return false;
+    }
+    $.ajax({
+        type: 'post',
+        url: '/add-subscribe-email',
+        data: { subscriber_email: subscriber_email },
+        success: function(resp) {
+            if (resp == 'exists') {
+                Toastify({
+                    text: "Subscriber email already exists.",
+                    duration: 3000,
+                    newWindow: true,
+                    close: true,
+                    gravity: "top", // `top` or `bottom`
+                    position: "center", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "linear-gradient(to right, #27ae60, #3498db)",
+                    },
+                    onClick: function() {} // Callback after click
+                }).showToast();
+            } else if (resp == 'inserted') {
+                Toastify({
+                    text: "Thanks for subscribing!",
+                    duration: 3000,
+                    newWindow: true,
+                    close: true,
+                    gravity: "top", // `top` or `bottom`
+                    position: "center", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "linear-gradient(to right, #27ae60, #3498db)",
+                    },
+                    onClick: function() {} // Callback after click
+                }).showToast();
+            }
+        },
+        error: function() {
+            alert('Error');
+        }
+    });
+}

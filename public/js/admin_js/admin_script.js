@@ -185,13 +185,13 @@ $(document).ready(function() {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    method: 'GET',
-                    url: '/admin/delete-product-' + record + '/' + recordurl,
+                    method: 'post',
+                    url: '/admin/delete-product',
                     data: { recordurl: recordurl },
                     success: function(res) {
-                        $('#' + recordurl).fadeOut(1000, function() {
+                        $('#tablerow-' + recordurl).fadeOut(1000, function() {
                             $(this).hide();
-                            $('.msg').append("<div class='alert alert-success alert-dismissible fade show' role='alert'>" + res['success_msg'] +
+                            $('.msg').append("<div class='alert alert-success alert-dismissible fade show' role='alert'>" + res['success'] +
                                 "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>" +
                                 "<span aria-hidden='true'>&times;</span>" +
                                 "</button>" +
@@ -741,6 +741,44 @@ $(document).ready(function() {
             }
         });
     });
+    //Update Newletter Status
+    $(document).on('click', '.SubscriberStatus', function() {
+
+        var status = $(this).children("i").attr("status");
+        var record = $(this).attr('record');
+        var record_id = $(this).attr('record_id');
+        $.ajax({
+            type: 'post',
+            url: '/admin/update-' + record + '-status',
+            data: { status: status, record_id: record_id },
+            success: function(res) {
+                if (res['status'] == 0) {
+                    $('#status-' + res.record_id).html("<i class='fas fa-toggle-off' status='Inactive'></i>");
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: record + ' status inactive successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } else if (res['status'] == 1) {
+                    $('#status-' + res.record_id).html("<i class='fas fa-toggle-on' status='Active'></i>");
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: record + ' status active successfully!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            },
+            error: function() {
+                alert('Problem');
+            }
+        });
+    });
+
+
 
 
 });

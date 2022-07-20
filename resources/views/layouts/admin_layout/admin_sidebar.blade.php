@@ -99,7 +99,7 @@
                   </ul>
               </li>
               <!-- Catelogues-->
-              @if(Session::get('page')=="sections" ||  Session::get('page')=="brands"|| Session::get('page')=="categories" || Session::get('page')=="products"|| Session::get('page')=="banners" || Session::get('page')=="coupons"|| Session::get('page')=='orders' || Session::get('page')=='shipping' || Session::get('page')=="cms-pages" || Session::get('page')=="ratings" || Session::get('page')=="return_page")
+              @if(Session::get('page')=="sections" ||  Session::get('page')=="brands"|| Session::get('page')=="categories" || Session::get('page')=="products"|| Session::get('page')=="banners" || Session::get('page')=="coupons"|| Session::get('page')=='orders' || Session::get('page')=='shipping' || Session::get('page')=="cms-pages" || Session::get('page')=="ratings" || Session::get('page')=="return_page" || Session::get('page')=="exchange_page" || Session::get('page')=="newsletter")
               <?php $active = 'active'; $menuopen = 'menu-open'; ?>
               @else 
               <?php $active=""; $menuopen=''; ?>
@@ -245,6 +245,30 @@
                               <p>Raturn Request</p>
                           </a>
                       </li>
+                       <!--Exchange Request Pages-->
+                       @if(Session::get('page')=="exchange_page")
+                       <?php $active = 'active'; ?>
+                       @else 
+                       <?php $active="";?>
+                       @endif
+                       <li class="nav-item">
+                           <a href="{{ url('/admin/exchange-request') }}" class="nav-link {{ $active }}">
+                               <i class="fas fa-exchange-alt nav-icon"></i>
+                               <p>Exchange Request</p>
+                           </a>
+                       </li>
+                        <!--Newsletter Pages-->
+                        @if(Session::get('page')=="newsletter")
+                        <?php $active = 'active'; ?>
+                        @else 
+                        <?php $active="";?>
+                        @endif
+                        <li class="nav-item">
+                            <a href="{{ url('/admin/newsletter-subscribers') }}" class="nav-link {{ $active }}">
+                                <i class="fas fa-newspaper nav-icon"></i>
+                                <p>Newsletter Subscriber</p>
+                            </a>
+                        </li>
                   </ul>
               </li>
              <!--Users-->

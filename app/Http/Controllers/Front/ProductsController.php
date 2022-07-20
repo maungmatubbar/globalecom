@@ -92,7 +92,7 @@ class ProductsController extends Controller
                 {
                     $categoryProducts->orderBy("id", "Asc");
                 }
-                $categoryProducts = $categoryProducts->paginate(3);
+                $categoryProducts = $categoryProducts->paginate(6);
                 return view("front.products.ajax_products_list")->with(
                     compact("categoryDetails", "categoryProducts", "url")
                 );
@@ -156,7 +156,7 @@ class ProductsController extends Controller
             $categoryProducts->orderBy('id','Desc');
           }*/
                 //Paginate link show products
-                $categoryProducts = $categoryProducts->paginate(3);
+                $categoryProducts = $categoryProducts->paginate(6);
                 //Products filers
                 $productFilters = Product::productFilters();
                 $fabricArray    = $productFilters["fabricArray"];
@@ -497,8 +497,8 @@ class ProductsController extends Controller
                         "status" => true,
                         "message" => $message,
                         "totalCartItems" => $totalCartItems,
-                        "couponAmount" => $couponAmount,
-                        "grand_total" => $grand_total,
+                        "couponAmount" => round($couponAmount),
+                        "grand_total" => round($grand_total),
                         "view" => (string) View::make(
                             "front.products.cart_items"
                         )->with(compact("userCartItems")),

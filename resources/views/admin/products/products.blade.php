@@ -63,7 +63,7 @@
                   <tbody>
                     <?php $i=1; ?>
                     @foreach ($products as $product)
-                    <tr id="{{ $product->product_url }}">
+                    <tr id="tablerow-{{ $product->product_url }}">
                         <td>{{ $i++ }}</td>
                         <td>{{ $product->product_name }}</td>
                         <td>{{ $product->product_code  }}</td>

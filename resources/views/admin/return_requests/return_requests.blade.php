@@ -68,13 +68,12 @@
                             <form action="{{ url('/admin/return-request-update') }}" method="post">@csrf
                                <div class="row">
                                     <input type="hidden" name="id" value="{{ $returnRequest->id }}">
-                                    <select name="return_status" id="" class="form-control">
+                                    <select name="return_status" id="">
                                         <option value="Pending" @if($returnRequest->return_status=='Pending') selected @endif>Pending</option>
                                         <option value="Approved" @if($returnRequest->return_status=='Approved') selected @endif>Approved</option>
                                         <option value="Rejected" @if($returnRequest->return_status=='Rejected') selected @endif>Rejected</option>
                                     </select>
-                                    &nbsp;&nbsp;
-                                        <button class="btn btn-primary btn-sm">Update</button>
+                                    <button class="btn btn-primary btn-sm">Update</button>
                                </div>
                             </form>
                         </td>

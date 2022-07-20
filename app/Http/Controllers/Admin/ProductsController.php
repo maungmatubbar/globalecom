@@ -66,29 +66,35 @@ class ProductsController extends Controller
             return response()->json(['status' => $status, 'product_id' => $data['product_id']]);
         }
     }
-    public function deleteProduct(Request $request,$product_url){
+    public function deleteProduct(Request $request){
         if ($request->ajax()) {
+            $product_url = $request->recordurl; 
             $product_image = Product::select('main_image')->where('product_url',$product_url)->first();
             $product_video_name = Product::select('product_video')->where('product_url',$product_url)->first();
-            $product_image_path = 'images/product_images/large/';
-            if(file_exists($product_image_path.$product_image->main_image)){
-                unlink($product_image_path.$product_image->main_image);
+            if(!empty($product_image->main_image))
+            {
+                $product_image_path = 'images/product_images/large/';
+                if(file_exists($product_image_path.$product_image->main_image)){
+                    unlink($product_image_path.$product_image->main_image);
+                }
+               
+                if(file_exists($product_image_path.$product_image->main_image)){
+                    unlink($product_image_path.$product_image->main_image);
+                }
+                $product_image_path = 'images/product_images/small/';
+                if(file_exists($product_image_path.$product_image->main_image)){
+                    unlink($product_image_path.$product_image->main_image);
+                }
             }
-            $product_image_path = 'images/product_images/medium/';
-            if(file_exists($product_image_path.$product_image->main_image)){
-                unlink($product_image_path.$product_image->main_image);
-            }
-            $product_image_path = 'images/product_images/small/';
-            if(file_exists($product_image_path.$product_image->main_image)){
-                unlink($product_image_path.$product_image->main_image);
-            }
-            $product_video_path = 'videos/product_videos/';
-            if(file_exists($product_video_path.$product_video_name->product_video)){
-                unlink($product_video_path.$product_video_name->product_video);
+            if(!empty($product_video_name->product_video))
+            {
+                $product_video_path = 'videos/product_videos/'.$product_video_name->product_video;
+                if(file_exists($product_video_path)){
+                    unlink($product_video_path);
+                }
             }
             Product::where('product_url',$product_url)->delete();
-            return response()->json(['product_url'=>$product_url,'success_msg'=>'Product Delete Successfully!']);
-            //return redirect()->back();
+            return response()->json(['success'=>'Product deleted successfully!']);
         }
 
     }
@@ -101,7 +107,6 @@ class ProductsController extends Controller
             'product_price' => 'required|numeric',
             'product_color' => 'required|regex:/^[\pL\s\-]+$/u',
             'main_image' => 'mimes:jpeg,jpg,png,gif|image|max:200000',
-            'product_video' => 'mimes:mp4,mov,ogg | max:2000000',
         ];
         $customMessages = [
             'category_id.required'=>"Category field is required",

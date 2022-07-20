@@ -27,6 +27,8 @@ class VerifyCsrfToken extends Middleware
         '/get-product-price',
         '/admin/update-coupon-status',
         '/admin/update-user-status',
-        '/admin/update-cms-page-status'
+        '/admin/update-cms-page-status',
+        '/admin/update-newsletter-status',
+        '/admin/delete-product'
     ];
 }

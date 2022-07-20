@@ -22,7 +22,7 @@ class IndexController extends Controller
         $featuredItemsChunk = array_chunk($featuredItems,4);
 
         //Get Latest Products
-        $latestProducts = Product::orderBy('id','Desc')->where('status','1')->limit(6)->get()->toArray();
+        $latestProducts = Product::orderBy('id','Desc')->where('status','1')->limit(9)->get()->toArray();
         
        //dd($latestProducts);
         if($request->isMethod('post'))

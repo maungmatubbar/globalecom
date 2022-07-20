@@ -31,7 +31,7 @@ Route::prefix('/admin')->namespace('Admin')->group(function () {
         //Products
         Route::get('/products','ProductsController@products');
         Route::post('/update-product-status', 'ProductsController@updateProductStatus');
-        Route::get('/delete-product/{url}', 'ProductsController@deleteProduct');
+        Route::post('/delete-product', 'ProductsController@deleteProduct');
         Route::match(['get', 'post'], '/add-edit-product/{url?}','ProductsController@addEditProduct');
         Route::post('/delete-product-image','ProductsController@deleteProductImage');
         Route::get('/delete-product-video/{id}','ProductsController@deleteProductVideo');
@@ -99,6 +99,12 @@ Route::prefix('/admin')->namespace('Admin')->group(function () {
         //Return Request
         Route::get('/return-request','ReturnRequestController@returnRequest');
         Route::post('/return-request-update','ReturnRequestController@returnRequestUpdate');
-        
+        //Exchange Request
+        Route::get('/exchange-request','ExchangeController@exchangeRequest');
+        Route::post('/exchange-request-update','ExchangeController@exchangeRequestUpdate');
+        //Newletter Subscriber
+        Route::get('/newsletter-subscribers','NewsletterController@newsletterSubscribers');
+        Route::post('/update-newsletter-status','NewsletterController@updateNewsletterStatus');
+        Route::get('/delete-newsletter/{id}','NewsletterController@deleteNewsletter');
     });
 });

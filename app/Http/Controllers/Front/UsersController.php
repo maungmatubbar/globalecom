@@ -15,13 +15,13 @@ use Auth;
 class UsersController extends Controller
 {
     public function loginRegister(){
-        Session::forget('success_message');
+        //Session::forget('success_message');
         return view('front.users.login_register');
     }
     public function registerUser(Request $request){
         if($request->isMethod('post')){
-            Session::forget('error_message');
-            Session::forget('success_message');
+            //Session::forget('error_message');
+            //Session::forget('success_message');
             $data = $request->all();
             $userCount = User::where(['email'=>$data['email']])->count();
             if($userCount>0){
@@ -102,7 +102,7 @@ class UsersController extends Controller
                     $message->to($email)->subject('Welcome to Colth Store Ecommarce website');
                 });
                 $message = "Your Email account is activated.You can login now.";
-                Session::put('success_message',$message);
+                Session::flash('success_message',$message);
                 return redirect('/login-register');
             }
         }
@@ -169,8 +169,8 @@ class UsersController extends Controller
             $emailCount = User::where('email',$data['email'])->count();
             if($emailCount==0){
                 $message = 'Email does not exists.';
-                Session::put('error_message',$message);
-                Session::forget('success_message');
+                Session::flash('error_message',$message);
+                //Session::forget('success_message');
                 return redirect()->back();
             }
             //Generate Random Password
@@ -195,7 +195,7 @@ class UsersController extends Controller
             });
             //Redirect to login register page
             $message = 'Please check your email for new password';
-            Session::put('success_message',$message);
+            Session::flash('success_message',$message);
             Session::forget('error_message');
             return redirect('login-register');
 

@@ -86,6 +86,8 @@ Route::middleware('visitor')->namespace('Front')->group(function(){
     Route::match(['get','post'],'/contact','CmsController@contact');
     //Rating and Review
     Route::post('/add-rating','RatingsController@addRating');
+    //Add subscriber email
+    Route::post('/add-subscribe-email','NewsletterController@addSubcriber');
     //For Customer Login a Or Registration
     Route::group(['middleware'=>['checkUser']],function(){
         //My Account
@@ -111,7 +113,9 @@ Route::middleware('visitor')->namespace('Front')->group(function(){
         //Order cancelletion
         Route::match(['get','post'],'/order/cancel','OrdersController@orderCancel');
         //Order Return
-        Route::match(['get','post'],'/order/return','OrdersController@orderReturn');
+        Route::match(['get','post'],'/order/return-exchange','OrdersController@orderReturnExchange');
+        //get product sizes for product exchange
+        Route::post('/get-product-sizes','OrdersController@getProductSizes');
         //Paypal Payment method
         Route::get('/paypal','PaypalController@paypal');
         //Paypal success

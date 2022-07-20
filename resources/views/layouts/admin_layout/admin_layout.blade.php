@@ -135,6 +135,7 @@
     $("#adminDataTable").DataTable();  
     $("#ratingDatatable").DataTable();  
     $("#returnRequest").DataTable();  
+    $("#exchangeRequest").DataTable();  
 
     $('.select2').select2();
     //Initialize Select2 Elements

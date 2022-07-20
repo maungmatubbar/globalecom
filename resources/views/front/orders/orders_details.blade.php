@@ -23,7 +23,7 @@
         @if($getOrderStatus == 'Delivered')
             <span class="pull-right">
                 <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#OrderReturnModal">
-                    Return Order
+                    Return / Exchange Order
                   </button>
             </span>
         @endif
@@ -191,18 +191,25 @@
 </div>
 <!--Order Return Modal -->
 <div class="modal fade" id="OrderReturnModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" align="center">
-    <form action="{{ url('/order/return') }}" method="post">@csrf
+    <form action="{{ url('/order/return-exchange') }}" method="post">@csrf
          <div class="modal-dialog" role="document">
              <div class="modal-content">
                  <div class="modal-header">
-                     <h5 class="modal-title" id="OrderCancelModalLabel">Reason For Return</h5>
+                     <h5 class="modal-title" id="OrderCancelModalLabel">Reason For Return / Exchange</h5>
                  </div>
+                 <div class="modal-body">
+                    <select name="return_exchange" id="return_exchange" class="control-form">
+                        <option value="">Select Return / Exchange</option> 
+                        <option value="Return">Return</option> 
+                        <option value="Exchange">Exchange</option> 
+                    </select>
+                </div>
                  <div class="modal-body">
                     <input type="hidden" name="order_id" value="{{ $orderDetails['id'] }}">
                     <select name="product_info" id="returnProduct">
                        <option value="">Select Product</option>
                        @foreach ($orderDetails['orders_products'] as $product)
-                            @if($product['item_status']!='Return Initiated' && $product['item_status']!='Return Approved' && $product['item_status']!='Return Rejected')
+                            @if($product['item_status']!='Return Initiated' && $product['item_status']!='Return Approved' && $product['item_status']!='Return Rejected' && $product['item_status']!='Exchange Initiated' && $product['item_status']!='Exchange Approved' && $product['item_status']!='Exchange Rejected')
                             <option value="{{  $product['product_code'].'-'.$product['product_size'] }}">{{  $product['product_code'].'-'.$product['product_size'] }}</option>
                            @endif
                        @endforeach
@@ -215,14 +222,21 @@
                          <option value="Item arrive too late">Item arrived too late</option> 
                          <option value="Wrong item was sent">Wrong item was sent</option> 
                          <option value="Item defactive or doesn't work">Item defactive or doesn't work</option> 
+                         <option value="Required Smaller Size">Required Smaller Size</option>
+                         <option value="Required Larger Size">Required Larger Size</option>
                      </select>
                  </div>
+                 <div class="modal-body product_size">
+                    <select name="required_size" id="productSize" class="control-form">
+                        <option value="">Select Required Size</option> 
+                    </select>
+                </div>
                  <div class="modal-body">
                     <textarea name="comment" id="" placeholder="Comment"></textarea>
                  </div>
                  <div class="modal-footer">
                      <button type="button" class="btn" data-dismiss="modal">Close</button>
-                     <button type="submit" class="btn btn-primary btnReturnOrder">Return Order</button>
+                     <button type="submit" class="btn btn-primary btnReturnOrder">Submit</button>
                  </div>
              </div>
        </div>
