@@ -95,6 +95,7 @@ Route::prefix('/admin')->namespace('Admin')->group(function () {
         Route::get('/delete-currency/{id}','CurrencyController@deleteCurrency');
         //Reviews and Ratings
         Route::get('/ratings','RatingsController@ratings');
+        
         Route::get('/update-rating-status','RatingsController@updateRatingStatus');
         //Return Request
         Route::get('/return-request','ReturnRequestController@returnRequest');

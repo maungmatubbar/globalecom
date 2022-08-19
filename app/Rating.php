@@ -18,6 +18,6 @@ class Rating extends Model
     }
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo('App\Product','product_id');
     }
 }

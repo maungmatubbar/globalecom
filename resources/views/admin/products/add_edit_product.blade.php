@@ -52,9 +52,7 @@
                                       @foreach ($category->subcategories as $subcategory)
                                         <option value="{{  $subcategory->id  }}" @if(!empty(@old('category_id')) && $subcategory->id == @old('category_id'))  selected @elseif (!empty($productdata->category_id) && $productdata->category_id == $subcategory->id) selected @endif>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&Rarr;&nbsp;{{  $subcategory->category_name  }}</option>
                                       @endforeach
-
-                                    @endforeach
-                                
+                                    @endforeach 
                                 @endforeach    
                             </select>
                             @error('category_id')

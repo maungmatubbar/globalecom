@@ -10,9 +10,10 @@ class RatingsController extends Controller
 {
     public function ratings()
     {
+       
         Session::put('page','ratings');
         $ratings = Rating::with(['user','product'])->get();
-        return view('admin.ratings.ratings')->with(compact('ratings'));
+        return view('admin.ratings.ratings&reviews')->with(compact('ratings'));
     }
     public function updateRatingStatus(Request $request)
     {

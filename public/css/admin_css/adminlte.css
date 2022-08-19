@@ -53992,5 +53992,10 @@ a.text-muted:hover {
     color: #3f474e;
 }
 
+.canvasjs-chart-credit {
+    visibility: none;
+    display: none;
+}
+
 
 /*# sourceMappingURL=adminlte.css.map */
